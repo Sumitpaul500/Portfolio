@@ -2994,7 +2994,9 @@
       const contactForm = document.getElementById('portfolio-contact-form');
       const contactAlert = document.getElementById('contact-alert');
       const submitBtn = document.getElementById('submit-btn');
-      const BACKEND_URL = 'http://localhost:3001/api/contact';
+      const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:3001/api/contact' 
+        : 'https://sumit-portfolio-backend-d8ys.onrender.com/api/contact';
 
       function showAlert(type, msg) {
         contactAlert.className = 'form-alert ' + type;
@@ -3720,7 +3722,7 @@
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 12px;">
         <h3 style="margin: 0; display: flex; align-items: center; gap: 8px; font-size: 18px; color: #ffffff;">📄 Sumit Paul — Resume Preview</h3>
         <div style="display: flex; gap: 10px; align-items: center;">
-          <a href="http://localhost:3001/api/download-resume" download="Sumit_Paul_Resume.pdf" target="_blank" rel="noopener noreferrer" class="btn-orange" style="padding: 7px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 999px;">📥 Download Resume (PDF)</a>
+          <a href="https://sumit-portfolio-backend-d8ys.onrender.com/api/download-resume" download="Sumit_Paul_Resume.pdf" target="_blank" rel="noopener noreferrer" class="btn-orange" style="padding: 7px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 999px;">📥 Download Resume (PDF)</a>
           <button type="button" id="close-resume-modal" class="admin-btn-cancel" style="padding: 6px 14px; font-size: 14px; cursor: pointer;">✕ Close</button>
         </div>
       </div>
