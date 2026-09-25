@@ -448,8 +448,8 @@
     }
 
     .about-action {
-      margin-top: 16px;
-      margin-bottom: 36px;
+      margin-top: 20px;
+      margin-bottom: 48px;
     }
 
     /* Showcase Cards Section */
@@ -908,8 +908,8 @@
     .growaz-section {
       position: relative;
       z-index: 10;
-      padding: 60px 0 0 0;
-      margin-top: 20px;
+      padding: 70px 0 0 0;
+      margin-top: 30px;
     }
 
     .growaz-about-block {
@@ -2025,7 +2025,8 @@
         padding: 0 20px;
       }
       .hero-section {
-        padding-top: 90px;
+        padding-top: 155px;
+        padding-bottom: 40px;
       }
       .hero-left {
         padding-left: 2px;
@@ -3409,12 +3410,14 @@
       function resize() {
         const rect = canvas.getBoundingClientRect();
         const dpr  = window.devicePixelRatio || 1;
+        if (rect.width <= 0 || rect.height <= 0) return false;
         W = rect.width;
         H = rect.height;
         canvas.width  = W * dpr;
         canvas.height = H * dpr;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         if (triggered) positionSettled();
+        return true;
       }
 
       // ── Compute a nice grid layout centred in canvas ──
@@ -3694,9 +3697,12 @@
 
       // ── IntersectionObserver: trigger when section enters viewport ──
       function triggerAnimation() {
+        if (!resize()) {
+          setTimeout(triggerAnimation, 100);
+          return;
+        }
         if (triggered) return;
         triggered = true;
-        resize();
         createBalls();
         startTime = performance.now();
         lastTime = null;
@@ -3711,10 +3717,10 @@
 
       observer.observe(canvas);
 
-      // Safety Fallback: Guarantee tech balls always initialize after 400ms even if observer is delayed
-      setTimeout(() => {
-        if (!triggered) triggerAnimation();
-      }, 400);
+      // Multi-layer Fallback: Guarantee tech balls initialize on load / refresh / preloader hide
+      window.addEventListener('load', () => setTimeout(triggerAnimation, 200));
+      document.addEventListener('DOMContentLoaded', () => setTimeout(triggerAnimation, 200));
+      setTimeout(triggerAnimation, 500);
 
       // resize handling
       const ro = new ResizeObserver(resize);
