@@ -3717,13 +3717,19 @@
         setTimeout(() => { hovered = -1; }, 1200);
       });
 
-      // ── IntersectionObserver: trigger when section enters viewport ──
-      function triggerAnimation() {
+      // ── IntersectionObserver: trigger & wake canvas whenever section enters viewport ──
+      let hasAnimatedInView = false;
+
+      function triggerAnimation(forceFlyIn = false) {
         if (!resize()) {
-          setTimeout(triggerAnimation, 50);
+          setTimeout(() => triggerAnimation(forceFlyIn), 50);
           return;
         }
-        if (triggered && balls && balls.length > 0) return;
+        if (triggered && !forceFlyIn && balls && balls.length > 0) {
+          positionSettled();
+          wakeTechBalls();
+          return;
+        }
         triggered = true;
         createBalls();
         startTime = performance.now();
@@ -3731,26 +3737,46 @@
         wakeTechBalls();
       }
 
+      function checkAndAnimateInView() {
+        if (hasAnimatedInView) return;
+        const rect = canvas.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        if (rect.bottom > 0 && rect.top < vh) {
+          hasAnimatedInView = true;
+          triggerAnimation(true);
+        }
+      }
+
       const observer = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
-          triggerAnimation();
+          if (!hasAnimatedInView) {
+            checkAndAnimateInView();
+          } else {
+            resize();
+            positionSettled();
+            wakeTechBalls();
+          }
         }
       }, { threshold: 0.01 });
 
       observer.observe(canvas);
 
-      // Instant & Multi-layer Fallback: Guarantee tech balls initialize on 1st refresh, load, and font readiness
-      triggerAnimation();
+      // Window scroll & load fallback listeners to ensure 100% reliable trigger on 1st link click
+      window.addEventListener('scroll', checkAndAnimateInView, { passive: true });
+      window.addEventListener('load', checkAndAnimateInView);
+
+      // Multi-layer fallback for font readiness and viewport entry
       if (document.fonts) {
         document.fonts.ready.then(() => {
-          triggerAnimation();
-          wakeTechBalls();
+          if (triggered) {
+            resize();
+            positionSettled();
+            wakeTechBalls();
+          } else {
+            checkAndAnimateInView();
+          }
         });
       }
-      window.addEventListener('load', () => triggerAnimation());
-      document.addEventListener('DOMContentLoaded', () => triggerAnimation());
-      setTimeout(triggerAnimation, 150);
-      setTimeout(triggerAnimation, 500);
 
       // resize handling
       const ro = new ResizeObserver(resize);
