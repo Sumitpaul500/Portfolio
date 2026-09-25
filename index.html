@@ -3438,8 +3438,16 @@
       }
 
       function positionSettled() {
+        if (!balls || !balls.length) {
+          createBalls();
+          return;
+        }
         const grid = computeGrid();
-        balls.forEach((b, i) => { b.tx = grid[i].tx; b.ty = grid[i].ty; });
+        if (grid && grid.length) {
+          balls.forEach((b, i) => {
+            if (grid[i]) { b.tx = grid[i].tx; b.ty = grid[i].ty; }
+          });
+        }
       }
 
       // ── Create balls in random off-screen starting positions ──
@@ -3698,10 +3706,10 @@
       // ── IntersectionObserver: trigger when section enters viewport ──
       function triggerAnimation() {
         if (!resize()) {
-          setTimeout(triggerAnimation, 100);
+          setTimeout(triggerAnimation, 50);
           return;
         }
-        if (triggered) return;
+        if (triggered && balls && balls.length > 0) return;
         triggered = true;
         createBalls();
         startTime = performance.now();
@@ -3717,9 +3725,17 @@
 
       observer.observe(canvas);
 
-      // Multi-layer Fallback: Guarantee tech balls initialize on load / refresh / preloader hide
-      window.addEventListener('load', () => setTimeout(triggerAnimation, 200));
-      document.addEventListener('DOMContentLoaded', () => setTimeout(triggerAnimation, 200));
+      // Instant & Multi-layer Fallback: Guarantee tech balls initialize on 1st refresh, load, and font readiness
+      triggerAnimation();
+      if (document.fonts) {
+        document.fonts.ready.then(() => {
+          triggerAnimation();
+          wakeTechBalls();
+        });
+      }
+      window.addEventListener('load', () => triggerAnimation());
+      document.addEventListener('DOMContentLoaded', () => triggerAnimation());
+      setTimeout(triggerAnimation, 150);
       setTimeout(triggerAnimation, 500);
 
       // resize handling
