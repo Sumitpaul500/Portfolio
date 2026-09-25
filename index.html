@@ -3667,6 +3667,12 @@
         }
       }
 
+      function getRelPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const pt = (e.touches && e.touches.length) ? e.touches[0] : (e.changedTouches && e.changedTouches.length ? e.changedTouches[0] : e);
+        return { x: pt.clientX - rect.left, y: pt.clientY - rect.top };
+      }
+
       canvas.addEventListener('mousemove', e => {
         const {x, y} = getRelPos(e);
         const prevHovered = hovered;
