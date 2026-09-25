@@ -1954,14 +1954,19 @@
     /* Comprehensive Mobile Responsive Media Queries */
     @media (max-width: 1024px) {
       .hero-section {
-        padding-top: 130px;
+        padding-top: 120px;
       }
       .hero-main-content {
         flex-direction: column;
         gap: 28px;
       }
+      .hero-left, .hero-right {
+        max-width: 100%;
+        width: 100%;
+      }
       .hero-title {
-        font-size: clamp(38px, 8vw, 68px);
+        font-size: clamp(34px, 8vw, 68px);
+        overflow-wrap: break-word;
       }
       .projects-grid, .achievements-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -2128,7 +2133,7 @@
         <li><a href="#projects">Projects</a></li>
         <li><a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
         <li><a href="https://leetcode.com/u/cF7BfaSxl2/" target="_blank" rel="noopener noreferrer">LeetCode</a></li>
-        <li><a href="http://localhost:3001/api/view-resume" target="_blank" rel="noopener noreferrer">Resume 📄</a></li>
+        <li><a href="Sumit_Paul_Resume.pdf" target="_blank" rel="noopener noreferrer">Resume 📄</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
       <button type="button" class="admin-lock-btn admin-toggle-btn" title="Owner Admin Mode — Unlock to add or delete skills" style="margin-right: 8px;">
@@ -2155,7 +2160,7 @@
       <li><a href="#projects" class="mobile-nav-link">Projects</a></li>
       <li><a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" target="_blank" rel="noopener noreferrer" class="mobile-nav-link">LinkedIn</a></li>
       <li><a href="https://leetcode.com/u/cF7BfaSxl2/" target="_blank" rel="noopener noreferrer" class="mobile-nav-link">LeetCode</a></li>
-      <li><a href="http://localhost:3001/api/view-resume" target="_blank" rel="noopener noreferrer" class="mobile-nav-link">Resume 📄</a></li>
+      <li><a href="Sumit_Paul_Resume.pdf" target="_blank" rel="noopener noreferrer" class="mobile-nav-link">Resume 📄</a></li>
       <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
     </ul>
     <div style="margin-top: 28px; width: 100%; text-align: center;">
