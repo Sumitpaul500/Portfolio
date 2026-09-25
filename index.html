@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Folioblox — Creative Director Portfolio</title>
+  <title>Sumit Paul | Computer Science Engineering Student & Full Stack Developer</title>
+  <meta name="description" content="Portfolio of Sumit Paul, a Computer Science & Engineering student at New Horizon College of Engineering, Bengaluru. Full Stack Developer specializing in Java, Python, React, Node.js, FastAPI, and AI applications." />
+  <meta property="og:title" content="Sumit Paul | Computer Science Engineering Student & Full Stack Developer" />
+  <meta property="og:description" content="Full Stack Developer & Computer Science Student (CGPA 9.59) specializing in web applications, backend APIs, and AI integrations." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -42,27 +45,41 @@
       height: 100vh;
     }
 
-    /* Header Navigation - Clean, No Blur */
+    /* Header Navigation - Sleek Translucent Dark Glass Bar */
     header {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      padding: 22px 5%;
+      padding: 16px 5%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 100;
-      background: transparent;
-      border-bottom: none;
+      z-index: 1000;
+      background: rgba(10, 10, 16, 0.78);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      transition: background 0.3s ease;
     }
 
     .logo {
-      font-size: 22px;
+      font-size: 28px;
       font-weight: 800;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.6px;
       color: #ffffff;
       text-decoration: none;
+      background: linear-gradient(135deg, #ffffff 40%, #ff8833 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 10px rgba(255, 85, 0, 0.7)) drop-shadow(0 0 20px rgba(255, 85, 0, 0.4));
+      transition: filter 0.3s ease, transform 0.3s ease;
+      display: inline-block;
+    }
+
+    .logo:hover {
+      filter: drop-shadow(0 0 16px rgba(255, 85, 0, 0.95)) drop-shadow(0 0 32px rgba(255, 85, 0, 0.6));
+      transform: scale(1.04);
     }
 
     nav {
@@ -231,53 +248,21 @@
       color: rgba(255, 255, 255, 0.95);
     }
 
-    /* Brands Banner with Glass Blur */
-    .brands-section {
+
+
+    #tech-balls-canvas {
+      display: block;
       width: 100%;
-      padding: 36px 0;
-      background: rgba(10, 10, 10, 0.4);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      height: 340px;
+      cursor: default;
+      background: transparent;
     }
 
-    .brands-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 24px;
+    @media (max-width: 768px) {
+      #tech-balls-canvas { height: 460px; }
     }
-
-    .brands-label {
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      color: rgba(255, 255, 255, 0.7);
-      max-width: 140px;
-      line-height: 1.3;
-    }
-
-    .brands-logos {
-      display: flex;
-      align-items: center;
-      gap: 48px;
-      flex-wrap: wrap;
-    }
-
-    .brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 16px;
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.9);
-      letter-spacing: -0.3px;
-    }
-
-    .brand-icon {
-      font-size: 18px;
+    @media (max-width: 480px) {
+      #tech-balls-canvas { height: 560px; }
     }
 
     /* Marketing Agency Stats Section with Glassmorphism Blur */
@@ -383,11 +368,11 @@
     }
 
     .stat-number {
-      font-family: 'Share Tech Mono', monospace;
+      font-family: 'Outfit', sans-serif;
       font-size: clamp(48px, 5.5vw, 84px);
-      font-weight: 400;
+      font-weight: 700;
       color: #ffffff;
-      letter-spacing: -2px;
+      letter-spacing: -1px;
       line-height: 1;
       margin-bottom: 18px;
     }
@@ -1132,7 +1117,17 @@
       border-radius: 999px;
     }
 
+    .card-footer {
+      position: relative;
+      z-index: 10;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+    }
+
     .btn-plus {
+      position: relative;
+      z-index: 10;
       width: 38px;
       height: 38px;
       border-radius: 50%;
@@ -1141,14 +1136,82 @@
       border: none;
       font-size: 20px;
       font-weight: 600;
-      cursor: pointer;
+      cursor: pointer !important;
+      pointer-events: auto !important;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .btn-plus:hover {
+      transform: scale(1.15);
+      background-color: #ff7722;
+      box-shadow: 0 0 16px rgba(255, 85, 0, 0.7);
+    }
+
+    /* Inline Card Skill Input Box */
+    .inline-add-skill-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      background: rgba(10, 10, 18, 0.9);
+      border: 1px solid #ff5500;
+      border-radius: 999px;
+      padding: 4px 6px 4px 16px;
+      box-shadow: 0 0 18px rgba(255, 85, 0, 0.45);
+      animation: popTag 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .inline-skill-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+    }
+
+    .inline-skill-input::placeholder {
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .btn-inline-save,
+    .btn-inline-cancel {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .btn-inline-save {
+      background: #ff5500;
+      color: #ffffff;
+    }
+
+    .btn-inline-save:hover {
+      background: #ff7722;
+      transform: scale(1.1);
+    }
+
+    .btn-inline-cancel {
+      background: rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .btn-inline-cancel:hover {
+      background: rgba(255, 255, 255, 0.3);
+      color: #ffffff;
       transform: scale(1.1);
     }
 
@@ -1305,6 +1368,738 @@
         justify-content: center;
       }
     }
+
+    /* Custom Project & Achievements Component Extensions */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .project-card {
+      background: rgba(15, 12, 12, 0.4);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .project-card:hover {
+      border-color: rgba(255, 85, 0, 0.6);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(255, 85, 0, 0.1);
+    }
+
+    .project-eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #ff5500;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .project-title {
+      font-size: clamp(24px, 2.5vw, 32px);
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 14px;
+      line-height: 1.15;
+    }
+
+    .project-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.78);
+      margin-bottom: 24px;
+    }
+
+    .project-tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .tech-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 5px 12px;
+      border-radius: 999px;
+    }
+
+    .project-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-link-github {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn-link-github:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: #ffffff;
+    }
+
+    .btn-link-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #ff5500;
+      color: #ffffff;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-link-demo:hover {
+      background-color: #ff661a;
+      transform: translateY(-1px);
+    }
+
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .form-textarea {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 16px;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      resize: vertical;
+      min-height: 120px;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-textarea:focus {
+      border-color: #ff5500;
+    }
+
+    .form-alert {
+      display: none;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .form-alert.success {
+      display: block;
+      background: rgba(40, 167, 69, 0.2);
+      border: 1px solid #28a745;
+      color: #2ecc71;
+    }
+
+    .form-alert.error {
+      display: block;
+      background: rgba(220, 53, 69, 0.2);
+      border: 1px solid #dc3545;
+      color: #e74c3c;
+    }
+
+    .form-alert.info {
+      display: block;
+      background: rgba(0, 160, 255, 0.12);
+      border: 1px solid #00a0ff;
+      color: #60c8ff;
+    }
+
+    .form-alert a { color: inherit; }
+
+    @media (max-width: 900px) {
+      .projects-grid, .achievements-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ==========================================================================
+       GLASSMORPHISM & CURSOR PROXIMITY INTERACTION STYLES
+       ========================================================================== */
+
+    /* Make all cards/panels slightly transparent (glassmorphism style) */
+    .services-grid,
+    .stats-card,
+    .growaz-card,
+    .tailored-card,
+    .project-card,
+    .showcase-card,
+    .connect-card,
+    .contact-card-wrap {
+      background: rgba(14, 14, 20, 0.38) !important;
+      backdrop-filter: blur(16px) saturate(130%) !important;
+      -webkit-backdrop-filter: blur(16px) saturate(130%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                  box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                  border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Ensure content is strictly above background lighting layers */
+    .services-grid > *,
+    .stats-card > *,
+    .growaz-card > *,
+    .tailored-card > *,
+    .project-card > *,
+    .showcase-card > *,
+    .connect-card > *,
+    .contact-card-wrap > * {
+      position: relative;
+      z-index: 3;
+    }
+
+    /* Anticlockwise glowing border light overlay pseudo element */
+    .proximity-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 2px;
+      background: conic-gradient(
+        from var(--glow-angle, 0deg) at var(--glow-x, 50%) var(--glow-y, 50%),
+        transparent 0deg,
+        rgba(255, 85, 0, var(--glow-opacity, 0)) 30deg,
+        rgba(255, 140, 0, calc(var(--glow-opacity, 0) * 0.95)) 75deg,
+        rgba(255, 200, 100, calc(var(--glow-opacity, 0) * 0.6)) 105deg,
+        transparent 140deg
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: var(--glow-opacity, 0);
+      transition: opacity 0.3s ease;
+      z-index: 2;
+    }
+
+    /* Soft internal spotlight illumination */
+    .proximity-card::after {
+      content: '';
+      position: absolute;
+      top: var(--spotlight-y, 50%);
+      left: var(--spotlight-x, 50%);
+      width: 380px;
+      height: 380px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(255, 85, 0, calc(var(--glow-opacity, 0) * 0.16)) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+      opacity: var(--glow-opacity, 0);
+      transition: opacity 0.3s ease;
+    }
+
+    /* ==========================================================================
+       HERO TYPING & SCROLL-TRIGGERED ENTRANCE ANIMATIONS
+       ========================================================================== */
+
+    /* Typing Caret Animation */
+    .typing-caret {
+      display: inline-block;
+      width: 3.5px;
+      height: 0.85em;
+      background-color: #ff5500;
+      margin-left: 4px;
+      vertical-align: baseline;
+      animation: blinkCaret 0.75s infinite alternate;
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(255, 85, 0, 0.8);
+    }
+
+    @keyframes blinkCaret {
+      0% { opacity: 1; }
+      100% { opacity: 0.1; }
+    }
+
+    /* Scroll Reveal Entrance Base Class */
+    .reveal-item {
+      will-change: transform, opacity, filter;
+      transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Left-side cards fly in from Left */
+    .reveal-left {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translate3d(-90px, 30px, 0) rotate(-2.5deg) scale(0.93);
+    }
+
+    /* Right-side cards fly in from Right */
+    .reveal-right {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translate3d(90px, 30px, 0) rotate(2.5deg) scale(0.93);
+    }
+
+    /* Center / single cards fly in from Bottom Center */
+    .reveal-center {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translate3d(0, 60px, 0) scale(0.92);
+    }
+
+    /* Active Revealed State */
+    .reveal-item.revealed {
+      opacity: 1 !important;
+      filter: blur(0px) !important;
+      transform: translate3d(0, 0, 0) rotate(0deg) scale(1) !important;
+    }
+
+
+
+    /* Styling for newly added custom tags - same look as existing tags */
+    .tag.custom-added-tag {
+      animation: popTag 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes popTag {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ─── Admin Mode & Protected Skills Controls ───────────────────────────── */
+    .admin-lock-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.7);
+      padding: 7px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .admin-lock-btn:hover {
+      background: rgba(255, 85, 0, 0.2);
+      border-color: #ff5500;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .admin-lock-btn.active {
+      background: rgba(46, 204, 113, 0.2);
+      border-color: #2ecc71;
+      color: #2ecc71;
+      box-shadow: 0 0 12px rgba(46, 204, 113, 0.3);
+    }
+
+    /* Hide + buttons and inline add inputs for non-admin visitors */
+    body:not(.admin-mode) .card-footer {
+      display: none !important;
+    }
+
+    /* Tag Styling & Delete Badges */
+    .tag {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .tag-delete-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: rgba(255, 77, 77, 0.25);
+      color: #ff4d4d;
+      font-size: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      line-height: 1;
+      transition: all 0.2s ease;
+      margin-left: 2px;
+    }
+    .tag-delete-btn:hover {
+      background: #ff4d4d;
+      color: #ffffff;
+      transform: scale(1.2);
+    }
+
+    body:not(.admin-mode) .tag-delete-btn {
+      display: none !important;
+    }
+
+    /* Admin PIN Modal */
+    .admin-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(10px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .admin-modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .admin-modal-card {
+      background: #121215;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 18px;
+      padding: 30px 24px;
+      max-width: 360px;
+      width: 90%;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 85, 0, 0.15);
+      text-align: center;
+    }
+    .admin-modal-card h3 {
+      font-size: 20px;
+      color: #ffffff;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .admin-modal-card p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.65);
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+    .admin-pin-input {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 18px;
+      letter-spacing: 6px;
+      text-align: center;
+      margin-bottom: 12px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease;
+    }
+    .admin-pin-input:focus {
+      border-color: #ff5500;
+      box-shadow: 0 0 12px rgba(255, 85, 0, 0.4);
+    }
+    .admin-pin-error {
+      color: #ff4d4d;
+      font-size: 12px;
+      margin-bottom: 14px;
+      display: none;
+      font-weight: 500;
+    }
+    .admin-modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .admin-btn-confirm {
+      flex: 1;
+      padding: 11px;
+      background: #ff5500;
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .admin-btn-confirm:hover {
+      background: #ff7722;
+    }
+    .admin-btn-cancel {
+      flex: 1;
+      padding: 11px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #cccccc;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .admin-btn-cancel:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+    }
+
+
+    /* Mobile Menu Toggle Button */
+    .mobile-menu-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 20px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 1001;
+      padding: 0;
+    }
+
+    .mobile-menu-btn span {
+      width: 100%;
+      height: 2px;
+      background-color: #ffffff;
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+    }
+
+    .mobile-menu-btn.active span:nth-child(1) {
+      transform: translateY(9px) rotate(45deg);
+      background-color: #ff5500;
+    }
+
+    .mobile-menu-btn.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .mobile-menu-btn.active span:nth-child(3) {
+      transform: translateY(-9px) rotate(-45deg);
+      background-color: #ff5500;
+    }
+
+    /* Mobile Overlay Menu Drawer */
+    .mobile-nav-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(10, 10, 15, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 24px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s;
+    }
+
+    .mobile-nav-overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .mobile-nav-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      width: 100%;
+    }
+
+    .mobile-nav-links a {
+      color: rgba(255, 255, 255, 0.95);
+      text-decoration: none;
+      font-size: 22px;
+      font-weight: 700;
+      transition: color 0.2s ease;
+    }
+
+    .mobile-nav-links a:hover {
+      color: #ff5500;
+    }
+
+    /* Comprehensive Mobile Responsive Media Queries */
+    @media (max-width: 1024px) {
+      .hero-section {
+        padding-top: 130px;
+      }
+      .hero-main-content {
+        flex-direction: column;
+        gap: 28px;
+      }
+      .hero-title {
+        font-size: clamp(38px, 8vw, 68px);
+      }
+      .projects-grid, .achievements-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+      .growaz-tailored-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      header {
+        padding: 16px 24px;
+      }
+      .mobile-menu-btn {
+        display: flex;
+      }
+      .nav-links, .header-cta, header .admin-toggle-btn {
+        display: none !important;
+      }
+      .hero-main-content {
+        flex-direction: column;
+        gap: 24px;
+      }
+      .hero-cta-group {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .projects-grid, .achievements-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+      .contact-card-wrap {
+        padding: 32px 20px;
+      }
+      .stats-card {
+        padding: 32px 20px;
+      }
+      .project-card {
+        padding: 28px 20px;
+      }
+      .admin-modal-card {
+        width: 95%;
+        padding: 22px 18px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-section {
+        padding-top: 100px;
+      }
+      .hero-left-eyebrow {
+        font-size: 14px;
+      }
+      .hero-title {
+        font-size: clamp(32px, 10vw, 48px);
+        line-height: 1.1;
+      }
+      .hero-subtitle-box {
+        font-size: 20px;
+        line-height: 1.3;
+      }
+      .hero-desc-box {
+        font-size: 14px;
+      }
+      .hero-cta-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .hero-cta-group > * {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
+      .services-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 16px;
+      }
+      .growaz-tailored-grid {
+        grid-template-columns: 1fr;
+      }
+      .growaz-services-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      .footer-top {
+        flex-direction: column;
+        gap: 36px;
+      }
+      .footer-nav-cols {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      #resume-modal .admin-modal-card {
+        height: 92vh;
+        padding: 16px;
+      }
+      .form-group input,
+      .form-group select,
+      .form-textarea {
+        font-size: 16px; /* Avoid iOS auto zoom */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .section-container {
+        padding: 0 4%;
+      }
+      .footer-nav-cols {
+        grid-template-columns: 1fr;
+      }
+      .stats-top {
+        flex-direction: column;
+        gap: 20px;
+      }
+    }
+
+    /* Proximity Button Interactive Transitions */
+    .proximity-btn {
+      will-change: transform, box-shadow, filter;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  background-color 0.25s ease !important;
+    }
+
+
   </style>
 </head>
 <body>
@@ -1324,20 +2119,52 @@
 
   <!-- Header Navigation -->
   <header>
-    <a href="#" class="logo">Folioblox</a>
+    <a href="#" class="logo">Sumit Paul</a>
     <nav>
       <ul class="nav-links">
         <li><a href="#home">Home</a></li>
         <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
         <li><a href="#projects">Projects</a></li>
+        <li><a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+        <li><a href="https://leetcode.com/u/cF7BfaSxl2/" target="_blank" rel="noopener noreferrer">LeetCode</a></li>
+        <li><a href="http://localhost:3001/api/view-resume" target="_blank" rel="noopener noreferrer">Resume 📄</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
-      <a href="#contact" class="btn-orange">
+      <button type="button" class="admin-lock-btn admin-toggle-btn" title="Owner Admin Mode — Unlock to add or delete skills" style="margin-right: 8px;">
+        <span class="lock-icon">🔒</span> <span class="lock-text">Admin</span>
+      </button>
+      <a href="#contact" class="btn-orange header-cta">
         Get in touch
         <span class="btn-icon">➔</span>
       </a>
+      <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
     </nav>
   </header>
+
+  <!-- Mobile Glassmorphic Navigation Drawer Overlay -->
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay">
+    <ul class="mobile-nav-links">
+      <li><a href="#home" class="mobile-nav-link">Home</a></li>
+      <li><a href="#about" class="mobile-nav-link">About</a></li>
+      <li><a href="#skills" class="mobile-nav-link">Skills</a></li>
+      <li><a href="#projects" class="mobile-nav-link">Projects</a></li>
+      <li><a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" target="_blank" rel="noopener noreferrer" class="mobile-nav-link">LinkedIn</a></li>
+      <li><a href="https://leetcode.com/u/cF7BfaSxl2/" target="_blank" rel="noopener noreferrer" class="mobile-nav-link">LeetCode</a></li>
+      <li><a href="http://localhost:3001/api/view-resume" target="_blank" rel="noopener noreferrer" class="mobile-nav-link">Resume 📄</a></li>
+      <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
+    </ul>
+    <div style="margin-top: 28px; width: 100%; text-align: center;">
+      <a href="#contact" class="btn-orange mobile-nav-cta">
+        Get in touch
+        <span class="btn-icon">➔</span>
+      </a>
+    </div>
+  </div>
 
   <!-- Page Sections Container -->
   <main>
@@ -1347,92 +2174,108 @@
       <div class="hero-main-content">
         <!-- Left Side Title -->
         <div class="hero-left">
-          <p class="hero-left-eyebrow">Hey, I'm a</p>
-          <h1 class="hero-title">Creative<br>Director</h1>
+          <p class="hero-left-eyebrow" id="type-eyebrow">Computer Science Student &</p>
+          <h1 class="hero-title" id="type-title">Software<br>Developer</h1>
         </div>
 
         <!-- Right Side Subtitle -->
         <div class="hero-right">
-          <h3 class="hero-subtitle-box">Great design<br>should feel <span class="serif-italic">invisible.</span></h3>
-          <p class="hero-desc-box">From logo to language, I build brands that connect and convert.</p>
+          <h3 class="hero-subtitle-box" id="type-subtitle">Building scalable<br>systems that <span class="serif-italic">empower.</span></h3>
+          <p class="hero-desc-box" id="type-desc">B.Tech CSE Student at NHCE, Bengaluru (Affiliated to VTU · CGPA 9.59) specializing in Full-Stack Web Development, REST APIs, and AI Applications.</p>
+          <div class="hero-cta-group" style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+            <button type="button" id="btn-view-resume" class="btn-orange" style="padding: 12px 24px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; border-radius: 999px;">
+              📄 View Resume
+            </button>
+            <a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" target="_blank" rel="noopener noreferrer" class="btn-pill-dark" style="padding: 12px 18px; font-size: 13px; text-decoration: none; border-color: rgba(10, 102, 194, 0.4); color: #3897f0;">
+              LinkedIn ➔
+            </a>
+            <a href="https://leetcode.com/u/cF7BfaSxl2/" target="_blank" rel="noopener noreferrer" class="btn-pill-dark" style="padding: 12px 18px; font-size: 13px; text-decoration: none; border-color: rgba(255, 161, 22, 0.4); color: #ffa116;">
+              LeetCode ➔
+            </a>
+          </div>
         </div>
       </div>
 
-      <!-- Services Grid -->
+      <!-- Core Pillars Grid -->
       <div class="services-grid">
-        <div class="service-item">
+        <div class="service-item reveal-item reveal-left" data-delay="0">
           <span class="service-num">#01</span>
-          <span class="service-title">Brand Strategy</span>
+          <span class="service-title">Full Stack Development</span>
         </div>
-        <div class="service-item">
+        <div class="service-item reveal-item reveal-left" data-delay="140">
           <span class="service-num">#02</span>
-          <span class="service-title">Brand Identity Design</span>
+          <span class="service-title">Backend & REST APIs</span>
         </div>
-        <div class="service-item">
+        <div class="service-item reveal-item reveal-right" data-delay="280">
           <span class="service-num">#03</span>
-          <span class="service-title">Packaging Design</span>
+          <span class="service-title">AI & LLM Integrations</span>
         </div>
-        <div class="service-item">
+        <div class="service-item reveal-item reveal-right" data-delay="420">
           <span class="service-num">#04</span>
-          <span class="service-title">Creative Direction</span>
+          <span class="service-title">Data Structures & Systems</span>
         </div>
       </div>
     </section>
 
-    <!-- Brands Strip -->
-    <section class="brands-section">
-      <div class="section-container brands-content">
-        <p class="brands-label">Trusted by Brands I've Helped Shape</p>
-        <div class="brands-logos">
-          <div class="brand-logo"><span class="brand-icon">⚪</span> Supa Blox</div>
-          <div class="brand-logo"><span class="brand-icon">⌛</span> Hype Blox</div>
-          <div class="brand-logo"><span class="brand-icon">🌓</span> Frame Blox</div>
-          <div class="brand-logo"><span class="brand-icon">🌗</span> Ultra Blox</div>
+    <!-- 3D Physics Tech Stack Section (Glassmorphic Card Container) -->
+    <section class="tech-section section-container" id="tech-balls-section" style="padding: 40px 0;">
+      <div class="stats-card proximity-card reveal-item reveal-center" data-delay="0" style="padding: 36px 40px; position: relative; overflow: hidden;">
+        <div class="tech-balls-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0;">
+          <span class="tech-balls-label" style="font-size: 13px; font-weight: 700; color: #ff5500; letter-spacing: 1.5px; text-transform: uppercase;">Core Technical Stack & Tools</span>
         </div>
+        <canvas id="tech-balls-canvas" style="display: block; width: 100%; height: 320px; cursor: default; background: transparent;"></canvas>
       </div>
     </section>
 
-    <!-- Results-Driven Marketing Agency Stats Section -->
+    <!-- Overview Stats Section -->
     <section class="stats-section section-container">
       <div class="stats-card">
         <div class="stats-top">
           <div class="stats-left">
             <div class="hub-tag">
-              <span class="hub-icon">🌐</span>
-              <span class="hub-text">Hub support peoples from all over the world</span>
+              <span class="hub-icon">📍</span>
+              <span class="hub-text">NHCE, Bengaluru (VTU) • B.Tech CSE (2023–2027)</span>
             </div>
             <div class="social-pills">
-              <a href="#" class="social-pill active">𝕏</a>
-              <a href="#" class="social-pill secondary">in</a>
-              <a href="#" class="social-pill secondary">🏀</a>
+              <a href="https://github.com/Sumitpaul500" target="_blank" rel="noopener noreferrer" class="social-pill active" title="GitHub Profile" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              </a>
+              <a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" target="_blank" rel="noopener noreferrer" class="social-pill secondary" title="LinkedIn Profile" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              </a>
+              <a href="https://leetcode.com/u/cF7BfaSxl2/" target="_blank" rel="noopener noreferrer" class="social-pill secondary" title="LeetCode Profile (cF7BfaSxl2)" aria-label="LeetCode" style="border-color: rgba(255, 161, 22, 0.4);">
+                <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#ffa116" d="M16.102 17.93l-2.697 2.607c-.466.467-1.111.662-1.823.662s-1.357-.195-1.824-.662l-4.332-4.363c-.467-.467-.702-1.15-.702-1.863s.235-1.357.702-1.824l4.319-4.38c.467-.467 1.125-.645 1.837-.645s1.357.195 1.823.662l2.697 2.606c.514.515 1.365.515 1.879 0 .515-.515.515-1.365 0-1.879l-2.697-2.607c-1.001-1.002-2.335-1.503-3.702-1.503s-2.701.501-3.702 1.503l-4.318 4.38c-1.002 1.001-1.503 2.335-1.503 3.702s.501 2.701 1.503 3.702l4.332 4.363c1.001 1.001 2.335 1.503 3.702 1.503s2.701-.502 3.702-1.503l2.697-2.607c.515-.515.515-1.365 0-1.879s-1.365-.515-1.879 0z"/><path fill="#ffffff" d="M10.8 11.2h10.4c.7 0 1.2.5 1.2 1.2s-.5 1.2-1.2 1.2H10.8c-.7 0-1.2-.5-1.2-1.2s.5-1.2 1.2-1.2z"/></svg>
+              </a>
+              <a href="Sumit_Paul_Resume.pdf" target="_blank" rel="noopener noreferrer" class="social-pill secondary" title="View / Download Resume" aria-label="Resume">📄</a>
+              <a href="https://mail.google.com/mail/?view=cm&to=deeprajpaul500@gmail.com" target="_blank" rel="noopener noreferrer" class="social-pill secondary" title="Email" aria-label="Email">✉</a>
             </div>
           </div>
           <div class="stats-right">
             <p class="agency-headline">
-              We're a <span class="highlight">results-driven marketing agency passionate</span> about crafting impactful campaigns that growth for our clients
+              Driven software engineering student <span class="highlight">building high-impact full-stack web platforms, AI solutions, and backend microservices</span>.
             </p>
           </div>
         </div>
 
         <div class="stats-grid">
           <div class="stat-item">
-            <div class="stat-number">86+</div>
+            <div class="stat-number">9.59</div>
             <div class="stat-label">
-              <span class="dot-orange"></span> Project Done
+              <span class="dot-orange"></span> NHCE · VTU B.E CSE CGPA
             </div>
             <div class="stat-line"></div>
           </div>
           <div class="stat-item">
-            <div class="stat-number">98%</div>
+            <div class="stat-number">Top 48</div>
             <div class="stat-label">
-              <span class="dot-orange"></span> Successful Rating
+              <span class="dot-orange"></span> Flipkart GRiD 8.0 National Finalist
             </div>
             <div class="stat-line"></div>
           </div>
           <div class="stat-item">
-            <div class="stat-number">223m</div>
+            <div class="stat-number">5+</div>
             <div class="stat-label">
-              <span class="dot-orange"></span> Growth Net Worth
+              <span class="dot-orange"></span> Production Web Apps
             </div>
             <div class="stat-line"></div>
           </div>
@@ -1440,18 +2283,18 @@
       </div>
     </section>
 
-    <!-- Behind the Designs Section -->
+    <!-- About Me Section -->
     <section class="about-section section-container" id="about">
       <div class="about-grid">
         <div>
-          <p class="eyebrow-orange">Behind the Designs</p>
-          <h2 class="about-heading">Shaping<br>Experiences That<br>Make Life Simpler</h2>
+          <p class="eyebrow-orange">Behind the Code</p>
+          <h2 class="about-heading">Engineering<br>Applications That<br>Solve Real Problems</h2>
         </div>
 
         <div class="about-right">
-          <p class="about-lead">I'm a product designer focused on building clean, intuitive interfaces that solve real-world problems.</p>
+          <p class="about-lead">I'm a Computer Science & Engineering student at <strong>New Horizon College of Engineering (NHCE)</strong>, Bengaluru — affiliated to <strong>Visvesvaraya Technological University (VTU)</strong> — with hands-on expertise in building scalable microservices, REST APIs, and modern web solutions.</p>
           <div>
-            <p class="about-subtext">Let's Build Something Meaningful Together</p>
+            <p class="about-subtext">Passionate about Java, Python, React, SvelteKit, FastAPI, Node.js, AI LLM integrations, and robust database systems.</p>
           </div>
           <div class="about-action">
             <a href="#contact" class="btn-orange">
@@ -1463,125 +2306,384 @@
       </div>
     </section>
 
-    <!-- Showcase Cards Grid -->
-    <section class="showcase-section section-container" id="projects">
-      <div class="showcase-grid">
-        <div class="showcase-card">
-          <img src="./images/showcase_jacket.png" alt="Showcase Jacket" />
+    <!-- Technical Skills Section -->
+    <section class="growaz-section section-container" id="skills">
+      <div class="growaz-services-block">
+        <div class="growaz-services-header">
+          <h2 class="growaz-services-headline">
+            Technical<br><span class="serif-italic">skills & expertise</span>
+          </h2>
+          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <button type="button" class="admin-lock-btn admin-toggle-btn" title="Owner Admin Mode — Unlock to add or delete skills">
+              <span class="lock-icon">🔒</span> <span class="lock-text">Admin</span>
+            </button>
+            <a href="#projects" class="btn-pill-dark">
+              <span class="pill-orange-icon">»</span>
+              View Projects
+            </a>
+          </div>
         </div>
-        <div class="showcase-card">
-          <img src="./images/showcase_headphones.png" alt="Showcase Headphones" />
-        </div>
-        <div class="showcase-card">
-          <img src="./images/showcase_bottle.png" alt="Showcase Cosmetic Bottle" />
+
+        <div class="growaz-tailored-grid">
+          <!-- Card 1 -->
+          <div class="growaz-card reveal-item reveal-left" data-delay="0">
+            <div>
+              <span class="card-num">01</span>
+              <h3 class="card-title">Languages &<br>Core CS</h3>
+              <div class="card-tags">
+                <span class="tag">Java</span>
+                <span class="tag">Python</span>
+                <span class="tag">C</span>
+                <span class="tag">JavaScript</span>
+                <span class="tag">TypeScript</span>
+                <span class="tag">Data Structures & Algorithms</span>
+                <span class="tag">OOP</span>
+                <span class="tag">System Design</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn-plus">+</button>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="growaz-card reveal-item reveal-left" data-delay="140">
+            <div>
+              <span class="card-num">02</span>
+              <h3 class="card-title">Frontend<br>Technologies</h3>
+              <div class="card-tags">
+                <span class="tag">React</span>
+                <span class="tag">SvelteKit</span>
+                <span class="tag">Tailwind CSS</span>
+                <span class="tag">HTML5</span>
+                <span class="tag">CSS3</span>
+                <span class="tag">Responsive Design</span>
+                <span class="tag">Bootstrap</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn-plus">+</button>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="growaz-card reveal-item reveal-right" data-delay="280">
+            <div>
+              <span class="card-num">03</span>
+              <h3 class="card-title">Backend &<br>REST APIs</h3>
+              <div class="card-tags">
+                <span class="tag">Node.js</span>
+                <span class="tag">Express.js</span>
+                <span class="tag">FastAPI</span>
+                <span class="tag">REST APIs</span>
+                <span class="tag">JWT Auth</span>
+                <span class="tag">Docker</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn-plus">+</button>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="growaz-card reveal-item reveal-right" data-delay="420">
+            <div>
+              <span class="card-num">04</span>
+              <h3 class="card-title">Databases &<br>Tools</h3>
+              <div class="card-tags">
+                <span class="tag">MongoDB</span>
+                <span class="tag">MySQL</span>
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">SQLite</span>
+                <span class="tag">Git & GitHub</span>
+                <span class="tag">Figma</span>
+                <span class="tag">Linux</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn-plus">+</button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Contact / Lead Form Section -->
-    <section class="contact-section section-container" id="contact">
-      <div class="contact-card-wrap">
-        <div class="contact-header">
-          <div class="contact-title-wrap">
-            <h2 class="contact-title">
-              <span class="row-top">READY TO</span>
-              <span class="row-grow">GROW</span>
-              <span class="row-sub">& SCALE YOUR COMPANY?</span>
-            </h2>
-            <div class="lets-talk-box">
-              <span class="lets-talk-tag">LET'S TALK</span>
-              <p class="lets-talk-desc">Unique overall approach to empower us on our next campaign.</p>
+    <!-- Projects Section -->
+    <section class="showcase-section section-container" id="projects" style="padding-top: 60px;">
+      <div>
+        <p class="eyebrow-orange">Featured Work</p>
+        <h2 class="about-heading">Featured Software &<br><span class="serif-italic">Full-Stack Projects</span></h2>
+      </div>
+
+      <div class="projects-grid">
+        <!-- Project 1: Community Hero -->
+        <div class="project-card reveal-item reveal-left" data-delay="0">
+          <div>
+            <span class="project-eyebrow">Civic Engagement • AI Platform</span>
+            <h3 class="project-title">Community Hero</h3>
+            <p class="project-desc">Hyperlocal civic problem reporting platform supporting 1,000+ concurrent users. Features Gemini AI auto issue categorization, Leaflet interactive mapping, real-time analytics dashboard, and citizen gamification workflow.</p>
+            <div class="project-tech-tags">
+              <span class="tech-badge">React</span>
+              <span class="tech-badge">TypeScript</span>
+              <span class="tech-badge">Firebase</span>
+              <span class="tech-badge">Gemini AI</span>
+              <span class="tech-badge">Leaflet</span>
+              <span class="tech-badge">Tailwind CSS</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://community-hero-47e90.web.app/" target="_blank" rel="noopener noreferrer" class="btn-link-demo">Live Demo ➔</a>
+            <a href="https://github.com/Sumitpaul500/Vibe2Ship" target="_blank" rel="noopener noreferrer" class="btn-link-github">GitHub Repo</a>
+          </div>
+        </div>
+
+        <!-- Project 2: FinPilot AI -->
+        <div class="project-card reveal-item reveal-right" data-delay="160">
+          <div>
+            <span class="project-eyebrow">FinTech • Microservices • AI</span>
+            <h3 class="project-title">FinPilot AI – Smart Expense Tracker</h3>
+            <p class="project-desc">3-tier microservices expense processing platform parsing 50+ receipt formats with receipt OCR (OCR.Space + Groq Llama 3.3-70B LLM with 95%+ accuracy), bank SMS regex parser, and Chart.js 3D dashboards.</p>
+            <div class="project-tech-tags">
+              <span class="tech-badge">SvelteKit</span>
+              <span class="tech-badge">Express.js</span>
+              <span class="tech-badge">FastAPI</span>
+              <span class="tech-badge">MongoDB</span>
+              <span class="tech-badge">Groq LLM</span>
+              <span class="tech-badge">Docker</span>
+              <span class="tech-badge">Redis</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Sumitpaul500/Smart-Expense-Tracker" target="_blank" rel="noopener noreferrer" class="btn-link-github">GitHub Repo</a>
+          </div>
+        </div>
+
+        <!-- Project 3: Image Steganography -->
+        <div class="project-card reveal-item reveal-left" data-delay="0">
+          <div>
+            <span class="project-eyebrow">Cybersecurity • Java Desktop App</span>
+            <h3 class="project-title">Image Steganography Application</h3>
+            <p class="project-desc">Engineered a 1,277-line Java Swing desktop application implementing LSB steganography with AES-256/CBC encryption and SHA-256 hashing across JPG, PNG, and BMP formats with 99.2% embedding capacity.</p>
+            <div class="project-tech-tags">
+              <span class="tech-badge">Java</span>
+              <span class="tech-badge">Java Swing</span>
+              <span class="tech-badge">LSB Steganography</span>
+              <span class="tech-badge">AES-256 Encryption</span>
+              <span class="tech-badge">SHA-256</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Sumitpaul500" target="_blank" rel="noopener noreferrer" class="btn-link-github">GitHub Repo</a>
+          </div>
+        </div>
+
+        <!-- Project 4: Weather Forecast Website -->
+        <div class="project-card reveal-item reveal-right" data-delay="160">
+          <div>
+            <span class="project-eyebrow">Web Application • API Integration</span>
+            <h3 class="project-title">Real-Time Weather Forecast App</h3>
+            <p class="project-desc">Responsive dark-themed weather app featuring HTML5 Geolocation, global city search, dual OpenWeatherMap API integrations for current weather, hourly forecast, and extended 4-day forecast.</p>
+            <div class="project-tech-tags">
+              <span class="tech-badge">HTML5</span>
+              <span class="tech-badge">CSS3</span>
+              <span class="tech-badge">Vanilla JS</span>
+              <span class="tech-badge">OpenWeatherMap API</span>
+              <span class="tech-badge">Geolocation API</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Sumitpaul500/weather" target="_blank" rel="noopener noreferrer" class="btn-link-github">GitHub Repo</a>
+          </div>
+        </div>
+
+        <!-- Project 5: UPI Payment System UI -->
+        <div class="project-card reveal-item reveal-center" data-delay="0">
+          <div>
+            <span class="project-eyebrow">FinTech UI/UX • Prototype</span>
+            <h3 class="project-title">UPI Payment System UI/UX</h3>
+            <p class="project-desc">A Figma + HTML based UPI payment interface prototype featuring login, PIN entry, send money, request money, QR scanning interface, and transaction history.</p>
+            <div class="project-tech-tags">
+              <span class="tech-badge">Figma</span>
+              <span class="tech-badge">HTML</span>
+              <span class="tech-badge">CSS</span>
+              <span class="tech-badge">JavaScript</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/Sumitpaul500/UI-UX-Payment-Gateway" target="_blank" rel="noopener noreferrer" class="btn-link-github">GitHub Repo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Achievements & Certifications Section -->
+    <section class="about-section section-container" id="achievements" style="padding-top: 100px;">
+      <div>
+        <p class="eyebrow-orange">Recognition & Education</p>
+        <h2 class="about-heading">Hackathons &<br><span class="serif-italic">Certifications</span></h2>
+      </div>
+
+      <div class="achievements-grid">
+        <!-- Card 0: Flipkart GRiD 8.0 — Featured Achievement (spans full width) -->
+        <div class="project-card reveal-item reveal-left grid-featured-card" data-delay="0" style="grid-column: 1 / -1; border-color: rgba(255, 136, 51, 0.55); background: linear-gradient(135deg, rgba(255, 136, 51, 0.07) 0%, rgba(10, 10, 16, 0.0) 60%); position: relative; overflow: hidden;">
+          <div style="position: absolute; top: 0; right: 0; background: linear-gradient(135deg, #ff6600, #ff9933); color: #000; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; padding: 5px 14px; border-bottom-left-radius: 10px; text-transform: uppercase;">National Finalist</div>
+          <div>
+            <span class="project-eyebrow">National Hackathon &bull; Flipkart &bull; 2026</span>
+            <h3 class="project-title">Flipkart GRiD 8.0 &mdash; Top 48 Nationally &middot; Top 16 in Software Development</h3>
+            <p class="project-desc">Selected as a <strong>National Finalist</strong> from approximately <strong>1.65&ndash;1.7 lakh registrations</strong> across India. Ranked in the <strong>Top 48 nationally</strong> and placed in the <strong>Top 16 in the Software Development track</strong> out of three specialised tracks (Software Development &middot; AI Engineering &middot; Data Science). Advanced to the <strong>National Finals hackathon</strong>, where the 48 finalists were grouped into teams of 4 to compete for the final prize.</p>
+            <div class="project-tech-tags" style="margin-top: 14px;">
+              <span class="tech-badge" style="border-color: rgba(255,136,51,0.6); color: #ff8833;">Top 48 Nationally</span>
+              <span class="tech-badge" style="border-color: rgba(255,136,51,0.6); color: #ff8833;">Top 16 Software Dev</span>
+              <span class="tech-badge">Flipkart GRiD 8.0</span>
+              <span class="tech-badge">National Finals</span>
+              <span class="tech-badge">1.65&ndash;1.7L+ Registrations</span>
             </div>
           </div>
         </div>
 
-        <form class="contact-form" onsubmit="event.preventDefault();">
+        <!-- Card 1: Oracle Certifications -->
+        <div class="project-card reveal-item reveal-left" data-delay="0">
+          <div>
+            <span class="project-eyebrow">Professional Certifications • Oracle</span>
+            <h3 class="project-title">Oracle Cloud & Generative AI Certified</h3>
+            <p class="project-desc">Earned back-to-back industry certifications from Oracle University: 🏆 <strong>Oracle Cloud Infrastructure 2025 Certified Generative AI Professional</strong> and 🏆 <strong>OCI Foundations Associate</strong>, validating deep expertise in cloud architecture and LLM models.</p>
+            <div class="project-tech-tags">
+              <span class="tech-badge">OCI GenAI Professional</span>
+              <span class="tech-badge">OCI Foundations</span>
+              <span class="tech-badge">Oracle University</span>
+              <span class="tech-badge">Cloud Computing</span>
+            </div>
+          </div>
+          <div class="project-links" style="margin-top: 16px;">
+            <a href="https://www.linkedin.com/feed/update/urn:li:activity:7391201941361606657/" target="_blank" rel="noopener noreferrer" class="btn-link-demo">Verify Badge ➔</a>
+          </div>
+        </div>
+
+        <!-- Card 2: Smart India Hackathon 2025 -->
+        <div class="project-card reveal-item reveal-left" data-delay="0">
+          <div>
+            <span class="project-eyebrow">National Hackathon • SIH 2025</span>
+            <h3 class="project-title">Smart India Hackathon 2025 — Grand Finale Top 15</h3>
+            <p class="project-desc">Designed system architecture and developed the Flask backend for <strong>AyurSutra</strong> — an AI-powered Ayurvedic patient management platform featuring automated therapy scheduling, JWT authentication, EHR integration, and n8n workflow automation. Qualified for <strong>Top 15 teams in Grand Finale</strong>.</p>
+            <div class="project-tech-tags">
+              <span class="tech-badge">Python Flask</span>
+              <span class="tech-badge">React</span>
+              <span class="tech-badge">MSSQL</span>
+              <span class="tech-badge">n8n Automation</span>
+              <span class="tech-badge">Grand Finale Top 15</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Vibe2Ship Hackathon -->
+        <div class="project-card reveal-item reveal-right" data-delay="160">
+          <div>
+            <span class="project-eyebrow">National AI Hackathon</span>
+            <h3 class="project-title">Vibe2Ship Hackathon – Coding Ninjas × Google</h3>
+            <p class="project-desc">Successfully built and deployed <strong>Community Hero</strong> — an AI-powered hyperlocal civic complaint platform — during India's Biggest Vibe Coding Hackathon organized by Coding Ninjas in collaboration with <strong>Google for Developers</strong>.</p>
+            <div class="project-tech-tags">
+              <span class="tech-badge">Google for Developers</span>
+              <span class="tech-badge">Coding Ninjas</span>
+              <span class="tech-badge">Solo Developer</span>
+              <span class="tech-badge">Firebase AI</span>
+            </div>
+          </div>
+          <div class="project-links" style="margin-top: 16px;">
+            <a href="https://github.com/Sumitpaul500/Vibe2Ship" target="_blank" rel="noopener noreferrer" class="btn-link-github">GitHub Repo</a>
+          </div>
+        </div>
+
+        <!-- Card 3: GHCI 2025 & IISc Symposium -->
+        <div class="project-card reveal-item reveal-left" data-delay="0">
+          <div>
+            <span class="project-eyebrow">Industry Symposiums & Hackathons</span>
+            <h3 class="project-title">GHCI 2025 & IISc Data Symposium</h3>
+            <p class="project-desc">Participated in <strong>GHCI 2025 Hackathon (AnitaB.org India)</strong> and attended the <strong>3rd Symposium on Data for Public Good at IISc Bengaluru</strong>, exploring sustainable development and AI governance with industry pioneers.</p>
+            <div class="project-tech-tags">
+              <span class="tech-badge">AnitaB.org GHCI</span>
+              <span class="tech-badge">IISc Bengaluru</span>
+              <span class="tech-badge">Data for Public Good</span>
+              <span class="tech-badge">AI Governance</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Generative AI & MAANG DSA Masterclasses -->
+        <div class="project-card reveal-item reveal-right" data-delay="160">
+          <div>
+            <span class="project-eyebrow">Upskilling & Data Structures</span>
+            <h3 class="project-title">GenAI Mastermind & Scaler MAANG DSA</h3>
+            <p class="project-desc">Completed hands-on <strong>Generative AI Mastermind</strong> (Outskill) and Scaler's <strong>Become a MAANG Engineer Masterclass</strong>, focusing on advanced Data Structures & Algorithms, System Design, and practical AI application development.</p>
+            <div class="project-tech-tags">
+              <span class="tech-badge">Outskill GenAI</span>
+              <span class="tech-badge">Scaler MAANG</span>
+              <span class="tech-badge">Advanced DSA</span>
+              <span class="tech-badge">System Design</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="contact-section section-container" id="contact">
+      <div class="contact-card-wrap reveal-item reveal-center" data-delay="0">
+        <div class="contact-header">
+          <div class="contact-title-wrap">
+            <h2 class="contact-title">
+              <span class="row-top">READY TO</span>
+              <span class="row-grow">COLLABORATE</span>
+              <span class="row-sub">& BUILD TOGETHER?</span>
+            </h2>
+            <div class="lets-talk-box">
+              <span class="lets-talk-tag">LET'S TALK</span>
+              <p class="lets-talk-desc">Open for Full Stack, Backend & Software Engineering Internship/Full-Time opportunities.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="contact-alert" class="form-alert"></div>
+
+        <form class="contact-form" id="portfolio-contact-form">
           <div class="form-grid">
             <!-- Row 1 -->
             <div class="form-group">
               <label for="name">YOUR NAME*</label>
-              <input type="text" id="name" placeholder="John Raddison" required />
+              <input type="text" id="name" placeholder="John Doe" required />
             </div>
             <div class="form-group">
-              <label for="number">YOUR NUMBER*</label>
-              <input type="tel" id="number" placeholder="+1 (514) 231 4567" required />
+              <label for="number">YOUR NUMBER / WHATSAPP</label>
+              <input type="tel" id="number" placeholder="+91 98765 43210" />
             </div>
 
             <!-- Row 2 -->
             <div class="form-group">
               <label for="email">YOUR EMAIL*</label>
-              <input type="email" id="email" placeholder="johnraddison@gmail.com" required />
+              <input type="email" id="email" placeholder="john@example.com" required />
             </div>
             <div class="form-group">
-              <label for="business-age">HOW LONG HAVE YOU BEEN IN BUSINESS?</label>
+              <label for="inquiry-type">INQUIRY TYPE</label>
               <div class="select-wrapper">
-                <select id="business-age">
-                  <option>0-1 year</option>
-                  <option>1-3 years</option>
-                  <option>3-5 years</option>
-                  <option>5+ years</option>
-                </select>
-                <span class="select-arrow">❯</span>
-              </div>
-            </div>
-
-            <!-- Row 3 -->
-            <div class="form-group">
-              <label for="scaling-challenge">WHAT'S YOUR BIGGEST CHALLENGE IN SCALING RIGHT NOW?</label>
-              <div class="select-wrapper">
-                <select id="scaling-challenge">
-                  <option>What to scale up</option>
-                  <option>Lead generation & sales</option>
-                  <option>Brand positioning</option>
-                  <option>Operational bottlenecks</option>
-                </select>
-                <span class="select-arrow">❯</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="marketing-spend">HOW MUCH DO YOU SPEND ON MARKETING EACH MONTH?</label>
-              <div class="select-wrapper">
-                <select id="marketing-spend">
-                  <option>What to scale up</option>
-                  <option>$5,000 - $10,000</option>
-                  <option>$10,000 - $25,000</option>
-                  <option>$25,000 - $50,000</option>
-                  <option>$50,000+</option>
-                </select>
-                <span class="select-arrow">❯</span>
-              </div>
-            </div>
-
-            <!-- Row 4 -->
-            <div class="form-group">
-              <label for="annual-revenue">WHAT'S YOUR ESTIMATED ANNUAL REVENUE?</label>
-              <div class="select-wrapper">
-                <select id="annual-revenue">
-                  <option>0-$250k</option>
-                  <option>$250k-$1M</option>
-                  <option>$1M-$5M</option>
-                  <option>$5M+</option>
-                </select>
-                <span class="select-arrow">❯</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="paid-ads">ARE YOU RUNNING PAID ADS RIGHT NOW?</label>
-              <div class="select-wrapper">
-                <select id="paid-ads">
-                  <option>No</option>
-                  <option>Yes — Meta / Google</option>
-                  <option>Yes — TikTok / LinkedIn</option>
-                  <option>Planning to start soon</option>
+                <select id="inquiry-type">
+                  <option>Software Engineering Opportunity</option>
+                  <option>Full Stack Developer Internship</option>
+                  <option>Project Collaboration</option>
+                  <option>General Inquiry</option>
                 </select>
                 <span class="select-arrow">❯</span>
               </div>
             </div>
           </div>
 
-          <div class="form-submit-row">
-            <button type="submit" class="btn-orange btn-submit">
-              Submit Inquiry
+          <!-- Row 3: Message -->
+          <div class="form-group" style="margin-top: 32px;">
+            <label for="message">YOUR MESSAGE*</label>
+            <textarea id="message" class="form-textarea" placeholder="Hi Sumit, I would like to discuss..." required></textarea>
+          </div>
+
+          <div class="form-submit-row" style="margin-top: 32px;">
+            <button type="submit" id="submit-btn" class="btn-orange btn-submit">
+              Send Message
               <span class="btn-icon">➔</span>
             </button>
           </div>
@@ -1591,131 +2693,26 @@
 
     <!-- Let's Connect Section -->
     <section class="connect-section section-container" id="connect">
-      <div class="connect-card">
-        <span class="connect-eyebrow">HAVE A PROJECT IN MIND?</span>
+      <div class="connect-card reveal-item reveal-center" data-delay="0">
+        <span class="connect-eyebrow">LOOKING FOR A DEVELOPER?</span>
         <h2 class="connect-title">LET'S CONNECT &<br>BUILD SOMETHING<br><span class="serif-italic">extraordinary</span></h2>
-        <p class="connect-desc">Whether you need brand identity, product design, or creative direction — let's bring your vision to life.</p>
+        <p class="connect-desc">Whether you have an internship opportunity, a project idea, or just want to connect — feel free to reach out!</p>
         
         <div class="connect-actions">
-          <a href="mailto:hello@folioblox.com" class="btn-orange btn-lg">
-            Start a Project
+          <a href="https://mail.google.com/mail/?view=cm&to=deeprajpaul500@gmail.com" target="_blank" rel="noopener noreferrer" class="btn-orange btn-lg">
+            Email Me
             <span class="btn-icon">➔</span>
           </a>
-          <a href="#contact" class="btn-pill-dark btn-lg">
-            Book a Discovery Call
+          <a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" target="_blank" rel="noopener noreferrer" class="btn-pill-dark btn-lg">
+            LinkedIn Profile
           </a>
         </div>
 
         <div class="social-links-row">
-          <a href="#" class="social-link">Instagram</a>
-          <a href="#" class="social-link">Twitter / 𝕏</a>
-          <a href="#" class="social-link">LinkedIn</a>
-          <a href="#" class="social-link">Dribbble</a>
-          <a href="#" class="social-link">Behance</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- About Growaz + Services That Are Tailored Section -->
-    <section class="growaz-section section-container" id="services">
-
-      <!-- About Growaz Statement -->
-      <div class="growaz-about-block">
-        <span class="growaz-eyebrow">About Growaz</span>
-        <p class="growaz-statement">
-          Growaz is not just another design agency — it's a creative and innovative force helping businesses amplify their growth through exceptional design solutions. At Growaz, the mission is clear: to craft designs that are stunning but also strategically aligned with the goals and values of our team and clients.
-        </p>
-        <div class="growaz-about-btn-wrap">
-          <a href="#about" class="btn-pill-dark">
-            <span class="pill-orange-icon">»</span>
-            About us
-          </a>
-        </div>
-      </div>
-
-      <!-- Services that are tailored -->
-      <div class="growaz-services-block">
-        <div class="growaz-services-header">
-          <h2 class="growaz-services-headline">
-            Services that<br><span class="serif-italic">are tailored</span>
-          </h2>
-          <a href="#projects" class="btn-pill-dark">
-            <span class="pill-orange-icon">»</span>
-            View Projects
-          </a>
-        </div>
-
-        <!-- 4-Column Service Cards -->
-        <div class="growaz-tailored-grid">
-
-          <!-- Card 1 -->
-          <div class="growaz-card">
-            <div>
-              <span class="card-num">01</span>
-              <h3 class="card-title">Brand<br>Strategy</h3>
-              <div class="card-tags">
-                <span class="tag">Development</span>
-                <span class="tag">Brand Guidelines</span>
-                <span class="tag">Analysis</span>
-                <span class="tag">Rebranding Services</span>
-              </div>
-            </div>
-            <div class="card-footer">
-              <button class="btn-plus">+</button>
-            </div>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="growaz-card">
-            <div>
-              <span class="card-num">02</span>
-              <h3 class="card-title">Web<br>Design</h3>
-              <div class="card-tags">
-                <span class="tag">Development</span>
-                <span class="tag">Custom Website</span>
-                <span class="tag">Web Solutions</span>
-                <span class="tag">Responsive Web</span>
-              </div>
-            </div>
-            <div class="card-footer">
-              <button class="btn-plus">+</button>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="growaz-card">
-            <div>
-              <span class="card-num">03</span>
-              <h3 class="card-title">Digital<br>Marketing</h3>
-              <div class="card-tags">
-                <span class="tag">Email Marketing</span>
-                <span class="tag">Pay-Per-Click</span>
-                <span class="tag">SEO</span>
-                <span class="tag">Social Media marketing</span>
-              </div>
-            </div>
-            <div class="card-footer">
-              <button class="btn-plus">+</button>
-            </div>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="growaz-card">
-            <div>
-              <span class="card-num">04</span>
-              <h3 class="card-title">UI/UX<br>Design</h3>
-              <div class="card-tags">
-                <span class="tag">User Interface (UI)</span>
-                <span class="tag">Wireframing</span>
-                <span class="tag">Analysis</span>
-                <span class="tag">Mobile App UI Design</span>
-              </div>
-            </div>
-            <div class="card-footer">
-              <button class="btn-plus">+</button>
-            </div>
-          </div>
-
+          <a href="https://github.com/Sumitpaul500" target="_blank" rel="noopener noreferrer" class="social-link">GitHub</a>
+          <a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" target="_blank" rel="noopener noreferrer" class="social-link">LinkedIn</a>
+          <a href="https://mail.google.com/mail/?view=cm&to=deeprajpaul500@gmail.com" target="_blank" rel="noopener noreferrer" class="social-link">Email</a>
+          <a href="tel:+918822302674" class="social-link">Phone (+91 8822302674)</a>
         </div>
       </div>
     </section>
@@ -1731,10 +2728,10 @@
 
         <!-- Brand Column -->
         <div class="footer-brand-col">
-          <a href="#" class="footer-logo">Folioblox</a>
-          <p class="footer-tagline">Creative direction, brand identity, and digital experiences crafted to make your brand unforgettable. Based globally, built for impact.</p>
-          <a href="mailto:hello@folioblox.com" class="footer-cta-btn">
-            Start a Project
+          <a href="#" class="footer-logo">Sumit Paul</a>
+          <p class="footer-tagline">B.Tech CSE Student at NHCE, Bengaluru (Affiliated to VTU · CGPA 9.59) & Full Stack Developer. Building scalable web platforms and AI applications.</p>
+          <a href="#contact" class="footer-cta-btn">
+            Get in touch
             <span class="btn-icon">➔</span>
           </a>
         </div>
@@ -1746,28 +2743,31 @@
             <ul>
               <li><a href="#home">Home</a></li>
               <li><a href="#about">About</a></li>
+              <li><a href="#skills">Skills</a></li>
               <li><a href="#projects">Projects</a></li>
+              <li><a href="#achievements">Achievements</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
           </div>
           <div class="footer-nav-col">
-            <h4>Services</h4>
+            <h4>Tech Stack</h4>
             <ul>
-              <li><a href="#">Brand Strategy</a></li>
-              <li><a href="#">Web Design</a></li>
-              <li><a href="#">Digital Marketing</a></li>
-              <li><a href="#">UI/UX Design</a></li>
-              <li><a href="#">Creative Direction</a></li>
+              <li><a href="#skills">Java & Python</a></li>
+              <li><a href="#skills">React & SvelteKit</a></li>
+              <li><a href="#skills">Node.js & FastAPI</a></li>
+              <li><a href="#skills">MongoDB & Postgres</a></li>
+              <li><a href="#skills">Docker & Cloud</a></li>
             </ul>
           </div>
           <div class="footer-nav-col">
             <h4>Connect</h4>
             <ul>
-              <li><a href="#">Instagram</a></li>
-              <li><a href="#">Twitter / 𝕏</a></li>
-              <li><a href="#">LinkedIn</a></li>
-              <li><a href="#">Dribbble</a></li>
-              <li><a href="#">Behance</a></li>
+              <li><a href="https://github.com/Sumitpaul500" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+              <li><a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+              <li><a href="https://leetcode.com/u/cF7BfaSxl2/" target="_blank" rel="noopener noreferrer">LeetCode Profile</a></li>
+              <li><a href="Sumit_Paul_Resume.pdf" target="_blank" rel="noopener noreferrer">Resume 📄</a></li>
+              <li><a href="https://mail.google.com/mail/?view=cm&to=deeprajpaul500@gmail.com" target="_blank" rel="noopener noreferrer">Email</a></li>
+              <li><a href="tel:+918822302674">Phone</a></li>
             </ul>
           </div>
         </div>
@@ -1778,43 +2778,30 @@
 
       <!-- Footer Bottom Row: Copyright + Social Icons -->
       <div class="footer-bottom">
-        <p class="footer-copy">© 2026 Folioblox. All rights reserved. Crafted with passion.</p>
+        <p class="footer-copy">© 2026 Sumit Paul. All rights reserved.</p>
 
         <!-- Social Media Icon Buttons -->
         <div class="footer-socials">
 
-          <!-- Instagram -->
-          <a href="#" class="footer-social-btn" aria-label="Instagram" title="Instagram">
+          <!-- GitHub -->
+          <a href="https://github.com/Sumitpaul500" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="GitHub" title="GitHub">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-            </svg>
-          </a>
-
-          <!-- Twitter / X -->
-          <a href="#" class="footer-social-btn" aria-label="Twitter / X" title="Twitter / X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
             </svg>
           </a>
 
           <!-- LinkedIn -->
-          <a href="#" class="footer-social-btn" aria-label="LinkedIn" title="LinkedIn">
+          <a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="LinkedIn" title="LinkedIn">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
             </svg>
           </a>
 
-          <!-- Dribbble -->
-          <a href="#" class="footer-social-btn" aria-label="Dribbble" title="Dribbble">
+          <!-- LeetCode -->
+          <a href="https://leetcode.com/u/cF7BfaSxl2/" target="_blank" rel="noopener noreferrer" class="footer-social-btn" aria-label="LeetCode" title="LeetCode Profile (cF7BfaSxl2)">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 0C5.374 0 0 5.373 0 12c0 6.628 5.374 12 12 12 6.627 0 12-5.372 12-12 0-6.627-5.373-12-12-12zm7.974 5.49a10.093 10.093 0 0 1 2.348 5.657c-.344-.066-3.786-.769-7.25-.332-.078-.192-.153-.39-.234-.583-.215-.527-.452-1.049-.694-1.558 3.801-1.548 5.537-3.778 5.83-4.184zM12 2.032a9.986 9.986 0 0 1 6.738 2.598c-.243.362-1.802 2.457-5.47 3.826C11.485 6.086 9.74 4.193 9.474 3.891A10.048 10.048 0 0 1 12 2.032zm-4.99 1.471c.258.297 1.978 2.188 3.768 4.476C6.148 9.163 2.99 9.148 2.65 9.14a10.037 10.037 0 0 1 4.36-5.637zm-4.91 8.49c0-.08.002-.16.004-.24.33.007 4.067.095 8.608-1.193.241.47.469.947.681 1.43-.109.032-.22.064-.33.1-4.693 1.514-7.19 5.65-7.407 6.027a9.956 9.956 0 0 1-1.556-6.124zm7.9 9.008a9.956 9.956 0 0 1-5.934-1.953c.174-.348 2.144-4.15 7.31-5.944.022-.007.044-.015.066-.022A48.74 48.74 0 0 1 13.7 18.88a9.97 9.97 0 0 1-3.7.12zm5.463-1.17a50.12 50.12 0 0 0-1.22-5.585c3.214-.514 6.033.326 6.382.433a10.017 10.017 0 0 1-5.162 5.152z"/>
-            </svg>
-          </a>
-
-          <!-- Behance -->
-          <a href="#" class="footer-social-btn" aria-label="Behance" title="Behance">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.051-2.053-5.051-5.013 0-2.972 1.93-5.02 5.029-5.02 3.093 0 4.925 1.952 5.029 5.093H16.22c.08 1.45 1.02 2.063 2.084 2.063.526 0 1.08-.128 1.37-.5h3.052zM16.13 13.25H20.5c-.014-1.22-.861-1.934-2.124-1.934-1.265 0-2.132.717-2.245 1.934zM3.499 18.063h3.499c.814-.043 1.467-.586 1.467-1.542 0-.903-.508-1.505-1.467-1.515H3.5v3.057zm0-4.617h3.197c.807 0 1.307-.468 1.307-1.384 0-.88-.5-1.327-1.307-1.327H3.5v2.711zM0 21V6h6.803c2.28 0 4.007 1.222 4.007 3.451 0 1.243-.688 2.318-1.717 2.903 1.376.492 2.173 1.73 2.173 3.214C11.266 18.51 9.413 21 6.802 21H0z"/>
+              <path fill="#ffa116" d="M16.102 17.93l-2.697 2.607c-.466.467-1.111.662-1.823.662s-1.357-.195-1.824-.662l-4.332-4.363c-.467-.467-.702-1.15-.702-1.863s.235-1.357.702-1.824l4.319-4.38c.467-.467 1.125-.645 1.837-.645s1.357.195 1.823.662l2.697 2.606c.514.515 1.365.515 1.879 0 .515-.515.515-1.365 0-1.879l-2.697-2.607c-1.001-1.002-2.335-1.503-3.702-1.503s-2.701.501-3.702 1.503l-4.318 4.38c-1.002 1.001-1.503 2.335-1.503 3.702s.501 2.701 1.503 3.702l4.332 4.363c1.001 1.001 2.335 1.503 3.702 1.503s2.701-.502 3.702-1.503l2.697-2.607c.515-.515.515-1.365 0-1.879s-1.365-.515-1.879 0z"/>
+              <path fill="#ffffff" d="M10.8 11.2h10.4c.7 0 1.2.5 1.2 1.2s-.5 1.2-1.2 1.2H10.8c-.7 0-1.2-.5-1.2-1.2s.5-1.2 1.2-1.2z"/>
             </svg>
           </a>
 
@@ -1826,8 +2813,8 @@
 
   <script>
     (function () {
-      const TOTAL_FRAMES = 180;
-      const FRAME_PATH_PREFIX = './ezgif-72843d57ac70b076-png-split/ezgif-frame-';
+      const TOTAL_FRAMES = 240;
+      const FRAME_PATH_PREFIX = './ezgif-1733b1c7cf1a5d50-png-split/ezgif-frame-';
       const FRAME_PATH_SUFFIX = '.png';
 
       const canvas = document.getElementById('animation-canvas');
@@ -1904,68 +2891,1208 @@
         targetFrame = progress * (TOTAL_FRAMES - 1);
       }
 
+      function handleScroll() {
+        updateScrollProgress();
+        requestTick();
+      }
+
+      window.addEventListener('resize', resizeCanvas);
+      window.addEventListener('orientationchange', resizeCanvas);
+      window.addEventListener('scroll', handleScroll, { passive: true });
+
+      let tickRunning = false;
       function tick() {
         const diff = targetFrame - currentFrame;
         
         if (Math.abs(diff) > 0.001) {
           currentFrame += diff * 0.12;
           renderCurrentFrame();
-        } else if (currentFrame !== targetFrame) {
+          requestAnimationFrame(tick);
+        } else {
           currentFrame = targetFrame;
           renderCurrentFrame();
-        }
-
-        requestAnimationFrame(tick);
-      }
-
-      function preloadImages() {
-        for (let i = 1; i <= TOTAL_FRAMES; i++) {
-          const img = new Image();
-          const src = getFrameFilename(i);
-
-          img.onload = () => {
-            loadedCount++;
-            const percent = Math.floor((loadedCount / TOTAL_FRAMES) * 100);
-            loaderText.textContent = `Loading ${percent}%`;
-            loaderFill.style.width = `${percent}%`;
-
-            if (i === 1) {
-              drawFrame(img);
-            }
-
-            if (loadedCount === TOTAL_FRAMES) {
-              onAllLoaded();
-            }
-          };
-
-          img.onerror = () => {
-            loadedCount++;
-            if (loadedCount === TOTAL_FRAMES) {
-              onAllLoaded();
-            }
-          };
-
-          img.src = src;
-          images.push(img);
+          tickRunning = false;
         }
       }
 
+      function requestTick() {
+        if (!tickRunning) {
+          tickRunning = true;
+          requestAnimationFrame(tick);
+        }
+      }
+
+      let hasLoadedFinished = false;
       function onAllLoaded() {
+        if (hasLoadedFinished) return;
+        hasLoadedFinished = true;
+
+        if (loaderText) loaderText.textContent = "Loading 100%";
+        if (loaderFill) loaderFill.style.width = "100%";
+
         setTimeout(() => {
-          loader.classList.add('hidden');
+          if (loader) loader.classList.add('hidden');
         }, 200);
 
         updateScrollProgress();
-        tick();
+        requestTick();
+      }
+
+      function preloadImages() {
+        // Instant render for Frame 1 so page displays under 150ms
+        const firstImg = new Image();
+        firstImg.onload = () => {
+          images[0] = firstImg;
+          drawFrame(firstImg);
+          onAllLoaded();
+          preloadRemainingFrames();
+        };
+        firstImg.onerror = () => {
+          onAllLoaded();
+          preloadRemainingFrames();
+        };
+        firstImg.src = getFrameFilename(1);
+
+        setTimeout(() => {
+          if (!hasLoadedFinished) onAllLoaded();
+        }, 150);
+      }
+
+      function preloadRemainingFrames() {
+        let index = 2;
+        function loadNextBatch() {
+          const batchEnd = Math.min(index + 6, TOTAL_FRAMES + 1);
+          for (; index < batchEnd; index++) {
+            const img = new Image();
+            const frameIdx = index - 1;
+            img.onload = () => {
+              images[frameIdx] = img;
+              loadedCount++;
+            };
+            img.onerror = () => { loadedCount++; };
+            img.src = getFrameFilename(index);
+          }
+          if (index <= TOTAL_FRAMES) {
+            if ('requestIdleCallback' in window) {
+              requestIdleCallback(loadNextBatch, { timeout: 100 });
+            } else {
+              setTimeout(loadNextBatch, 20);
+            }
+          }
+        }
+        loadNextBatch();
       }
 
       window.addEventListener('resize', resizeCanvas);
       window.addEventListener('orientationchange', resizeCanvas);
-      window.addEventListener('scroll', updateScrollProgress, { passive: true });
+      window.addEventListener('scroll', handleScroll, { passive: true });
 
       resizeCanvas();
       preloadImages();
+
+      // ─── Contact Form — Real Backend Submission ──────────────────────────────
+      const contactForm = document.getElementById('portfolio-contact-form');
+      const contactAlert = document.getElementById('contact-alert');
+      const submitBtn = document.getElementById('submit-btn');
+      const BACKEND_URL = 'http://localhost:3001/api/contact';
+
+      function showAlert(type, msg) {
+        contactAlert.className = 'form-alert ' + type;
+        contactAlert.innerHTML = msg;
+        contactAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      function clearAlert(delay) {
+        setTimeout(() => {
+          contactAlert.className = 'form-alert';
+          contactAlert.innerHTML = '';
+        }, delay);
+      }
+
+      if (contactForm) {
+        contactForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          const nameVal    = (document.getElementById('name')?.value || '').trim();
+          const emailVal   = (document.getElementById('email')?.value || '').trim();
+          const numberVal  = (document.getElementById('number')?.value || '').trim();
+          const inquiryVal = (document.getElementById('inquiryType')?.value || '');
+          const messageVal = (document.getElementById('message')?.value || '').trim();
+
+          // Client-side validation
+          if (!nameVal || !emailVal || !messageVal) {
+            showAlert('error', '⚠️ Please fill out all required fields (Name, Email, and Message).');
+            return;
+          }
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(emailVal)) {
+            showAlert('error', '⚠️ Please enter a valid email address.');
+            return;
+          }
+
+          // Loading state
+          const origBtnText = submitBtn.innerHTML;
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '⏳ Sending...';
+          showAlert('info', '📨 Sending your message…');
+
+          try {
+            const response = await fetch(BACKEND_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: nameVal,
+                email: emailVal,
+                number: numberVal,
+                inquiryType: inquiryVal,
+                message: messageVal
+              })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+              showAlert('success',
+                `✅ <strong>Message sent!</strong> Thank you, ${nameVal}! I'll reply to <em>${emailVal}</em> within 24 hours.`);
+              contactForm.reset();
+              clearAlert(10000);
+            } else {
+              showAlert('error',
+                `❌ ${data.error || 'Something went wrong. Please try emailing directly at <a href="mailto:deeprajpaul500@gmail.com" style="color:inherit">deeprajpaul500@gmail.com</a>'}`);
+            }
+          } catch (networkErr) {
+            // Server not running — friendly fallback
+            showAlert('error',
+              `⚠️ Could not reach the server. Please email me directly at <a href="mailto:deeprajpaul500@gmail.com" style="color:inherit;text-decoration:underline">deeprajpaul500@gmail.com</a> or connect on <a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">LinkedIn</a>.`);
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = origBtnText;
+          }
+        });
+      }
+    })();
+
+    // ─── Proximity-Based Lighting & Button Pop-Out Interaction Engine ─────────
+    (function () {
+      const cardSelectors = [
+        '.services-grid',
+        '.stats-card',
+        '.growaz-card',
+        '.tailored-card',
+        '.project-card',
+        '.showcase-card',
+        '.connect-card',
+        '.contact-card-wrap'
+      ];
+
+      const btnSelectors = [
+        '.btn-orange',
+        '.nav-links a',
+        '.logo',
+        '.social-pill',
+        '.social-link',
+        '.footer-social-btn',
+        '.btn-link-github',
+        '.btn-link-demo',
+        '.btn-pill-dark',
+        '.footer-cta-btn',
+        '.btn-submit',
+        '.btn-plus',
+        '.tech-ball-card'
+      ];
+
+      const cards = Array.from(document.querySelectorAll(cardSelectors.join(',')));
+      const buttons = Array.from(document.querySelectorAll(btnSelectors.join(',')));
+
+      cards.forEach(card => card.classList.add('proximity-card'));
+      buttons.forEach(btn => btn.classList.add('proximity-btn'));
+
+      const cardStates = cards.map(card => ({
+        element: card,
+        currentOpacity: 0,
+        targetOpacity: 0,
+        angle: 0,
+        rect: null
+      }));
+
+      const buttonStates = buttons.map(btn => ({
+        element: btn,
+        currentScale: 1,
+        targetScale: 1,
+        currentY: 0,
+        targetY: 0,
+        currentGlow: 0,
+        targetGlow: 0,
+        rect: null
+      }));
+
+      let isUpdatingRects = false;
+      function updateRects() {
+        cardStates.forEach(s => s.rect = s.element.getBoundingClientRect());
+        buttonStates.forEach(s => s.rect = s.element.getBoundingClientRect());
+        isUpdatingRects = false;
+      }
+
+      function scheduleUpdateRects() {
+        if (!isUpdatingRects) {
+          isUpdatingRects = true;
+          requestAnimationFrame(updateRects);
+        }
+      }
+
+      updateRects();
+      window.addEventListener('resize', scheduleUpdateRects, { passive: true });
+      window.addEventListener('scroll', scheduleUpdateRects, { passive: true });
+
+      let mouseX = -1000;
+      let mouseY = -1000;
+
+      const CARD_RADIUS = 360;
+      const BTN_RADIUS = 160;
+
+      let isProximityAnimating = false;
+      function wakeProximityAnimation() {
+        if (!isProximityAnimating) {
+          isProximityAnimating = true;
+          requestAnimationFrame(animate);
+        }
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        wakeProximityAnimation();
+      }, { passive: true });
+
+      function animate() {
+        let hasActiveUpdates = false;
+
+        // 1. Process Cards - Anticlockwise Border Light
+        cardStates.forEach(s => {
+          if (!s.rect) return;
+          const rect = s.rect;
+
+          const dx = Math.max(rect.left - mouseX, 0, mouseX - rect.right);
+          const dy = Math.max(rect.top - mouseY, 0, mouseY - rect.bottom);
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < CARD_RADIUS) {
+            s.targetOpacity = Math.min(1, Math.pow(1 - dist / CARD_RADIUS, 1.2));
+          } else {
+            s.targetOpacity = 0;
+          }
+
+          s.currentOpacity += (s.targetOpacity - s.currentOpacity) * 0.12;
+
+          if (s.currentOpacity > 0.005 || s.targetOpacity > 0) {
+            hasActiveUpdates = true;
+            s.angle = (s.angle - 2.2) % 360;
+
+            const relX = ((mouseX - rect.left) / rect.width) * 100;
+            const relY = ((mouseY - rect.top) / rect.height) * 100;
+
+            s.element.style.setProperty('--glow-opacity', s.currentOpacity.toFixed(3));
+            s.element.style.setProperty('--glow-angle', `${s.angle.toFixed(1)}deg`);
+            s.element.style.setProperty('--glow-x', `${relX.toFixed(1)}%`);
+            s.element.style.setProperty('--glow-y', `${relY.toFixed(1)}%`);
+            s.element.style.setProperty('--spotlight-x', `${relX.toFixed(1)}%`);
+            s.element.style.setProperty('--spotlight-y', `${relY.toFixed(1)}%`);
+            s.element.style.boxShadow = `0 12px 36px rgba(0, 0, 0, 0.45), 0 0 ${Math.round(s.currentOpacity * 28)}px rgba(255, 85, 0, ${(s.currentOpacity * 0.35).toFixed(2)})`;
+          } else if (s.element.style.getPropertyValue('--glow-opacity') !== '0') {
+            s.element.style.setProperty('--glow-opacity', '0');
+            s.element.style.boxShadow = 'none';
+          }
+        });
+
+        // 2. Process Buttons - Proximity Scaling & Pop-Out
+        buttonStates.forEach(s => {
+          if (!s.rect) return;
+          const rect = s.rect;
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+
+          const dist = Math.hypot(mouseX - centerX, mouseY - centerY);
+
+          if (dist < BTN_RADIUS) {
+            const proximity = 1 - (dist / BTN_RADIUS);
+            const smoothFactor = Math.pow(proximity, 1.4);
+            s.targetScale = 1 + (smoothFactor * 0.08);
+            s.targetY = -smoothFactor * 3.5;
+            s.targetGlow = smoothFactor;
+          } else {
+            s.targetScale = 1;
+            s.targetY = 0;
+            s.targetGlow = 0;
+          }
+
+          s.currentScale += (s.targetScale - s.currentScale) * 0.14;
+          s.currentY += (s.targetY - s.currentY) * 0.14;
+          s.currentGlow += (s.targetGlow - s.currentGlow) * 0.14;
+
+          if (s.currentGlow > 0.005 || s.targetGlow > 0) {
+            hasActiveUpdates = true;
+            s.element.style.transform = `translateY(${s.currentY.toFixed(2)}px) scale(${s.currentScale.toFixed(3)})`;
+            s.element.style.filter = `brightness(${(1 + s.currentGlow * 0.16).toFixed(2)})`;
+            s.element.style.boxShadow = `0 ${Math.round(s.currentGlow * 8)}px ${Math.round(s.currentGlow * 20)}px rgba(255, 85, 0, ${(s.currentGlow * 0.4).toFixed(2)})`;
+          } else if (s.element.style.transform !== '') {
+            s.element.style.transform = '';
+            s.element.style.filter = '';
+            s.element.style.boxShadow = '';
+          }
+        });
+
+        if (hasActiveUpdates) {
+          requestAnimationFrame(animate);
+        } else {
+          isProximityAnimating = false;
+        }
+      }
+
+      wakeProximityAnimation();
+    })();
+
+    // ─── Mobile Navigation Drawer Toggle Handler ─────────────────────────────
+    (function () {
+      const mobileToggle = document.getElementById('mobile-menu-toggle');
+      const mobileOverlay = document.getElementById('mobile-nav-overlay');
+      const mobileNavLinks = document.querySelectorAll('.mobile-nav-link, .mobile-nav-cta');
+
+      if (mobileToggle && mobileOverlay) {
+        mobileToggle.addEventListener('click', function () {
+          mobileToggle.classList.toggle('active');
+          mobileOverlay.classList.toggle('active');
+          document.body.style.overflow = mobileOverlay.classList.contains('active') ? 'hidden' : '';
+        });
+
+        mobileNavLinks.forEach(link => {
+          link.addEventListener('click', function () {
+            mobileToggle.classList.remove('active');
+            mobileOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+          });
+        });
+      }
+    })();
+
+    // ─── Hero Text Typing & Reveal Sequence ─────────────────────────────
+    (function () {
+      const eyebrow  = document.getElementById('type-eyebrow');
+      const titleEl  = document.getElementById('type-title');
+      const subtitle = document.getElementById('type-subtitle');
+      const desc     = document.getElementById('type-desc');
+
+      if (!eyebrow || !titleEl || !subtitle || !desc) return;
+
+      const EYEBROW_TEXT = 'Computer Science Student &';
+      const TITLE_LINE1  = 'Software';
+      const TITLE_LINE2  = 'Developer';
+
+      // ── initial hidden state ──
+      eyebrow.textContent = '';
+      titleEl.innerHTML   = '';
+      subtitle.style.opacity = '0';
+      subtitle.style.transform = 'translateY(18px)';
+      subtitle.style.transition = 'opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1)';
+      desc.style.opacity = '0';
+      desc.style.transform = 'translateY(18px)';
+      desc.style.transition = 'opacity 0.8s cubic-bezier(0.16,1,0.3,1) 0.18s, transform 0.8s cubic-bezier(0.16,1,0.3,1) 0.18s';
+
+      const wait = ms => new Promise(r => setTimeout(r, ms));
+
+      async function startTypingSequence() {
+        await wait(300);
+
+        // 1. Type eyebrow line with caret
+        const ebCaret = document.createElement('span');
+        ebCaret.className = 'typing-caret';
+        eyebrow.appendChild(ebCaret);
+        for (let i = 0; i < EYEBROW_TEXT.length; i++) {
+          eyebrow.insertBefore(document.createTextNode(EYEBROW_TEXT[i]), ebCaret);
+          await wait(32 + Math.random() * 14);
+        }
+        await wait(220);
+        ebCaret.remove();
+
+        // 2. Type Title (Software <br> Developer)
+        const tCaret = document.createElement('span');
+        tCaret.className = 'typing-caret';
+        titleEl.appendChild(tCaret);
+
+        for (let i = 0; i < TITLE_LINE1.length; i++) {
+          titleEl.insertBefore(document.createTextNode(TITLE_LINE1[i]), tCaret);
+          await wait(45 + Math.random() * 20);
+        }
+        titleEl.insertBefore(document.createElement('br'), tCaret);
+        await wait(160);
+
+        for (let i = 0; i < TITLE_LINE2.length; i++) {
+          titleEl.insertBefore(document.createTextNode(TITLE_LINE2[i]), tCaret);
+          await wait(45 + Math.random() * 20);
+        }
+        await wait(320);
+        tCaret.remove();
+
+        // 3. Reveal right-side subtitle & desc
+        subtitle.style.opacity = '1';
+        subtitle.style.transform = 'translateY(0)';
+        desc.style.opacity = '1';
+        desc.style.transform = 'translateY(0)';
+      }
+
+      const loader = document.getElementById('loader');
+      if (loader && !loader.classList.contains('hidden')) {
+        const chk = setInterval(() => {
+          if (loader.classList.contains('hidden')) { clearInterval(chk); startTypingSequence(); }
+        }, 100);
+      } else {
+        startTypingSequence();
+      }
+    })();
+
+    // ─── 3D Physics Tech Balls Engine ────────────────────────────────────────
+    (function () {
+      const canvas = document.getElementById('tech-balls-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      // ── Tech list (from actual skills in portfolio) ──
+      const TECHS = [
+        { label: 'Java',       color: '#e76f00', glow: 'rgba(231,111,0,0.55)' },
+        { label: 'Python',     color: '#3776ab', glow: 'rgba(55,118,171,0.55)' },
+        { label: 'JavaScript', color: '#f7df1e', glow: 'rgba(247,223,30,0.5)'  },
+        { label: 'TypeScript', color: '#3178c6', glow: 'rgba(49,120,198,0.55)' },
+        { label: 'React',      color: '#61dafb', glow: 'rgba(97,218,251,0.5)'  },
+        { label: 'SvelteKit',  color: '#ff3e00', glow: 'rgba(255,62,0,0.55)'   },
+        { label: 'Node.js',    color: '#68a063', glow: 'rgba(104,160,99,0.55)' },
+        { label: 'Express',    color: '#ffffff', glow: 'rgba(255,255,255,0.35)' },
+        { label: 'FastAPI',    color: '#05998b', glow: 'rgba(5,153,139,0.55)'  },
+        { label: 'MongoDB',    color: '#4db33d', glow: 'rgba(77,179,61,0.55)'  },
+        { label: 'PostgreSQL', color: '#336791', glow: 'rgba(51,103,145,0.55)' },
+        { label: 'MySQL',      color: '#4479a1', glow: 'rgba(68,121,161,0.55)' },
+        { label: 'Docker',     color: '#2496ed', glow: 'rgba(36,150,237,0.55)' },
+        { label: 'Git',        color: '#f1502f', glow: 'rgba(241,80,47,0.55)'  },
+        { label: 'Linux',      color: '#fcc624', glow: 'rgba(252,198,36,0.5)'  },
+        { label: 'Figma',      color: '#a259ff', glow: 'rgba(162,89,255,0.55)' },
+        { label: 'HTML5',      color: '#e34f26', glow: 'rgba(227,79,38,0.55)'  },
+        { label: 'CSS3',       color: '#264de4', glow: 'rgba(38,77,228,0.55)'  },
+      ];
+
+      const BALL_R  = 36;   // base radius
+      const FONT_SZ = 9;    // label font size
+      let W, H;
+      let balls = [];
+      let hovered = -1;
+      let animFrame;
+      let settled = false;
+      let triggered = false;
+
+      // ── Resize canvas to CSS size with correct DPR handling ──
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr  = window.devicePixelRatio || 1;
+        W = rect.width;
+        H = rect.height;
+        canvas.width  = W * dpr;
+        canvas.height = H * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (triggered) positionSettled();
+      }
+
+      // ── Compute a nice grid layout centred in canvas ──
+      function computeGrid() {
+        const count = TECHS.length;
+        const cols = Math.min(count, Math.max(4, Math.floor(W / (BALL_R * 2.8))));
+        const rows = Math.ceil(count / cols);
+        const spacingX = Math.min(BALL_R * 2.8, (W - BALL_R * 2) / cols);
+        const spacingY = Math.min(BALL_R * 2.8, (H - BALL_R * 2) / rows);
+        const totalW   = (cols - 1) * spacingX;
+        const totalH   = (rows - 1) * spacingY;
+        const startX   = (W - totalW) / 2;
+        const startY   = (H - totalH) / 2;
+        return TECHS.map((_, i) => ({
+          tx: startX + (i % cols) * spacingX,
+          ty: startY + Math.floor(i / cols) * spacingY
+        }));
+      }
+
+      function positionSettled() {
+        const grid = computeGrid();
+        balls.forEach((b, i) => { b.tx = grid[i].tx; b.ty = grid[i].ty; });
+      }
+
+      // ── Create balls in random off-screen starting positions ──
+      function createBalls() {
+        balls = TECHS.map((t, i) => {
+          // random start from 4 sides
+          const side = i % 4;
+          let sx, sy;
+          if      (side === 0) { sx = -BALL_R - Math.random() * 200; sy = Math.random() * H; }
+          else if (side === 1) { sx = W + BALL_R + Math.random() * 200; sy = Math.random() * H; }
+          else if (side === 2) { sx = Math.random() * W; sy = -BALL_R - Math.random() * 180; }
+          else                 { sx = Math.random() * W; sy = H + BALL_R + Math.random() * 180; }
+
+          const grid = computeGrid();
+          return {
+            x: sx, y: sy,
+            vx: 0, vy: 0,
+            tx: grid[i].tx,
+            ty: grid[i].ty,
+            r: BALL_R * (0.88 + Math.random() * 0.24),
+            label: t.label,
+            color: t.color,
+            glow:  t.glow,
+            delay: i * 55,          // stagger entrance
+            bounced: false,
+            scale: 1,
+            active: false,
+            rotation: Math.random() * Math.PI * 2,
+            rotSpeed: (Math.random() - 0.5) * 0.04,
+          };
+        });
+      }
+
+      // ── Draw a single ball — glassmorphic style matching site aesthetic ──
+      function drawBall(b, idx) {
+        if (!b.active) return;
+        const isHov = idx === hovered;
+        const scale = b.scale * (isHov ? 1.18 : 1);
+        const r = b.r * scale;
+
+        ctx.save();
+
+        // ── Outer orange glow on hover (matches site's #ff5500 accent) ──
+        if (isHov) {
+          ctx.shadowColor = 'rgba(255, 85, 0, 0.65)';
+          ctx.shadowBlur  = 32;
+        } else {
+          // subtle colored glow always present
+          ctx.shadowColor = b.glow;
+          ctx.shadowBlur  = 10;
+        }
+
+        ctx.translate(b.x, b.y);
+        ctx.rotate(b.rotation);
+
+        // ── Glassmorphic dark base sphere ──
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI * 2);
+        const baseGrad = ctx.createRadialGradient(-r * 0.25, -r * 0.3, r * 0.05, 0, 0, r);
+        // Dark glassmorphic base with color tint
+        baseGrad.addColorStop(0, hexToRgba(b.color, isHov ? 0.55 : 0.42));
+        baseGrad.addColorStop(0.5, hexToRgba(b.color, isHov ? 0.32 : 0.22));
+        baseGrad.addColorStop(1, 'rgba(8, 8, 16, 0.75)');
+        ctx.fillStyle = baseGrad;
+        ctx.fill();
+
+        // ── Colored border ring (matches site card borders) ──
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI * 2);
+        ctx.strokeStyle = isHov
+          ? `rgba(255, 85, 0, 0.85)`
+          : hexToRgba(b.color, 0.55);
+        ctx.lineWidth = isHov ? 2.5 : 1.5;
+        ctx.stroke();
+
+        // ── Glass sheen highlight (top-left, like other cards) ──
+        const shine = ctx.createRadialGradient(-r * 0.3, -r * 0.38, r * 0.02, -r * 0.2, -r * 0.28, r * 0.52);
+        shine.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
+        shine.addColorStop(0.6, 'rgba(255, 255, 255, 0.06)');
+        shine.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        ctx.beginPath();
+        ctx.arc(-r * 0.1, -r * 0.18, r * 0.55, 0, Math.PI * 2);
+        ctx.fillStyle = shine;
+        ctx.fill();
+
+        // ── Inner color dot / core (adds depth) ──
+        ctx.beginPath();
+        ctx.arc(-r * 0.08, -r * 0.1, r * 0.28, 0, Math.PI * 2);
+        const coreGrad = ctx.createRadialGradient(-r * 0.08, -r * 0.1, 0, -r * 0.08, -r * 0.1, r * 0.28);
+        coreGrad.addColorStop(0, hexToRgba(b.color, isHov ? 0.95 : 0.7));
+        coreGrad.addColorStop(1, hexToRgba(b.color, 0));
+        ctx.fillStyle = coreGrad;
+        ctx.fill();
+
+        ctx.restore();
+        ctx.shadowBlur = 0;
+
+        // ── Label drawn upright (no rotation transform) ──
+        const fontSize = Math.max(9, Math.min(11 + (isHov ? 1.5 : 0), r * 0.38));
+        ctx.font = `700 ${fontSize}px 'Plus Jakarta Sans', sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        // Label color: white always (dark base means white is always readable)
+        ctx.fillStyle = isHov ? '#ffffff' : 'rgba(255,255,255,0.92)';
+        ctx.globalAlpha = isHov ? 1 : 0.9;
+
+        // Simple split for long labels
+        const lbl = b.label;
+        if (lbl.length > 7) {
+          // find a natural break
+          const mid = Math.ceil(lbl.length / 2);
+          const sp  = lbl.indexOf('.') > 0 ? lbl.indexOf('.') :
+                      lbl.lastIndexOf('S', mid) > 0 ? lbl.lastIndexOf('S', mid) : mid;
+          const top = lbl.slice(0, sp);
+          const bot = lbl.slice(sp);
+          ctx.fillText(top, b.x, b.y - fontSize * 0.58);
+          ctx.fillText(bot, b.x, b.y + fontSize * 0.68);
+        } else {
+          ctx.fillText(lbl, b.x, b.y);
+        }
+        ctx.globalAlpha = 1;
+      }
+
+      // ── colour helpers ──
+      function parseHex(h) {
+        const c = h.replace('#','');
+        return [parseInt(c.slice(0,2),16), parseInt(c.slice(2,4),16), parseInt(c.slice(4,6),16)];
+      }
+      function hexToRgba(hex, alpha) {
+        if (hex === '#ffffff') return `rgba(255,255,255,${alpha})`;
+        const [r,g,b] = parseHex(hex);
+        return `rgba(${r},${g},${b},${alpha})`;
+      }
+
+
+      // ── Physics update ──
+      const GRAVITY   = 0.0;   // no real gravity — spring toward target
+      const SPRING    = 0.072; // spring pull to target
+      const DAMPING   = 0.78;  // velocity damping
+      const BOUNCE_SC = 0.5;   // bounce scale pulse
+      const SETTLE_DIST = 2.5; // pixels — considered settled
+
+      let allSettled = false;
+      let startTime = 0;
+
+      function physicsUpdate(elapsed) {
+        let totalUnsettled = 0;
+
+        balls.forEach((b, i) => {
+          if (!b.active) {
+            if (elapsed > b.delay) b.active = true;
+            else return;
+          }
+
+          // Spring force toward target
+          const dx = b.tx - b.x;
+          const dy = b.ty - b.y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+
+          b.vx += dx * SPRING;
+          b.vy += dy * SPRING;
+          b.vx *= DAMPING;
+          b.vy *= DAMPING;
+
+          b.x += b.vx;
+          b.y += b.vy;
+
+          // bounce pulse when arriving
+          if (!b.bounced && dist < 8 && Math.abs(b.vx) < 3 && Math.abs(b.vy) < 3) {
+            b.bounced = true;
+            b.scale = 1 + BOUNCE_SC;
+          }
+
+          // scale spring back to 1
+          if (b.scale > 1) {
+            b.scale += (1 - b.scale) * 0.15;
+            if (b.scale < 1.005) b.scale = 1;
+          }
+
+          b.rotation += b.rotSpeed * (dist > 30 ? 1 : 0.15);
+
+          if (dist > SETTLE_DIST || Math.abs(b.vx) > 0.4 || Math.abs(b.vy) > 0.4) {
+            totalUnsettled++;
+          }
+        });
+
+        allSettled = (totalUnsettled === 0);
+      }
+
+      let isTechBallsRendering = false;
+      function wakeTechBalls() {
+        if (!isTechBallsRendering) {
+          isTechBallsRendering = true;
+          animFrame = requestAnimationFrame(render);
+        }
+      }
+
+      function render(ts) {
+        if (!lastTime) lastTime = ts;
+        const elapsed = ts - startTime;
+        ctx.clearRect(0, 0, W, H);
+        physicsUpdate(elapsed);
+        balls.forEach((b, i) => drawBall(b, i));
+
+        if (!allSettled || hovered >= 0) {
+          animFrame = requestAnimationFrame(render);
+        } else {
+          isTechBallsRendering = false;
+        }
+      }
+
+      canvas.addEventListener('mousemove', e => {
+        const {x, y} = getRelPos(e);
+        const prevHovered = hovered;
+        hovered = -1;
+        balls.forEach((b, i) => {
+          if (!b.active) return;
+          const dx = b.x - x, dy = b.y - y;
+          if (Math.sqrt(dx*dx+dy*dy) < b.r * 1.2) hovered = i;
+        });
+        canvas.style.cursor = hovered >= 0 ? 'pointer' : 'default';
+        if (hovered !== prevHovered || hovered >= 0) {
+          wakeTechBalls();
+        }
+      });
+      canvas.addEventListener('mouseleave', () => { hovered = -1; });
+
+      // ── IntersectionObserver: trigger when section enters viewport ──
+      function triggerAnimation() {
+        if (triggered) return;
+        triggered = true;
+        createBalls();
+        startTime = performance.now();
+        lastTime = null;
+        animFrame = requestAnimationFrame(render);
+      }
+
+      const observer = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          triggerAnimation();
+          observer.disconnect();
+        }
+      }, { threshold: 0.15 });
+
+      observer.observe(canvas);
+
+      // resize handling
+      const ro = new ResizeObserver(resize);
+      ro.observe(canvas);
+      resize();
+    })();
+
+    // ─── Scroll-Triggered Cinematic Intersection Observer Engine ─────────────
+    (function () {
+      const revealItems = document.querySelectorAll('.reveal-item');
+      if (!revealItems.length) return;
+
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px 0px -60px 0px',
+        threshold: 0.1
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const item = entry.target;
+            const delay = parseInt(item.getAttribute('data-delay') || '0', 10);
+            
+            setTimeout(() => {
+              item.classList.add('revealed');
+            }, delay);
+
+            observer.unobserve(item);
+          }
+        });
+      }, observerOptions);
+
+      revealItems.forEach(item => observer.observe(item));
     })();
   </script>
+
+  <!-- ─── Admin Verification PIN Modal ────────────────────────────────────── -->
+  <div id="admin-modal" class="admin-modal-overlay">
+    <div class="admin-modal-card">
+      <h3>🔒 Owner Verification</h3>
+      <p>Enter your Admin Passcode to enable adding or deleting skills.</p>
+      <input type="password" id="admin-pin-input" class="admin-pin-input" placeholder="••••" maxlength="10" autocomplete="off" />
+      <div id="admin-pin-error" class="admin-pin-error">Incorrect Passcode! Default PIN is <strong>1234</strong></div>
+      <div class="admin-modal-actions">
+        <button type="button" id="admin-btn-cancel" class="admin-btn-cancel">Cancel</button>
+        <button type="button" id="admin-btn-confirm" class="admin-btn-confirm">Unlock Admin</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Interactive Resume Viewer Modal ────────────────────────────────────── -->
+  <div id="resume-modal" class="admin-modal-overlay">
+    <div class="admin-modal-card" style="max-width: 840px; width: 92%; height: 86vh; display: flex; flex-direction: column; text-align: left; padding: 22px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 12px;">
+        <h3 style="margin: 0; display: flex; align-items: center; gap: 8px; font-size: 18px; color: #ffffff;">📄 Sumit Paul — Resume Preview</h3>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <a href="http://localhost:3001/api/download-resume" download="Sumit_Paul_Resume.pdf" target="_blank" rel="noopener noreferrer" class="btn-orange" style="padding: 7px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 999px;">📥 Download Resume (PDF)</a>
+          <button type="button" id="close-resume-modal" class="admin-btn-cancel" style="padding: 6px 14px; font-size: 14px; cursor: pointer;">✕ Close</button>
+        </div>
+      </div>
+      <div style="flex: 1; height: 100%; border-radius: 10px; overflow: hidden; background: #ffffff;">
+        <iframe src="Sumit_Paul_Resume.pdf?v=201" style="width: 100%; height: 100%; border: none;"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Protected Skills & Admin Management Engine ───────────────────────── -->
+  <script>
+      (function () {
+        const STORAGE_KEY_CUSTOM  = 'sumit_portfolio_custom_skills';
+        const STORAGE_KEY_DELETED = 'sumit_portfolio_deleted_skills';
+        const DEFAULT_PIN = '1234';
+
+        // ── Admin Mode State Manager ──
+        function isAdminUnlocked() {
+          return sessionStorage.getItem('portfolio_admin_unlocked') === 'true';
+        }
+
+        function setAdminMode(unlocked) {
+          const btns = document.querySelectorAll('.admin-toggle-btn');
+          if (unlocked) {
+            sessionStorage.setItem('portfolio_admin_unlocked', 'true');
+            document.body.classList.add('admin-mode');
+            btns.forEach(btn => {
+              btn.classList.add('active');
+              btn.innerHTML = `<span class="lock-icon">🔓</span> <span class="lock-text">Admin Active (Lock)</span>`;
+            });
+          } else {
+            sessionStorage.removeItem('portfolio_admin_unlocked');
+            document.body.classList.remove('admin-mode');
+            btns.forEach(btn => {
+              btn.classList.remove('active');
+              btn.innerHTML = `<span class="lock-icon">🔒</span> <span class="lock-text">Admin</span>`;
+            });
+          }
+        }
+
+        // Initialize Admin Mode State on page load
+        if (isAdminUnlocked()) {
+          setAdminMode(true);
+        } else {
+          setAdminMode(false);
+        }
+
+        // ── Admin PIN Modal Handlers ──
+        const modal = document.getElementById('admin-modal');
+        const pinInput = document.getElementById('admin-pin-input');
+        const pinError = document.getElementById('admin-pin-error');
+        const btnCancel = document.getElementById('admin-btn-cancel');
+        const btnConfirm = document.getElementById('admin-btn-confirm');
+
+        // ── Resume Viewer Modal Handlers ──
+        const btnViewResume = document.getElementById('btn-view-resume');
+        const resumeModal = document.getElementById('resume-modal');
+        const closeResumeModal = document.getElementById('close-resume-modal');
+
+        if (btnViewResume && resumeModal) {
+          btnViewResume.addEventListener('click', function () {
+            resumeModal.classList.add('open');
+          });
+        }
+        if (closeResumeModal && resumeModal) {
+          closeResumeModal.addEventListener('click', function () {
+            resumeModal.classList.remove('open');
+          });
+        }
+        if (resumeModal) {
+          resumeModal.addEventListener('click', function (e) {
+            if (e.target === resumeModal) resumeModal.classList.remove('open');
+          });
+        }
+
+
+
+        document.addEventListener('click', function (e) {
+          const adminBtn = e.target.closest('.admin-toggle-btn');
+          if (adminBtn) {
+            e.preventDefault();
+            if (isAdminUnlocked()) {
+              setAdminMode(false);
+            } else {
+              openAdminModal();
+            }
+          }
+        });
+
+        function openAdminModal() {
+          if (!modal) return;
+          pinInput.value = '';
+          if (pinError) pinError.style.display = 'none';
+          modal.classList.add('open');
+          setTimeout(() => pinInput.focus(), 100);
+        }
+
+        function closeAdminModal() {
+          if (!modal) return;
+          modal.classList.remove('open');
+        }
+
+        if (btnCancel) btnCancel.addEventListener('click', closeAdminModal);
+
+        if (btnConfirm) {
+          btnConfirm.addEventListener('click', handlePinVerify);
+        }
+
+        if (pinInput) {
+          pinInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handlePinVerify();
+            } else if (e.key === 'Escape') {
+              closeAdminModal();
+            }
+          });
+        }
+
+        function handlePinVerify() {
+          const typedPin = (pinInput.value || '').trim();
+          if (typedPin === DEFAULT_PIN) {
+            setAdminMode(true);
+            closeAdminModal();
+          } else {
+            if (pinError) pinError.style.display = 'block';
+            pinInput.focus();
+            pinInput.select();
+          }
+        }
+
+        // ── Skill Storage Helpers ──
+        function getCustomSkills() {
+          try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY_CUSTOM)) || {};
+          } catch (e) { return {}; }
+        }
+
+        function saveCustomSkill(catIdx, skillText) {
+          const saved = getCustomSkills();
+          if (!saved[catIdx]) saved[catIdx] = [];
+          saved[catIdx].push(skillText);
+          localStorage.setItem(STORAGE_KEY_CUSTOM, JSON.stringify(saved));
+        }
+
+        function removeCustomSkill(catIdx, skillText) {
+          const saved = getCustomSkills();
+          if (saved[catIdx] && Array.isArray(saved[catIdx])) {
+            saved[catIdx] = saved[catIdx].filter(s => s.trim().toLowerCase() !== skillText.trim().toLowerCase());
+            localStorage.setItem(STORAGE_KEY_CUSTOM, JSON.stringify(saved));
+          }
+        }
+
+        function getDeletedSkills() {
+          try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY_DELETED)) || [];
+          } catch (e) { return []; }
+        }
+
+        function recordDeletedSkill(catIdx, skillText) {
+          const deleted = getDeletedSkills();
+          const itemKey = `${catIdx}:${skillText.trim().toLowerCase()}`;
+          if (!deleted.includes(itemKey)) {
+            deleted.push(itemKey);
+            localStorage.setItem(STORAGE_KEY_DELETED, JSON.stringify(deleted));
+          }
+        }
+
+        // Attach delete badges to tag elements
+        function attachDeleteBadge(tagEl) {
+          if (!tagEl || tagEl.querySelector('.tag-delete-btn')) return;
+          const deleteBtn = document.createElement('span');
+          deleteBtn.className = 'tag-delete-btn';
+          deleteBtn.innerHTML = '✕';
+          deleteBtn.title = 'Delete skill (Admin)';
+          tagEl.appendChild(deleteBtn);
+        }
+
+        // ── Purge "react" from Languages & Core CS (Card Index 0) ──
+        (function purgeReactFromCS() {
+          try {
+            // 1. Remove from localStorage custom skills
+            const saved = getCustomSkills();
+            let changed = false;
+            if (saved['0'] && Array.isArray(saved['0'])) {
+              const before = saved['0'].length;
+              saved['0'] = saved['0'].filter(s => s.trim().toLowerCase() !== 'react');
+              if (saved['0'].length !== before) changed = true;
+            }
+            if (changed) localStorage.setItem(STORAGE_KEY_CUSTOM, JSON.stringify(saved));
+
+            // 2. Mark "react" under category 0 as deleted
+            recordDeletedSkill('0', 'react');
+          } catch (e) {}
+        })();
+
+        // ── Render & Clean Skills on Page Load ──
+        function initSkillsRendering() {
+          const cards = document.querySelectorAll('.growaz-card');
+          const custom = getCustomSkills();
+          const deleted = getDeletedSkills();
+
+          cards.forEach((card, catIdx) => {
+            const tagsContainer = card.querySelector('.card-tags');
+            if (!tagsContainer) return;
+
+            // 1. Process default static HTML tags
+            Array.from(tagsContainer.children).forEach(tagEl => {
+              const text = tagEl.childNodes[0]?.textContent?.trim() || tagEl.textContent.trim();
+              const itemKey = `${catIdx}:${text.toLowerCase()}`;
+
+              // If marked deleted or if lowercase "react" under card 0 (Languages & CS), remove it
+              if (deleted.includes(itemKey) || (catIdx === 0 && text.toLowerCase() === 'react')) {
+                tagEl.remove();
+              } else {
+                attachDeleteBadge(tagEl);
+              }
+            });
+
+            // 2. Render saved custom skills for this card
+            if (custom[catIdx] && Array.isArray(custom[catIdx])) {
+              custom[catIdx].forEach(skillText => {
+                const itemKey = `${catIdx}:${skillText.trim().toLowerCase()}`;
+                if (deleted.includes(itemKey)) return;
+
+                const existing = Array.from(tagsContainer.children).some(t => {
+                  const txt = t.childNodes[0]?.textContent?.trim() || t.textContent.trim();
+                  return txt.toLowerCase() === skillText.trim().toLowerCase();
+                });
+
+                if (!existing) {
+                  const newTag = document.createElement('span');
+                  newTag.className = 'tag custom-added-tag';
+                  newTag.textContent = skillText;
+                  attachDeleteBadge(newTag);
+                  tagsContainer.appendChild(newTag);
+                }
+              });
+            }
+          });
+        }
+
+        initSkillsRendering();
+
+        // ── Event Listener: Delete & Inline Add Skills ──
+        document.addEventListener('click', function (e) {
+          // A. Click on Tag Delete button (✕)
+          const deleteBadge = e.target.closest('.tag-delete-btn');
+          if (deleteBadge) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (!isAdminUnlocked()) {
+              openAdminModal();
+              return;
+            }
+
+            const tagEl = deleteBadge.closest('.tag');
+            if (!tagEl) return;
+
+            const card = tagEl.closest('.growaz-card');
+            const allCards = Array.from(document.querySelectorAll('.growaz-card'));
+            const catIdx = allCards.indexOf(card);
+            const skillText = tagEl.childNodes[0]?.textContent?.trim() || tagEl.textContent.replace('✕', '').trim();
+
+            if (catIdx !== -1 && skillText) {
+              // Remove from custom skills if custom, and record in deleted list
+              removeCustomSkill(catIdx, skillText);
+              recordDeletedSkill(catIdx, skillText);
+
+              // Animate removal
+              tagEl.style.transition = 'all 0.25s ease';
+              tagEl.style.transform = 'scale(0.2)';
+              tagEl.style.opacity = '0';
+              setTimeout(() => tagEl.remove(), 250);
+            }
+            return;
+          }
+
+          // B. Click on + button
+          const plusBtn = e.target.closest('.btn-plus');
+          if (plusBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (!isAdminUnlocked()) {
+              openAdminModal();
+              return;
+            }
+
+            const footer = plusBtn.closest('.card-footer');
+            if (!footer) return;
+
+            footer.innerHTML = `
+              <div class="inline-add-skill-box">
+                <input type="text" class="inline-skill-input" placeholder="Type new skill..." maxlength="30" autocomplete="off" />
+                <button type="button" class="btn-inline-save" title="Save Skill">✓</button>
+                <button type="button" class="btn-inline-cancel" title="Cancel">✕</button>
+              </div>
+            `;
+
+            const input = footer.querySelector('.inline-skill-input');
+            if (input) setTimeout(() => input.focus(), 50);
+            return;
+          }
+
+          // C. Click on Save (✓) inline button
+          const saveBtn = e.target.closest('.btn-inline-save');
+          if (saveBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const footer = saveBtn.closest('.card-footer');
+            submitInlineSkill(footer);
+            return;
+          }
+
+          // D. Click on Cancel (✕) inline button
+          const cancelBtn = e.target.closest('.btn-inline-cancel');
+          if (cancelBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const footer = cancelBtn.closest('.card-footer');
+            restorePlusButton(footer);
+            return;
+          }
+        });
+
+        // Keydown handler for inline skill input
+        document.addEventListener('keydown', function (e) {
+          if (e.target && e.target.classList.contains('inline-skill-input')) {
+            const footer = e.target.closest('.card-footer');
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              submitInlineSkill(footer);
+            } else if (e.key === 'Escape') {
+              e.preventDefault();
+              restorePlusButton(footer);
+            }
+          }
+        });
+
+        function submitInlineSkill(footer) {
+          if (!footer) return;
+          const input = footer.querySelector('.inline-skill-input');
+          if (!input) return;
+
+          const skillText = input.value.trim();
+          const card = footer.closest('.growaz-card');
+          const allCards = Array.from(document.querySelectorAll('.growaz-card'));
+          const catIdx = allCards.indexOf(card);
+
+          if (skillText && card) {
+            const tagsContainer = card.querySelector('.card-tags');
+            if (tagsContainer) {
+              const newTag = document.createElement('span');
+              newTag.className = 'tag custom-added-tag';
+              newTag.textContent = skillText;
+              attachDeleteBadge(newTag);
+              tagsContainer.appendChild(newTag);
+
+              saveCustomSkill(catIdx, skillText);
+            }
+          }
+
+          restorePlusButton(footer);
+        }
+
+        function restorePlusButton(footer) {
+          if (!footer) return;
+          footer.innerHTML = `<button type="button" class="btn-plus">+</button>`;
+        }
+      })();
+    </script>
 </body>
 </html>
