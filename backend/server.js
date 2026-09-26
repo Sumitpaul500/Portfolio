@@ -182,18 +182,16 @@ app.post('/api/contact', async (req, res) => {
 
 // ─── 24/7 Keep-Alive Ping Engine (Prevents Render Free Tier Sleeping) ─────────
 function startKeepAlive() {
-  const pingInterval = 10 * 60 * 1000; // Ping every 10 minutes
+  const pingInterval = 3 * 60 * 1000; // Ping every 3 minutes for zero-lag instant response
   setInterval(() => {
-    const liveUrl = process.env.RENDER_EXTERNAL_URL || process.env.BACKEND_URL;
-    if (liveUrl) {
-      const targetUrl = liveUrl.endsWith('/health') ? liveUrl : `${liveUrl}/health`;
-      const requester = targetUrl.startsWith('https') ? https : http;
-      requester.get(targetUrl, (res) => {
-        console.log(`[Keep-Alive ⚡] Health ping sent to ${targetUrl} — Status: ${res.statusCode}`);
-      }).on('error', (err) => {
-        console.error('[Keep-Alive ⚠️] Ping error:', err.message);
-      });
-    }
+    const liveUrl = process.env.RENDER_EXTERNAL_URL || 'https://sumit-portfolio-backend-d8ys.onrender.com';
+    const targetUrl = liveUrl.endsWith('/health') ? liveUrl : `${liveUrl}/health`;
+    const requester = targetUrl.startsWith('https') ? https : http;
+    requester.get(targetUrl, (res) => {
+      console.log(`[Keep-Alive ⚡] High-frequency health ping to ${targetUrl} — Status: ${res.statusCode}`);
+    }).on('error', (err) => {
+      console.error('[Keep-Alive ⚠️] Ping error:', err.message);
+    });
   }, pingInterval);
 }
 
