@@ -121,15 +121,15 @@ async function dispatchEmailNotification(name, email, number, inquiryType, messa
     console.log('[Email Engine 🔄] Nodemailer SMTP unverified. Triggering FormSubmit HTTP API fallback relay...');
     try {
       const payload = JSON.stringify({
+        name: name,
+        email: email,
+        phone: number || 'Not provided',
+        inquiryType: inquiryType || 'General Inquiry',
+        message: message,
         _subject: `[Portfolio Contact] New Message from ${name} (${email})`,
         _replyto: email,
         _autorespond: `Thanks for reaching out, ${name}! I've received your message through my portfolio and will get back to you within 24 hours. — Sumit Paul (Full Stack Developer)`,
-        _template: 'table',
-        Sender_Name: name,
-        Sender_Email: email,
-        Phone_WhatsApp: number || 'Not provided',
-        Inquiry_Type: inquiryType || 'General Inquiry',
-        Message_Body: message
+        _template: 'table'
       });
       const req = https.request('https://formsubmit.co/ajax/deeprajpaul500@gmail.com', {
         method: 'POST',
