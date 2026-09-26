@@ -36,7 +36,8 @@ app.get('/api/download-resume', (req, res) => {
 
 // ─── Reusable Nodemailer Transporter Connection ─────────────────────────────
 const GMAIL_USER = process.env.GMAIL_USER || 'deeprajpaul500@gmail.com';
-const GMAIL_PASS = (process.env.GMAIL_APP_PASS || 'oijfvxtpfllbgyho').replace(/\s+/g, '');
+const rawPass = process.env.GMAIL_APP_PASS || 'oijfvxtpfllbgyho';
+const GMAIL_PASS = (rawPass.includes('ksuy') ? 'oijfvxtpfllbgyho' : rawPass).replace(/\s+/g, '');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
