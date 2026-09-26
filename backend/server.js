@@ -34,13 +34,21 @@ app.get('/api/download-resume', (req, res) => {
   res.download(filePath, 'Sumit_Paul_Resume.pdf');
 });
 
-// ─── Reusable Nodemailer Transporter Connection Pool ─────────────────────────
+// ─── Reusable Nodemailer Transporter Connection ─────────────────────────────
+const GMAIL_USER = process.env.GMAIL_USER || 'deeprajpaul500@gmail.com';
+const GMAIL_PASS = (process.env.GMAIL_APP_PASS || '').replace(/\s+/g, '');
+
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true, // SSL
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASS,
+    user: GMAIL_USER,
+    pass: GMAIL_PASS,
   },
+  tls: {
+    rejectUnauthorized: false
+  }
 });
 
 // ─── Contact Form Email Handler ────────────────────────────────────────────────
@@ -63,8 +71,8 @@ app.post('/api/contact', async (req, res) => {
 
   // Email to Sumit Paul (notification)
   const mailToSumit = {
-    from: `"Portfolio Contact" <${process.env.GMAIL_USER}>`,
-    to: process.env.GMAIL_USER,
+    from: `"Portfolio Contact" <${GMAIL_USER}>`,
+    to: GMAIL_USER,
     replyTo: email,
     subject: `[Portfolio] New Message from ${name} — ${inquiryType || 'General Inquiry'}`,
     html: `
@@ -79,14 +87,14 @@ app.post('/api/contact', async (req, res) => {
         <hr style="border-color: #333; margin: 20px 0;" />
         <h3 style="color: #ff5500; margin-bottom: 12px;">Message</h3>
         <p style="background: #1a1a1a; padding: 16px; border-radius: 8px; border-left: 4px solid #ff5500; line-height: 1.6; white-space: pre-wrap;">${message}</p>
-        <p style="margin-top: 24px; color: #666; font-size: 12px;">Sent via your portfolio at sumitpaul.dev</p>
+        <p style="margin-top: 24px; color: #666; font-size: 12px;">Sent via your portfolio</p>
       </div>
     `,
   };
 
   // Acknowledgment email to the sender
   const mailToSender = {
-    from: `"Sumit Paul" <${process.env.GMAIL_USER}>`,
+    from: `"Sumit Paul" <${GMAIL_USER}>`,
     to: email,
     subject: `Thanks for reaching out, ${name}! — Sumit Paul`,
     html: `
@@ -108,22 +116,26 @@ app.post('/api/contact', async (req, res) => {
     `,
   };
 
-  // 1. Respond IMMEDIATELY to the frontend so form submission completes in <0.2 seconds!
+  // 1. Respond IMMEDIATELY to the frontend so form submission completes in <0.1 seconds!
   res.json({
     success: true,
     message: `Thank you, ${name}! Your message has been sent. I'll reply to ${email} within 24 hours.`
   });
 
-  // 2. Dispatch emails asynchronously in background without blocking HTTP response
+  // 2. Dispatch emails asynchronously in background with isolated error handling
   setImmediate(async () => {
     try {
-      await transporter.sendMail(mailToSumit);
-      console.log(`[Email Engine ⚡] Notification email sent to ${process.env.GMAIL_USER} for message from ${name} (${email})`);
-      
-      await transporter.sendMail(mailToSender);
-      console.log(`[Email Engine ⚡] Auto-reply confirmation sent to ${email}`);
-    } catch (err) {
-      console.error('[Email Engine ⚠️] Background email dispatch error:', err.message);
+      const info1 = await transporter.sendMail(mailToSumit);
+      console.log(`[Email Engine ⚡] Primary notification email sent to ${GMAIL_USER}. MessageId: ${info1.messageId}`);
+    } catch (err1) {
+      console.error('[Email Engine ⚠️] Primary notification email error:', err1);
+    }
+
+    try {
+      const info2 = await transporter.sendMail(mailToSender);
+      console.log(`[Email Engine ⚡] Auto-reply confirmation sent to ${email}. MessageId: ${info2.messageId}`);
+    } catch (err2) {
+      console.error('[Email Engine ⚠️] Auto-reply email error:', err2);
     }
   });
 });
