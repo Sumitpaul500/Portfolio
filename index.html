@@ -3059,7 +3059,7 @@
       preloadImages();
 
       // ─── Contact Form — Real Backend Submission ──────────────────────────────
-      const DEPLOY_BUILD = '2026-09-26-v4.0.0-vercel-24x7';
+      const DEPLOY_BUILD = '2026-09-26-v5.0.0-mobile-email-fix';
       const contactForm = document.getElementById('portfolio-contact-form');
       const contactAlert = document.getElementById('contact-alert');
       const submitBtn = document.getElementById('submit-btn');
@@ -3123,27 +3123,19 @@
           let lastError = '';
 
           async function postContact(url) {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 25000);
+            const res = await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+              body: JSON.stringify(payload),
+              keepalive: true
+            });
+            let data = {};
             try {
-              const res = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                body: JSON.stringify(payload),
-                signal: controller.signal
-              });
-              clearTimeout(timeoutId);
-              let data = {};
-              try {
-                data = await res.json();
-              } catch (_) {
-                data = {};
-              }
-              return { res, data };
-            } catch (err) {
-              clearTimeout(timeoutId);
-              throw err;
+              data = await res.json();
+            } catch (_) {
+              data = {};
             }
+            return { res, data };
           }
 
           for (const endpoint of CONTACT_ENDPOINTS) {
@@ -3151,9 +3143,11 @@
               const { res, data } = await postContact(endpoint);
               if (res.ok && data.success) {
                 const d = data.dispatch || {};
-                if (d.sumitSent || d.senderSent) {
+                if (d.pending || d.sumitSent || d.senderSent) {
                   sentSuccessfully = true;
-                  partialDelivery = Boolean(d.sumitSent !== d.senderSent);
+                  partialDelivery = Boolean(
+                    d.pending || (d.sumitSent !== d.senderSent && (d.sumitSent || d.senderSent))
+                  );
                   break;
                 }
               }
