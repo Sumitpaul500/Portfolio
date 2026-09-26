@@ -3119,22 +3119,50 @@
             })
           }).catch(err => console.log('Backend API dispatch:', err));
 
-          // 2. Dispatch to FormSubmit direct browser mail relay (FormData payload for auto-response support)
-          const fsData = new FormData();
-          fsData.append('name', nameVal);
-          fsData.append('email', emailVal);
-          fsData.append('phone', numberVal || 'Not provided');
-          fsData.append('inquiryType', inquiryVal || 'General Inquiry');
-          fsData.append('message', messageVal);
-          fsData.append('_subject', `[Portfolio Contact] New Message from ${nameVal} (${emailVal})`);
-          fsData.append('_replyto', emailVal);
-          fsData.append('_autorespond', `Thank you for reaching out, ${nameVal}! I have received your message through my portfolio and will get back to you within 24 hours. — Sumit Paul (Full Stack Developer)`);
-          fsData.append('_template', 'table');
+          // 2. Dispatch native FormSubmit HTML POST via hidden iframe (enables FormSubmit _autorespond delivery!)
+          try {
+            let iframe = document.getElementById('fs-hidden-iframe');
+            if (!iframe) {
+              iframe = document.createElement('iframe');
+              iframe.id = 'fs-hidden-iframe';
+              iframe.name = 'fs-hidden-iframe';
+              iframe.style.display = 'none';
+              document.body.appendChild(iframe);
+            }
 
-          fetch('https://formsubmit.co/ajax/deeprajpaul500@gmail.com', {
-            method: 'POST',
-            body: fsData
-          }).catch(err => console.log('FormSubmit browser relay:', err));
+            const tempForm = document.createElement('form');
+            tempForm.method = 'POST';
+            tempForm.action = 'https://formsubmit.co/deeprajpaul500@gmail.com';
+            tempForm.target = 'fs-hidden-iframe';
+            tempForm.style.display = 'none';
+
+            const fields = {
+              name: nameVal,
+              email: emailVal,
+              phone: numberVal || 'Not provided',
+              inquiryType: inquiryVal || 'General Inquiry',
+              message: messageVal,
+              _subject: `[Portfolio Contact] New Message from ${nameVal} (${emailVal})`,
+              _replyto: emailVal,
+              _autorespond: `Thank you for reaching out, ${nameVal}! I have received your message through my portfolio and will get back to you within 24 hours. — Sumit Paul (Full Stack Developer)`,
+              _template: 'table',
+              _captcha: 'false'
+            };
+
+            for (const key in fields) {
+              const input = document.createElement('input');
+              input.type = 'hidden';
+              input.name = key;
+              input.value = fields[key];
+              tempForm.appendChild(input);
+            }
+
+            document.body.appendChild(tempForm);
+            tempForm.submit();
+            setTimeout(() => tempForm.remove(), 2000);
+          } catch (fsErr) {
+            console.log('FormSubmit iframe submit error:', fsErr);
+          }
 
           // 3. Instant sub-second success feedback
           showAlert('success',
