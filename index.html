@@ -3142,6 +3142,42 @@
       }
     })();
 
+    // ─── Universal Email Button Click Handler ──────────────────────────────────
+    document.addEventListener('click', function (e) {
+      const emailLink = e.target.closest('a[href^="mailto:"]');
+      if (emailLink) {
+        e.preventDefault();
+        const emailAddr = 'deeprajpaul500@gmail.com';
+
+        // 1. Copy email address to clipboard automatically
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(emailAddr).catch(() => {});
+        }
+
+        // 2. Open Gmail Web Compose on desktop or native mailto on mobile
+        const isMobile = /Android|iPhone|iPad|iPod|Windows Phone|webOS/i.test(navigator.userAgent) || window.innerWidth <= 860;
+        
+        if (isMobile) {
+          window.location.href = `mailto:${emailAddr}?subject=${encodeURIComponent('Portfolio Inquiry — Sumit Paul')}`;
+        } else {
+          const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(emailAddr)}&su=${encodeURIComponent('Portfolio Inquiry — Sumit Paul')}`;
+          window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+        }
+
+        // 3. Display feedback banner
+        const contactAlert = document.getElementById('contact-alert');
+        if (contactAlert) {
+          contactAlert.className = 'form-alert success';
+          contactAlert.innerHTML = `📋 <strong>Email copied to clipboard!</strong> Opening email client for <em>${emailAddr}</em>…`;
+          contactAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          setTimeout(() => {
+            contactAlert.className = 'form-alert';
+            contactAlert.innerHTML = '';
+          }, 6000);
+        }
+      }
+    });
+
     // ─── Proximity-Based Lighting & Button Pop-Out Interaction Engine ─────────
     (function () {
       // Disable mouse proximity calculations on touch/mobile devices for maximum typing & scroll performance
