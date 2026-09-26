@@ -10,7 +10,22 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // ─── Middleware ────────────────────────────────────────────────────────────────
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
+}));
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -149,21 +164,20 @@ app.post('/api/contact', async (req, res) => {
     return res.status(400).json({ success: false, error: 'Invalid email address.' });
   }
 
-  try {
-    // Await Nodemailer SMTP transmission to guarantee both emails are dispatched before responding
-    await dispatchEmailNotification(name, email, number, inquiryType, message);
+  // 1. Respond IMMEDIATELY to the frontend so form submission completes in <0.01 seconds!
+  res.status(200).json({
+    success: true,
+    message: `Thank you, ${name}! Your message has been sent. I'll reply to ${email} within 24 hours.`
+  });
 
-    res.json({
-      success: true,
-      message: `Thank you, ${name}! Your message has been sent. I'll reply to ${email} within 24 hours.`
-    });
-  } catch (err) {
-    console.error('[API Error] Contact route handler error:', err);
-    res.json({
-      success: true,
-      message: `Thank you, ${name}! Your message has been received.`
-    });
-  }
+  // 2. Dispatch emails via Nodemailer SMTP asynchronously in background
+  setImmediate(async () => {
+    try {
+      await dispatchEmailNotification(name, email, number, inquiryType, message);
+    } catch (dispatchErr) {
+      console.error('[Email Engine ❌] Async dispatch error:', dispatchErr.message || dispatchErr);
+    }
+  });
 });
 
 // ─── 24/7 Keep-Alive Ping Engine (Prevents Render Free Tier Sleeping) ─────────
