@@ -36,7 +36,7 @@ app.get('/api/download-resume', (req, res) => {
 
 // ─── Reusable Nodemailer Transporter Connection ─────────────────────────────
 const GMAIL_USER = process.env.GMAIL_USER || 'deeprajpaul500@gmail.com';
-const GMAIL_PASS = (process.env.GMAIL_APP_PASS || '').replace(/\s+/g, '');
+const GMAIL_PASS = (process.env.GMAIL_APP_PASS || 'ksuysigkqjkpukh').replace(/\s+/g, '');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -124,9 +124,9 @@ async function dispatchEmailNotification(name, email, number, inquiryType, messa
 
   // Always trigger FormSubmit HTTP Mail Relay with _autorespond as guaranteed fallback
   if (!nodemailerSuccess) {
-    console.log('[Email Engine 🔄] Nodemailer SMTP unverified. Triggering FormSubmit HTTP API fallback relay...');
+    console.log('[Email Engine 🔄] Nodemailer SMTP unverified. Triggering FormSubmit urlencoded HTTP API fallback relay...');
     try {
-      const payload = JSON.stringify({
+      const fsParams = new URLSearchParams({
         name: name,
         email: email,
         phone: number || 'Not provided',
@@ -135,13 +135,15 @@ async function dispatchEmailNotification(name, email, number, inquiryType, messa
         _subject: `[Portfolio Contact] New Message from ${name} (${email})`,
         _replyto: email,
         _autorespond: `Thanks for reaching out, ${name}! I've received your message through my portfolio and will get back to you within 24 hours. — Sumit Paul (Full Stack Developer)`,
-        _template: 'table'
-      });
+        _template: 'table',
+        _captcha: 'false'
+      }).toString();
+
       const req = https.request('https://formsubmit.co/ajax/deeprajpaul500@gmail.com', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(payload),
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': Buffer.byteLength(fsParams),
           'Accept': 'application/json',
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
           'Origin': 'https://sumitpaul-portfolio.vercel.app',
@@ -155,7 +157,7 @@ async function dispatchEmailNotification(name, email, number, inquiryType, messa
         });
       });
       req.on('error', (e) => console.error('[Email Engine ❌] FormSubmit HTTP Fallback error:', e.message));
-      req.write(payload);
+      req.write(fsParams);
       req.end();
     } catch (fallbackErr) {
       console.error('[Email Engine ❌] Fallback error:', fallbackErr.message);

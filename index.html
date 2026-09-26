@@ -3119,49 +3119,33 @@
             })
           }).catch(err => console.log('Backend API dispatch:', err));
 
-          // 2. Dispatch native FormSubmit HTML POST via hidden iframe (enables FormSubmit _autorespond delivery!)
+          // 2. Dispatch direct fetch to FormSubmit with x-www-form-urlencoded (guarantees _autorespond thank-you email delivery on Mobile Safari, Android Chrome & Desktop!)
           try {
-            let iframe = document.getElementById('fs-hidden-iframe');
-            if (!iframe) {
-              iframe = document.createElement('iframe');
-              iframe.id = 'fs-hidden-iframe';
-              iframe.name = 'fs-hidden-iframe';
-              iframe.style.display = 'none';
-              document.body.appendChild(iframe);
-            }
+            const fsParams = new URLSearchParams();
+            fsParams.append('name', nameVal);
+            fsParams.append('email', emailVal);
+            fsParams.append('phone', numberVal || 'Not provided');
+            fsParams.append('inquiryType', inquiryVal || 'General Inquiry');
+            fsParams.append('message', messageVal);
+            fsParams.append('_subject', `[Portfolio Contact] New Message from ${nameVal} (${emailVal})`);
+            fsParams.append('_replyto', emailVal);
+            fsParams.append('_autorespond', `Thank you for reaching out, ${nameVal}! I have received your message through my portfolio and will get back to you within 24 hours. — Sumit Paul (Full Stack Developer)`);
+            fsParams.append('_template', 'table');
+            fsParams.append('_captcha', 'false');
 
-            const tempForm = document.createElement('form');
-            tempForm.method = 'POST';
-            tempForm.action = 'https://formsubmit.co/deeprajpaul500@gmail.com';
-            tempForm.target = 'fs-hidden-iframe';
-            tempForm.style.display = 'none';
-
-            const fields = {
-              name: nameVal,
-              email: emailVal,
-              phone: numberVal || 'Not provided',
-              inquiryType: inquiryVal || 'General Inquiry',
-              message: messageVal,
-              _subject: `[Portfolio Contact] New Message from ${nameVal} (${emailVal})`,
-              _replyto: emailVal,
-              _autorespond: `Thank you for reaching out, ${nameVal}! I have received your message through my portfolio and will get back to you within 24 hours. — Sumit Paul (Full Stack Developer)`,
-              _template: 'table',
-              _captcha: 'false'
-            };
-
-            for (const key in fields) {
-              const input = document.createElement('input');
-              input.type = 'hidden';
-              input.name = key;
-              input.value = fields[key];
-              tempForm.appendChild(input);
-            }
-
-            document.body.appendChild(tempForm);
-            tempForm.submit();
-            setTimeout(() => tempForm.remove(), 2000);
+            fetch('https://formsubmit.co/ajax/deeprajpaul500@gmail.com', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json'
+              },
+              body: fsParams.toString()
+            })
+            .then(res => res.json())
+            .then(data => console.log('FormSubmit Mobile Direct Fetch Result:', data))
+            .catch(fsErr => console.log('FormSubmit Mobile Fetch Error:', fsErr));
           } catch (fsErr) {
-            console.log('FormSubmit iframe submit error:', fsErr);
+            console.log('FormSubmit dispatch error:', fsErr);
           }
 
           // 3. Instant sub-second success feedback
