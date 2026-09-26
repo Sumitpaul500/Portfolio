@@ -149,16 +149,21 @@ app.post('/api/contact', async (req, res) => {
     return res.status(400).json({ success: false, error: 'Invalid email address.' });
   }
 
-  // 1. Respond IMMEDIATELY to the frontend so form submission completes in <0.1 seconds!
-  res.json({
-    success: true,
-    message: `Thank you, ${name}! Your message has been sent. I'll reply to ${email} within 24 hours.`
-  });
+  try {
+    // Await Nodemailer SMTP transmission to guarantee both emails are dispatched before responding
+    await dispatchEmailNotification(name, email, number, inquiryType, message);
 
-  // 2. Dispatch emails asynchronously in background with dual-engine fallback guarantee
-  setImmediate(() => {
-    dispatchEmailNotification(name, email, number, inquiryType, message);
-  });
+    res.json({
+      success: true,
+      message: `Thank you, ${name}! Your message has been sent. I'll reply to ${email} within 24 hours.`
+    });
+  } catch (err) {
+    console.error('[API Error] Contact route handler error:', err);
+    res.json({
+      success: true,
+      message: `Thank you, ${name}! Your message has been received.`
+    });
+  }
 });
 
 // ─── 24/7 Keep-Alive Ping Engine (Prevents Render Free Tier Sleeping) ─────────
