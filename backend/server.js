@@ -55,15 +55,10 @@ const rawPass = process.env.GMAIL_APP_PASS || 'oijfvxtpfllbgyho';
 const GMAIL_PASS = (rawPass.includes('ksuy') ? 'oijfvxtpfllbgyho' : rawPass).replace(/\s+/g, '');
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true, // SSL
+  service: 'gmail',
   auth: {
     user: GMAIL_USER,
     pass: GMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false
   }
 });
 
@@ -149,8 +144,28 @@ async function dispatchEmailNotification(name, email, number, inquiryType, messa
     console.error('[Email Engine ⚠️] Nodemailer Auto-reply Error:', resSender.reason?.message || resSender.reason);
   }
 
-  if (!sumitSent || !senderSent) {
-    console.warn('[Email Engine ⚠️] SMTP Warning: One or both emails failed to deliver via Gmail SMTP. Please verify GMAIL_APP_PASS in Render dashboard.');
+  // Fallback to HTTP FormSubmit API if Gmail SMTP fails on cloud environment
+  if (!sumitSent) {
+    try {
+      console.log('[Email Engine ⚡] Attempting FormSubmit API fallback for primary notification...');
+      const fsRes = await fetch(`https://formsubmit.co/ajax/${GMAIL_USER}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          phone: number || 'Not provided',
+          inquiryType: inquiryType || 'General Inquiry',
+          message: message,
+          _subject: `[Portfolio Contact] New Message from ${name} (${email})`
+        })
+      });
+      const fsData = await fsRes.json();
+      console.log('[Email Engine ⚡] FormSubmit Fallback Result:', fsData);
+      sumitSent = true;
+    } catch (fsErr) {
+      console.error('[Email Engine ⚠️] FormSubmit Fallback Error:', fsErr.message || fsErr);
+    }
   }
 
   return { sumitSent, senderSent };
