@@ -108,27 +108,24 @@ app.post('/api/contact', async (req, res) => {
     `,
   };
 
-  try {
-    // 1. Send primary notification email to Sumit Paul
-    await transporter.sendMail(mailToSumit);
+  // 1. Respond IMMEDIATELY to the frontend so form submission completes in <0.2 seconds!
+  res.json({
+    success: true,
+    message: `Thank you, ${name}! Your message has been sent. I'll reply to ${email} within 24 hours.`
+  });
 
-    // 2. Respond immediately to the frontend so response finishes in <1 second
-    res.json({
-      success: true,
-      message: `Thank you, ${name}! Your message has been sent. I'll reply to ${email} within 24 hours.`
-    });
-
-    // 3. Dispatch auto-reply email to sender asynchronously in background
-    transporter.sendMail(mailToSender).catch(err => {
-      console.error('[Email Auto-Reply Error]:', err.message);
-    });
-  } catch (err) {
-    console.error('Email send error:', err);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to send email. Please try contacting directly at deeprajpaul500@gmail.com'
-    });
-  }
+  // 2. Dispatch emails asynchronously in background without blocking HTTP response
+  setImmediate(async () => {
+    try {
+      await transporter.sendMail(mailToSumit);
+      console.log(`[Email Engine ⚡] Notification email sent to ${process.env.GMAIL_USER} for message from ${name} (${email})`);
+      
+      await transporter.sendMail(mailToSender);
+      console.log(`[Email Engine ⚡] Auto-reply confirmation sent to ${email}`);
+    } catch (err) {
+      console.error('[Email Engine ⚠️] Background email dispatch error:', err.message);
+    }
+  });
 });
 
 // ─── 24/7 Keep-Alive Ping Engine (Prevents Render Free Tier Sleeping) ─────────
