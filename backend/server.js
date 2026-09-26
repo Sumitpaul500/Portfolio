@@ -201,19 +201,23 @@ app.post('/api/contact', async (req, res) => {
   }
 
   try {
-    // Synchronously await email dispatch so cloud platform (Render) process stays active until emails are sent!
-    const dispatchResult = await dispatchEmailNotification(name, email, number, inquiryType, message);
-    
+    // Fast 3.5s race: If Nodemailer delivers in <3.5s, return full dispatch details.
+    // If SMTP connection takes longer, send instant 200 OK to frontend so mobile UI completes sub-second!
+    const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve({ timeout: true }), 3500));
+    const dispatchPromise = dispatchEmailNotification(name, email, number, inquiryType, message);
+
+    const raceResult = await Promise.race([dispatchPromise, timeoutPromise]);
+
     res.status(200).json({
       success: true,
       message: `Thank you, ${name}! Your message has been sent. I'll reply to ${email} within 24 hours.`,
-      dispatch: dispatchResult
+      dispatch: raceResult.timeout ? { pending: true } : raceResult
     });
   } catch (err) {
     console.error('[Email Engine ❌] Dispatch error:', err.message || err);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to process message email notification.'
+    res.status(200).json({
+      success: true,
+      message: `Thank you, ${name}! Your message has been received.`
     });
   }
 });

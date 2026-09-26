@@ -3109,36 +3109,77 @@
           }
           showAlert('info', '⏳ Dispatching your message...');
 
+          const payload = {
+            name: nameVal,
+            email: emailVal,
+            number: numberVal,
+            inquiryType: inquiryVal,
+            message: messageVal
+          };
+
+          let sentSuccessfully = false;
+
+          // Attempt 1: Try Render backend with strict 6-second timeout (prevents cold-start hanging on mobile)
           try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 6000);
+
             const res = await fetch(BACKEND_URL, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                name: nameVal,
-                email: emailVal,
-                number: numberVal,
-                inquiryType: inquiryVal,
-                message: messageVal
-              })
+              body: JSON.stringify(payload),
+              signal: controller.signal
             });
+            clearTimeout(timeoutId);
 
-            const data = await res.json();
-
-            if (res.ok && data.success) {
-              showAlert('success', `✅ <strong>Message sent successfully!</strong> Thank you, ${nameVal}! I've sent a confirmation email to <em>${emailVal}</em> and will reply within 24 hours.`);
-              contactForm.reset();
-              clearAlert(10000);
-            } else {
-              throw new Error(data.error || 'Server error occurred');
+            if (res.ok) {
+              const data = await res.json();
+              if (data.success) {
+                sentSuccessfully = true;
+              }
             }
           } catch (err) {
-            console.error('[Contact API Dispatch Error]', err);
-            showAlert('error', '⚠️ Could not reach email server. Please email directly at <a href="mailto:deeprajpaul500@gmail.com" style="color: #ff5500; text-decoration: underline;">deeprajpaul500@gmail.com</a>.');
-          } finally {
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.innerHTML = originalBtnText;
+            console.warn('[Render Backend Timeout/Error — switching to instant FormSubmit fallback]', err);
+          }
+
+          // Attempt 2: Direct FormSubmit Fallback if Render is cold-starting or offline
+          if (!sentSuccessfully) {
+            try {
+              const fsRes = await fetch('https://formsubmit.co/ajax/deeprajpaul500@gmail.com', {
+                method: 'POST',
+                headers: { 
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                  name: nameVal,
+                  email: emailVal,
+                  phone: numberVal || 'Not provided',
+                  inquiryType: inquiryVal || 'General Inquiry',
+                  message: messageVal,
+                  _subject: `[Portfolio Contact] New Message from ${nameVal} (${emailVal})`
+                })
+              });
+              const fsData = await fsRes.json();
+              if (fsRes.ok || fsData.success === 'true' || fsData.success === true || fsRes.status === 200) {
+                sentSuccessfully = true;
+              }
+            } catch (fsErr) {
+              console.error('[FormSubmit Fallback Error]', fsErr);
             }
+          }
+
+          if (sentSuccessfully) {
+            showAlert('success', `✅ <strong>Message sent successfully!</strong> Thank you, ${nameVal}! I've received your message and will reply to <em>${emailVal}</em> within 24 hours.`);
+            contactForm.reset();
+            clearAlert(10000);
+          } else {
+            showAlert('error', '⚠️ Could not send automatically. Please email directly at <a href="mailto:deeprajpaul500@gmail.com" style="color: #ff5500; text-decoration: underline;">deeprajpaul500@gmail.com</a>.');
+          }
+
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
           }
         });
       }
