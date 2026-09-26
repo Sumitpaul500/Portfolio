@@ -105,25 +105,25 @@ async function dispatchEmailNotification(name, email, number, inquiryType, messa
     console.log(`[Email Engine ⚡] Primary notification sent via Nodemailer SMTP. MessageId: ${info1.messageId}`);
     nodemailerSuccess = true;
   } catch (err1) {
-    console.error('[Email Engine ⚠️] Nodemailer SMTP Error:', err1.message || err1);
+    console.error('[Email Engine ⚠️] Nodemailer Primary SMTP Error:', err1.message || err1);
   }
 
-  if (nodemailerSuccess) {
-    try {
-      const info2 = await transporter.sendMail(mailToSender);
-      console.log(`[Email Engine ⚡] Auto-reply confirmation sent via Nodemailer SMTP. MessageId: ${info2.messageId}`);
-    } catch (err2) {
-      console.error('[Email Engine ⚠️] Nodemailer Auto-reply Error:', err2.message || err2);
-    }
+  // Always attempt auto-reply to the sender independently via Nodemailer
+  try {
+    const info2 = await transporter.sendMail(mailToSender);
+    console.log(`[Email Engine ⚡] Auto-reply confirmation sent via Nodemailer SMTP. MessageId: ${info2.messageId}`);
+  } catch (err2) {
+    console.error('[Email Engine ⚠️] Nodemailer Auto-reply Error:', err2.message || err2);
   }
 
-  // Always trigger FormSubmit HTTP Mail Relay if SMTP encountered an issue
+  // Always trigger FormSubmit HTTP Mail Relay with _autorespond as guaranteed fallback
   if (!nodemailerSuccess) {
-    console.log('[Email Engine 🔄] Nodemailer SMTP failed or credentials unverified. Triggering FormSubmit HTTP API fallback relay...');
+    console.log('[Email Engine 🔄] Nodemailer SMTP unverified. Triggering FormSubmit HTTP API fallback relay...');
     try {
       const payload = JSON.stringify({
         _subject: `[Portfolio Contact] New Message from ${name} (${email})`,
         _replyto: email,
+        _autorespond: `Thanks for reaching out, ${name}! I've received your message through my portfolio and will get back to you within 24 hours. — Sumit Paul (Full Stack Developer)`,
         _template: 'table',
         Sender_Name: name,
         Sender_Email: email,
