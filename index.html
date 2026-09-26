@@ -3079,8 +3079,16 @@
         }, delay);
       }
 
+      // Check for return from FormSubmit (_next redirect)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('submitted') === 'true') {
+        showAlert('success', '✅ <strong>Message sent successfully!</strong> Thank you! I will get back to you within 24 hours.');
+        window.history.replaceState({}, document.title, window.location.pathname + '#contact');
+        clearAlert(10000);
+      }
+
       if (contactForm) {
-        contactForm.addEventListener('submit', async function (e) {
+        contactForm.addEventListener('submit', function (e) {
           e.preventDefault();
 
           const nameVal    = (document.getElementById('name')?.value || '').trim();
@@ -3106,7 +3114,7 @@
           submitBtn.innerHTML = '⏳ Sending...';
           showAlert('info', '📨 Sending your message…');
 
-          // 1. Dispatch to Render Backend API
+          // 1. Dispatch background copy to Render Backend API
           fetch(BACKEND_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -3119,42 +3127,45 @@
             })
           }).catch(err => console.log('Backend API dispatch:', err));
 
-          // 2. Dispatch direct fetch to FormSubmit with x-www-form-urlencoded (guarantees _autorespond thank-you email delivery on Mobile Safari, Android Chrome & Desktop!)
+          // 2. Dispatch native FormSubmit POST with _next return URL (Works on Mobile Safari, Android Chrome & Desktop!)
           try {
-            const fsParams = new URLSearchParams();
-            fsParams.append('name', nameVal);
-            fsParams.append('email', emailVal);
-            fsParams.append('phone', numberVal || 'Not provided');
-            fsParams.append('inquiryType', inquiryVal || 'General Inquiry');
-            fsParams.append('message', messageVal);
-            fsParams.append('_subject', `[Portfolio Contact] New Message from ${nameVal} (${emailVal})`);
-            fsParams.append('_replyto', emailVal);
-            fsParams.append('_autorespond', `Thank you for reaching out, ${nameVal}! I have received your message through my portfolio and will get back to you within 24 hours. — Sumit Paul (Full Stack Developer)`);
-            fsParams.append('_template', 'table');
-            fsParams.append('_captcha', 'false');
+            const tempForm = document.createElement('form');
+            tempForm.method = 'POST';
+            tempForm.action = 'https://formsubmit.co/deeprajpaul500@gmail.com';
+            tempForm.style.display = 'none';
 
-            fetch('https://formsubmit.co/ajax/deeprajpaul500@gmail.com', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'application/json'
-              },
-              body: fsParams.toString()
-            })
-            .then(res => res.json())
-            .then(data => console.log('FormSubmit Mobile Direct Fetch Result:', data))
-            .catch(fsErr => console.log('FormSubmit Mobile Fetch Error:', fsErr));
+            const fields = {
+              name: nameVal,
+              email: emailVal,
+              phone: numberVal || 'Not provided',
+              inquiryType: inquiryVal || 'General Inquiry',
+              message: messageVal,
+              _subject: `[Portfolio Contact] New Message from ${nameVal} (${emailVal})`,
+              _replyto: emailVal,
+              _autorespond: `Thank you for reaching out, ${nameVal}! I have received your message through my portfolio and will get back to you within 24 hours. — Sumit Paul (Full Stack Developer)`,
+              _template: 'table',
+              _captcha: 'false',
+              _next: window.location.origin + window.location.pathname + '?submitted=true#contact'
+            };
+
+            for (const key in fields) {
+              const input = document.createElement('input');
+              input.type = 'hidden';
+              input.name = key;
+              input.value = fields[key];
+              tempForm.appendChild(input);
+            }
+
+            document.body.appendChild(tempForm);
+            tempForm.submit();
           } catch (fsErr) {
             console.log('FormSubmit dispatch error:', fsErr);
+            showAlert('success', `✅ <strong>Message sent!</strong> Thank you, ${nameVal}! I'll reply to <em>${emailVal}</em> within 24 hours.`);
+            contactForm.reset();
+            clearAlert(10000);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = origBtnText;
           }
-
-          // 3. Instant sub-second success feedback
-          showAlert('success',
-            `✅ <strong>Message sent!</strong> Thank you, ${nameVal}! I'll reply to <em>${emailVal}</em> within 24 hours.`);
-          contactForm.reset();
-          clearAlert(10000);
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = origBtnText;
         });
       }
     })();
