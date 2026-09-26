@@ -3094,7 +3094,7 @@
           const nameVal    = (document.getElementById('name')?.value || '').trim();
           const emailVal   = (document.getElementById('email')?.value || '').trim();
           const numberVal  = (document.getElementById('number')?.value || '').trim();
-          const inquiryVal = (document.getElementById('inquiryType')?.value || '');
+          const inquiryVal = (document.getElementById('inquiry-type')?.value || document.getElementById('inquiryType')?.value || '');
           const messageVal = (document.getElementById('message')?.value || '').trim();
 
           // Client-side validation
