@@ -55,17 +55,22 @@ const rawPass = process.env.GMAIL_APP_PASS || 'oijfvxtpfllbgyho';
 const GMAIL_PASS = (rawPass.includes('ksuy') ? 'oijfvxtpfllbgyho' : rawPass).replace(/\s+/g, '');
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, // TLS
   auth: {
     user: GMAIL_USER,
     pass: GMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false
   }
 });
 
 if (!GMAIL_PASS) {
   console.warn('[Server Warning ⚠️] GMAIL_APP_PASS is not set in environment variables! Please set GMAIL_APP_PASS in Render Dashboard for native Gmail auto-replies.');
 } else {
-  console.log(`[Server Info ⚡] Nodemailer Gmail SMTP configured for ${GMAIL_USER}`);
+  console.log(`[Server Info ⚡] Nodemailer Gmail SMTP (Port 587 TLS) configured for ${GMAIL_USER}`);
 }
 
 // ─── Dual-Engine Email Dispatcher (Gmail SMTP + FormSubmit HTTP Fallback) ───
@@ -150,7 +155,11 @@ async function dispatchEmailNotification(name, email, number, inquiryType, messa
       console.log('[Email Engine ⚡] Attempting FormSubmit API fallback for primary notification...');
       const fsRes = await fetch(`https://formsubmit.co/ajax/${GMAIL_USER}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Referer': 'https://sumit-portfolio-backend-d8ys.onrender.com'
+        },
         body: JSON.stringify({
           name: name,
           email: email,
@@ -162,7 +171,9 @@ async function dispatchEmailNotification(name, email, number, inquiryType, messa
       });
       const fsData = await fsRes.json();
       console.log('[Email Engine ⚡] FormSubmit Fallback Result:', fsData);
-      sumitSent = true;
+      if (fsData.success === 'true' || fsData.success === true) {
+        sumitSent = true;
+      }
     } catch (fsErr) {
       console.error('[Email Engine ⚠️] FormSubmit Fallback Error:', fsErr.message || fsErr);
     }
