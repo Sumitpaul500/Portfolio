@@ -109,12 +109,18 @@ app.post('/api/contact', async (req, res) => {
   };
 
   try {
+    // 1. Send primary notification email to Sumit Paul
     await transporter.sendMail(mailToSumit);
-    await transporter.sendMail(mailToSender);
 
+    // 2. Respond immediately to the frontend so response finishes in <1 second
     res.json({
       success: true,
       message: `Thank you, ${name}! Your message has been sent. I'll reply to ${email} within 24 hours.`
+    });
+
+    // 3. Dispatch auto-reply email to sender asynchronously in background
+    transporter.sendMail(mailToSender).catch(err => {
+      console.error('[Email Auto-Reply Error]:', err.message);
     });
   } catch (err) {
     console.error('Email send error:', err);

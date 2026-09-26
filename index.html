@@ -594,9 +594,11 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.25);
       padding: 12px 0;
       color: #ffffff;
-      font-size: 15px;
+      font-size: 16px;
       font-family: inherit;
       outline: none;
+      -webkit-tap-highlight-color: transparent;
+      transform: translateZ(0);
       transition: border-color 0.2s ease;
     }
 
@@ -1500,10 +1502,12 @@
       padding: 16px;
       color: #ffffff;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 16px;
       outline: none;
       resize: vertical;
       min-height: 120px;
+      -webkit-tap-highlight-color: transparent;
+      transform: translateZ(0);
       transition: border-color 0.2s ease;
     }
 
@@ -3117,6 +3121,11 @@
 
     // ─── Proximity-Based Lighting & Button Pop-Out Interaction Engine ─────────
     (function () {
+      // Disable mouse proximity calculations on touch/mobile devices for maximum typing & scroll performance
+      if (window.matchMedia('(hover: none)').matches || window.innerWidth <= 860) {
+        return;
+      }
+
       const cardSelectors = [
         '.services-grid',
         '.stats-card',
