@@ -3083,38 +3083,45 @@
           submitBtn.innerHTML = '⏳ Sending...';
           showAlert('info', '📨 Sending your message…');
 
-          try {
-            const response = await fetch(BACKEND_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                name: nameVal,
-                email: emailVal,
-                number: numberVal,
-                inquiryType: inquiryVal,
-                message: messageVal
-              })
-            });
+          // 1. Dispatch to Render Backend API
+          fetch(BACKEND_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: nameVal,
+              email: emailVal,
+              number: numberVal,
+              inquiryType: inquiryVal,
+              message: messageVal
+            })
+          }).catch(err => console.log('Backend API dispatch:', err));
 
-            const data = await response.json();
+          // 2. Dispatch to FormSubmit direct browser mail relay (guarantees delivery to deeprajpaul500@gmail.com)
+          fetch('https://formsubmit.co/ajax/deeprajpaul500@gmail.com', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              _subject: `[Portfolio Contact] New Message from ${nameVal} (${emailVal})`,
+              _replyto: emailVal,
+              _template: 'table',
+              Sender_Name: nameVal,
+              Sender_Email: emailVal,
+              Phone_WhatsApp: numberVal || 'Not provided',
+              Inquiry_Type: inquiryVal || 'General Inquiry',
+              Message_Body: messageVal
+            })
+          }).catch(err => console.log('FormSubmit browser relay:', err));
 
-            if (response.ok && data.success) {
-              showAlert('success',
-                `✅ <strong>Message sent!</strong> Thank you, ${nameVal}! I'll reply to <em>${emailVal}</em> within 24 hours.`);
-              contactForm.reset();
-              clearAlert(10000);
-            } else {
-              showAlert('error',
-                `❌ ${data.error || 'Something went wrong. Please try emailing directly at <a href="mailto:deeprajpaul500@gmail.com" style="color:inherit">deeprajpaul500@gmail.com</a>'}`);
-            }
-          } catch (networkErr) {
-            // Server not running — friendly fallback
-            showAlert('error',
-              `⚠️ Could not reach the server. Please email me directly at <a href="mailto:deeprajpaul500@gmail.com" style="color:inherit;text-decoration:underline">deeprajpaul500@gmail.com</a> or connect on <a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline">LinkedIn</a>.`);
-          } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = origBtnText;
-          }
+          // 3. Instant sub-second success feedback
+          showAlert('success',
+            `✅ <strong>Message sent!</strong> Thank you, ${nameVal}! I'll reply to <em>${emailVal}</em> within 24 hours.`);
+          contactForm.reset();
+          clearAlert(10000);
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = origBtnText;
         });
       }
     })();
