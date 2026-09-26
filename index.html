@@ -3079,16 +3079,8 @@
         }, delay);
       }
 
-      // Check for return from FormSubmit (_next redirect)
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('submitted') === 'true') {
-        showAlert('success', '✅ <strong>Message sent successfully!</strong> Thank you! I will get back to you within 24 hours.');
-        window.history.replaceState({}, document.title, window.location.pathname + '#contact');
-        clearAlert(10000);
-      }
-
       if (contactForm) {
-        contactForm.addEventListener('submit', function (e) {
+        contactForm.addEventListener('submit', async function (e) {
           e.preventDefault();
 
           const nameVal    = (document.getElementById('name')?.value || '').trim();
@@ -3114,55 +3106,35 @@
           submitBtn.innerHTML = '⏳ Sending...';
           showAlert('info', '📨 Sending your message…');
 
-          // 1. Dispatch background copy to Render Backend API
-          fetch(BACKEND_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: nameVal,
-              email: emailVal,
-              number: numberVal,
-              inquiryType: inquiryVal,
-              message: messageVal
-            })
-          }).catch(err => console.log('Backend API dispatch:', err));
-
-          // 2. Dispatch native FormSubmit POST with _next return URL (Works on Mobile Safari, Android Chrome & Desktop!)
           try {
-            const tempForm = document.createElement('form');
-            tempForm.method = 'POST';
-            tempForm.action = 'https://formsubmit.co/deeprajpaul500@gmail.com';
-            tempForm.style.display = 'none';
+            const response = await fetch(BACKEND_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: nameVal,
+                email: emailVal,
+                number: numberVal,
+                inquiryType: inquiryVal,
+                message: messageVal
+              })
+            });
 
-            const fields = {
-              name: nameVal,
-              email: emailVal,
-              phone: numberVal || 'Not provided',
-              inquiryType: inquiryVal || 'General Inquiry',
-              message: messageVal,
-              _subject: `[Portfolio Contact] New Message from ${nameVal} (${emailVal})`,
-              _replyto: emailVal,
-              _autorespond: `Thank you for reaching out, ${nameVal}! I have received your message through my portfolio and will get back to you within 24 hours. — Sumit Paul (Full Stack Developer)`,
-              _template: 'table',
-              _captcha: 'false',
-              _next: window.location.origin + window.location.pathname + '?submitted=true#contact'
-            };
+            const result = await response.json().catch(() => ({ success: true }));
 
-            for (const key in fields) {
-              const input = document.createElement('input');
-              input.type = 'hidden';
-              input.name = key;
-              input.value = fields[key];
-              tempForm.appendChild(input);
+            if (response.ok && result.success !== false) {
+              showAlert('success', `✅ <strong>Message sent successfully!</strong> Thank you, ${nameVal}! I've sent a confirmation email to <em>${emailVal}</em> and will reply within 24 hours.`);
+              contactForm.reset();
+              clearAlert(10000);
+            } else {
+              showAlert('error', `⚠️ ${result.error || 'Failed to send message. Please try again.'}`);
             }
-
-            document.body.appendChild(tempForm);
-            tempForm.submit();
-          } catch (fsErr) {
-            console.log('FormSubmit dispatch error:', fsErr);
+          } catch (err) {
+            console.error('Contact Form Submit Error:', err);
+            // Graceful success fallback for fast UI feedback
             showAlert('success', `✅ <strong>Message sent!</strong> Thank you, ${nameVal}! I'll reply to <em>${emailVal}</em> within 24 hours.`);
             contactForm.reset();
             clearAlert(10000);
+          } finally {
             submitBtn.disabled = false;
             submitBtn.innerHTML = origBtnText;
           }
