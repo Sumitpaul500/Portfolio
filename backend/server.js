@@ -51,6 +51,109 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// ─── Dual-Engine Email Dispatcher (Gmail SMTP + FormSubmit HTTP Fallback) ───
+async function dispatchEmailNotification(name, email, number, inquiryType, message) {
+  const mailToSumit = {
+    from: `"Portfolio Contact" <${GMAIL_USER}>`,
+    to: GMAIL_USER,
+    replyTo: email,
+    subject: `[Portfolio Contact] New Message from ${name} (${email})`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background: #0a0a0a; color: #ffffff; border-radius: 12px; border: 1px solid #ff5500;">
+        <h2 style="color: #ff5500; margin-bottom: 24px;">📬 New Portfolio Message</h2>
+        <p style="font-size: 15px; line-height: 1.5;">You received a new message from your portfolio website!</p>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
+          <tr><td style="padding: 8px 0; color: #999; width: 140px;">Name</td><td style="padding: 8px 0; font-weight: bold; color: #fff;">${name}</td></tr>
+          <tr><td style="padding: 8px 0; color: #999;">Email</td><td style="padding: 8px 0;"><a href="mailto:${email}" style="color: #ff5500; text-decoration: underline;">${email}</a></td></tr>
+          <tr><td style="padding: 8px 0; color: #999;">Phone/WhatsApp</td><td style="padding: 8px 0; color: #fff;">${number || 'Not provided'}</td></tr>
+          <tr><td style="padding: 8px 0; color: #999;">Inquiry Type</td><td style="padding: 8px 0; color: #fff;">${inquiryType || 'General Inquiry'}</td></tr>
+        </table>
+        <hr style="border-color: #333; margin: 20px 0;" />
+        <h3 style="color: #ff5500; margin-bottom: 12px;">Message Content</h3>
+        <p style="background: #1a1a1a; padding: 18px; border-radius: 8px; border-left: 4px solid #ff5500; line-height: 1.6; white-space: pre-wrap; color: #eee;">${message}</p>
+        <p style="margin-top: 24px; color: #666; font-size: 12px;">Sent via Sumit Paul Portfolio</p>
+      </div>
+    `,
+  };
+
+  const mailToSender = {
+    from: `"Sumit Paul" <${GMAIL_USER}>`,
+    to: email,
+    subject: `Thanks for reaching out, ${name}! — Sumit Paul`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background: #0a0a0a; color: #ffffff; border-radius: 12px;">
+        <h2 style="color: #ff5500; margin-bottom: 16px;">Hey ${name}! 👋</h2>
+        <p style="line-height: 1.7; color: #ddd;">Thanks for reaching out through my portfolio! I've received your message and will get back to you as soon as possible — usually within 24 hours.</p>
+        <div style="background: #1a1a1a; padding: 16px; border-radius: 8px; border-left: 4px solid #ff5500; margin: 20px 0;">
+          <p style="color: #999; font-size: 13px; margin-bottom: 8px;">Your message:</p>
+          <p style="color: #ddd; line-height: 1.6; white-space: pre-wrap; font-size: 14px;">${message}</p>
+        </div>
+        <p style="line-height: 1.7; color: #ddd;">In the meantime, feel free to connect with me:</p>
+        <div style="margin: 20px 0;">
+          <a href="https://github.com/Sumitpaul500" style="display: inline-block; margin-right: 12px; padding: 8px 18px; background: #ff5500; color: #fff; text-decoration: none; border-radius: 999px; font-size: 13px; font-weight: 600;">GitHub</a>
+          <a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" style="display: inline-block; padding: 8px 18px; background: #0a66c2; color: #fff; text-decoration: none; border-radius: 999px; font-size: 13px; font-weight: 600;">LinkedIn</a>
+        </div>
+        <hr style="border-color: #333; margin: 20px 0;" />
+        <p style="color: #666; font-size: 12px;">Sumit Paul | Computer Science & Engineering Student | Full Stack Developer<br>New Horizon College of Engineering, Bengaluru | VTU CGPA 9.59</p>
+      </div>
+    `,
+  };
+
+  let nodemailerSuccess = false;
+  try {
+    const info1 = await transporter.sendMail(mailToSumit);
+    console.log(`[Email Engine ⚡] Primary notification sent via Nodemailer SMTP. MessageId: ${info1.messageId}`);
+    nodemailerSuccess = true;
+  } catch (err1) {
+    console.error('[Email Engine ⚠️] Nodemailer SMTP Error:', err1.message || err1);
+  }
+
+  if (nodemailerSuccess) {
+    try {
+      const info2 = await transporter.sendMail(mailToSender);
+      console.log(`[Email Engine ⚡] Auto-reply confirmation sent via Nodemailer SMTP. MessageId: ${info2.messageId}`);
+    } catch (err2) {
+      console.error('[Email Engine ⚠️] Nodemailer Auto-reply Error:', err2.message || err2);
+    }
+  }
+
+  // Always trigger FormSubmit HTTP Mail Relay if SMTP encountered an issue
+  if (!nodemailerSuccess) {
+    console.log('[Email Engine 🔄] Nodemailer SMTP failed or credentials unverified. Triggering FormSubmit HTTP API fallback relay...');
+    try {
+      const payload = JSON.stringify({
+        _subject: `[Portfolio Contact] New Message from ${name} (${email})`,
+        _replyto: email,
+        _template: 'table',
+        Sender_Name: name,
+        Sender_Email: email,
+        Phone_WhatsApp: number || 'Not provided',
+        Inquiry_Type: inquiryType || 'General Inquiry',
+        Message_Body: message
+      });
+      const req = https.request('https://formsubmit.co/ajax/deeprajpaul500@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(payload),
+          'Accept': 'application/json'
+        }
+      }, (res) => {
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => {
+          console.log(`[Email Engine ⚡] FormSubmit HTTP Fallback completed (${res.statusCode}):`, data);
+        });
+      });
+      req.on('error', (e) => console.error('[Email Engine ❌] FormSubmit HTTP Fallback error:', e.message));
+      req.write(payload);
+      req.end();
+    } catch (fallbackErr) {
+      console.error('[Email Engine ❌] Fallback error:', fallbackErr.message);
+    }
+  }
+}
+
 // ─── Contact Form Email Handler ────────────────────────────────────────────────
 app.post('/api/contact', async (req, res) => {
   const { name, email, number, inquiryType, message } = req.body;
@@ -69,74 +172,15 @@ app.post('/api/contact', async (req, res) => {
     return res.status(400).json({ success: false, error: 'Invalid email address.' });
   }
 
-  // Email to Sumit Paul (notification)
-  const mailToSumit = {
-    from: `"Portfolio Contact" <${GMAIL_USER}>`,
-    to: GMAIL_USER,
-    replyTo: email,
-    subject: `[Portfolio] New Message from ${name} — ${inquiryType || 'General Inquiry'}`,
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background: #0a0a0a; color: #ffffff; border-radius: 12px;">
-        <h2 style="color: #ff5500; margin-bottom: 24px;">📬 New Portfolio Contact</h2>
-        <table style="width: 100%; border-collapse: collapse;">
-          <tr><td style="padding: 8px 0; color: #999; width: 140px;">Name</td><td style="padding: 8px 0; font-weight: bold;">${name}</td></tr>
-          <tr><td style="padding: 8px 0; color: #999;">Email</td><td style="padding: 8px 0;"><a href="mailto:${email}" style="color: #ff5500;">${email}</a></td></tr>
-          <tr><td style="padding: 8px 0; color: #999;">Phone</td><td style="padding: 8px 0;">${number || 'Not provided'}</td></tr>
-          <tr><td style="padding: 8px 0; color: #999;">Inquiry Type</td><td style="padding: 8px 0;">${inquiryType || 'General Inquiry'}</td></tr>
-        </table>
-        <hr style="border-color: #333; margin: 20px 0;" />
-        <h3 style="color: #ff5500; margin-bottom: 12px;">Message</h3>
-        <p style="background: #1a1a1a; padding: 16px; border-radius: 8px; border-left: 4px solid #ff5500; line-height: 1.6; white-space: pre-wrap;">${message}</p>
-        <p style="margin-top: 24px; color: #666; font-size: 12px;">Sent via your portfolio</p>
-      </div>
-    `,
-  };
-
-  // Acknowledgment email to the sender
-  const mailToSender = {
-    from: `"Sumit Paul" <${GMAIL_USER}>`,
-    to: email,
-    subject: `Thanks for reaching out, ${name}! — Sumit Paul`,
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background: #0a0a0a; color: #ffffff; border-radius: 12px;">
-        <h2 style="color: #ff5500; margin-bottom: 16px;">Hey ${name}! 👋</h2>
-        <p style="line-height: 1.7; color: #ddd;">Thanks for reaching out through my portfolio! I've received your message and will get back to you as soon as possible — usually within 24 hours.</p>
-        <div style="background: #1a1a1a; padding: 16px; border-radius: 8px; border-left: 4px solid #ff5500; margin: 20px 0;">
-          <p style="color: #999; font-size: 13px; margin-bottom: 8px;">Your message:</p>
-          <p style="color: #ddd; line-height: 1.6; white-space: pre-wrap; font-size: 14px;">${message}</p>
-        </div>
-        <p style="line-height: 1.7; color: #ddd;">In the meantime, feel free to explore my work:</p>
-        <div style="margin: 20px 0;">
-          <a href="https://github.com/Sumitpaul500" style="display: inline-block; margin-right: 12px; padding: 8px 18px; background: #ff5500; color: #fff; text-decoration: none; border-radius: 999px; font-size: 13px; font-weight: 600;">GitHub</a>
-          <a href="https://www.linkedin.com/in/sumit-paul-28b5b0280/" style="display: inline-block; padding: 8px 18px; background: #0a66c2; color: #fff; text-decoration: none; border-radius: 999px; font-size: 13px; font-weight: 600;">LinkedIn</a>
-        </div>
-        <hr style="border-color: #333; margin: 20px 0;" />
-        <p style="color: #666; font-size: 12px;">Sumit Paul | Computer Science & Engineering Student | Full Stack Developer<br>New Horizon College of Engineering, Bengaluru | VTU CGPA 9.59</p>
-      </div>
-    `,
-  };
-
   // 1. Respond IMMEDIATELY to the frontend so form submission completes in <0.1 seconds!
   res.json({
     success: true,
     message: `Thank you, ${name}! Your message has been sent. I'll reply to ${email} within 24 hours.`
   });
 
-  // 2. Dispatch emails asynchronously in background with isolated error handling
-  setImmediate(async () => {
-    try {
-      const info1 = await transporter.sendMail(mailToSumit);
-      console.log(`[Email Engine ⚡] Primary notification email sent to ${GMAIL_USER}. MessageId: ${info1.messageId}`);
-    } catch (err1) {
-      console.error('[Email Engine ⚠️] Primary notification email error:', err1);
-    }
-
-    try {
-      const info2 = await transporter.sendMail(mailToSender);
-      console.log(`[Email Engine ⚡] Auto-reply confirmation sent to ${email}. MessageId: ${info2.messageId}`);
-    } catch (err2) {
-      console.error('[Email Engine ⚠️] Auto-reply email error:', err2);
-    }
+  // 2. Dispatch emails asynchronously in background with dual-engine fallback guarantee
+  setImmediate(() => {
+    dispatchEmailNotification(name, email, number, inquiryType, message);
   });
 });
 
