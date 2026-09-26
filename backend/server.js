@@ -51,6 +51,12 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+if (!GMAIL_PASS) {
+  console.warn('[Server Warning ⚠️] GMAIL_APP_PASS is not set in environment variables! Please set GMAIL_APP_PASS in Render Dashboard for native Gmail auto-replies.');
+} else {
+  console.log(`[Server Info ⚡] Nodemailer Gmail SMTP configured for ${GMAIL_USER}`);
+}
+
 // ─── Dual-Engine Email Dispatcher (Gmail SMTP + FormSubmit HTTP Fallback) ───
 async function dispatchEmailNotification(name, email, number, inquiryType, message) {
   const mailToSumit = {
