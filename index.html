@@ -3101,26 +3101,45 @@
             return;
           }
 
-          // 1. Instant sub-second UI success feedback (<0.01s)
-          showAlert('success', `✅ <strong>Message sent successfully!</strong> Thank you, ${nameVal}! I've sent a confirmation email to <em>${emailVal}</em> and will reply within 24 hours.`);
-          contactForm.reset();
-          clearAlert(10000);
+          // 1. UI Loading Feedback
+          const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Send Message';
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '⏳ Sending Message...';
+          }
+          showAlert('info', '⏳ Dispatching your message...');
 
-          // 2. Dispatch API call to Render backend asynchronously in background
-          fetch(BACKEND_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: nameVal,
-              email: emailVal,
-              number: numberVal,
-              inquiryType: inquiryVal,
-              message: messageVal
-            })
-          })
-          .then(res => res.json())
-          .then(data => console.log('[Contact API Success]', data))
-          .catch(err => console.log('[Contact API Dispatch]', err));
+          try {
+            const res = await fetch(BACKEND_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: nameVal,
+                email: emailVal,
+                number: numberVal,
+                inquiryType: inquiryVal,
+                message: messageVal
+              })
+            });
+
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+              showAlert('success', `✅ <strong>Message sent successfully!</strong> Thank you, ${nameVal}! I've sent a confirmation email to <em>${emailVal}</em> and will reply within 24 hours.`);
+              contactForm.reset();
+              clearAlert(10000);
+            } else {
+              throw new Error(data.error || 'Server error occurred');
+            }
+          } catch (err) {
+            console.error('[Contact API Dispatch Error]', err);
+            showAlert('error', '⚠️ Could not reach email server. Please email directly at <a href="mailto:deeprajpaul500@gmail.com" style="color: #ff5500; text-decoration: underline;">deeprajpaul500@gmail.com</a>.');
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalBtnText;
+            }
+          }
         });
       }
     })();

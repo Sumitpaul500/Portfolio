@@ -80,6 +80,12 @@ async function dispatchEmailNotification(name, email, number, inquiryType, messa
     to: GMAIL_USER,
     replyTo: email,
     subject: `[Portfolio Contact] New Message from ${name} (${email})`,
+    priority: 'high',
+    headers: {
+      'X-Priority': '1 (Highest)',
+      'X-MSMail-Priority': 'High',
+      'Importance': 'High'
+    },
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background: #0a0a0a; color: #ffffff; border-radius: 12px; border: 1px solid #ff5500;">
         <h2 style="color: #ff5500; margin-bottom: 24px;">📬 New Portfolio Message</h2>
@@ -124,26 +130,30 @@ async function dispatchEmailNotification(name, email, number, inquiryType, messa
   let sumitSent = false;
   let senderSent = false;
 
-  try {
-    const info1 = await transporter.sendMail(mailToSumit);
-    console.log(`[Email Engine ⚡] Primary notification sent to ${GMAIL_USER} via Nodemailer SMTP. MessageId: ${info1.messageId}`);
+  const [resSumit, resSender] = await Promise.allSettled([
+    transporter.sendMail(mailToSumit),
+    transporter.sendMail(mailToSender)
+  ]);
+
+  if (resSumit.status === 'fulfilled') {
+    console.log(`[Email Engine ⚡] Primary notification sent to ${GMAIL_USER} via Nodemailer SMTP. MessageId: ${resSumit.value.messageId}`);
     sumitSent = true;
-  } catch (err1) {
-    console.error('[Email Engine ⚠️] Nodemailer Primary SMTP Error:', err1.message || err1);
+  } else {
+    console.error('[Email Engine ⚠️] Nodemailer Primary SMTP Error:', resSumit.reason?.message || resSumit.reason);
   }
 
-  // Send auto-reply to the sender independently via Nodemailer
-  try {
-    const info2 = await transporter.sendMail(mailToSender);
-    console.log(`[Email Engine ⚡] Auto-reply confirmation sent to ${email} via Nodemailer SMTP. MessageId: ${info2.messageId}`);
+  if (resSender.status === 'fulfilled') {
+    console.log(`[Email Engine ⚡] Auto-reply confirmation sent to ${email} via Nodemailer SMTP. MessageId: ${resSender.value.messageId}`);
     senderSent = true;
-  } catch (err2) {
-    console.error('[Email Engine ⚠️] Nodemailer Auto-reply Error:', err2.message || err2);
+  } else {
+    console.error('[Email Engine ⚠️] Nodemailer Auto-reply Error:', resSender.reason?.message || resSender.reason);
   }
 
   if (!sumitSent || !senderSent) {
     console.warn('[Email Engine ⚠️] SMTP Warning: One or both emails failed to deliver via Gmail SMTP. Please verify GMAIL_APP_PASS in Render dashboard.');
   }
+
+  return { sumitSent, senderSent };
 }
 
 // ─── Contact Form Email Handler ────────────────────────────────────────────────
@@ -164,20 +174,22 @@ app.post('/api/contact', async (req, res) => {
     return res.status(400).json({ success: false, error: 'Invalid email address.' });
   }
 
-  // 1. Respond IMMEDIATELY to the frontend so form submission completes in <0.01 seconds!
-  res.status(200).json({
-    success: true,
-    message: `Thank you, ${name}! Your message has been sent. I'll reply to ${email} within 24 hours.`
-  });
-
-  // 2. Dispatch emails via Nodemailer SMTP asynchronously in background
-  setImmediate(async () => {
-    try {
-      await dispatchEmailNotification(name, email, number, inquiryType, message);
-    } catch (dispatchErr) {
-      console.error('[Email Engine ❌] Async dispatch error:', dispatchErr.message || dispatchErr);
-    }
-  });
+  try {
+    // Synchronously await email dispatch so cloud platform (Render) process stays active until emails are sent!
+    const dispatchResult = await dispatchEmailNotification(name, email, number, inquiryType, message);
+    
+    res.status(200).json({
+      success: true,
+      message: `Thank you, ${name}! Your message has been sent. I'll reply to ${email} within 24 hours.`,
+      dispatch: dispatchResult
+    });
+  } catch (err) {
+    console.error('[Email Engine ❌] Dispatch error:', err.message || err);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to process message email notification.'
+    });
+  }
 });
 
 // ─── 24/7 Keep-Alive Ping Engine (Prevents Render Free Tier Sleeping) ─────────
