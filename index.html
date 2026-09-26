@@ -3059,13 +3059,17 @@
       preloadImages();
 
       // ─── Contact Form — Real Backend Submission ──────────────────────────────
-      const DEPLOY_BUILD = '2026-09-26-v2.0.0-fresh';
+      const DEPLOY_BUILD = '2026-09-26-v3.0.0-vercel-api';
       const contactForm = document.getElementById('portfolio-contact-form');
       const contactAlert = document.getElementById('contact-alert');
       const submitBtn = document.getElementById('submit-btn');
-      const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? 'http://localhost:3001/api/contact' 
-        : 'https://sumit-portfolio-backend-d8ys.onrender.com/api/contact';
+      const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const CONTACT_ENDPOINTS = isLocalHost
+        ? ['http://localhost:3001/api/contact']
+        : [
+            `${window.location.origin}/api/contact`,
+            'https://sumit-portfolio-backend-d8ys.onrender.com/api/contact'
+          ];
 
       function showAlert(type, msg) {
         contactAlert.className = 'form-alert ' + type;
@@ -3118,63 +3122,70 @@
           };
 
           let sentSuccessfully = false;
+          let partialDelivery = false;
+          let lastError = '';
 
-          // Attempt 1: Try Render backend with strict 6-second timeout (prevents cold-start hanging on mobile)
-          try {
+          async function postContact(url) {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 6000);
-
-            const res = await fetch(BACKEND_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload),
-              signal: controller.signal
-            });
-            clearTimeout(timeoutId);
-
-            if (res.ok) {
-              const data = await res.json();
-              if (data.success) {
-                sentSuccessfully = true;
+            const timeoutId = setTimeout(() => controller.abort(), url.includes('onrender.com') ? 45000 : 25000);
+            try {
+              const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                body: JSON.stringify(payload),
+                signal: controller.signal
+              });
+              clearTimeout(timeoutId);
+              let data = {};
+              try {
+                data = await res.json();
+              } catch (_) {
+                data = {};
               }
+              return { res, data };
+            } catch (err) {
+              clearTimeout(timeoutId);
+              throw err;
             }
-          } catch (err) {
-            console.warn('[Render Backend Timeout/Error — switching to instant FormSubmit fallback]', err);
           }
 
-          // Attempt 2: Direct FormSubmit Fallback if Render is cold-starting or offline
-          if (!sentSuccessfully) {
+          for (const endpoint of CONTACT_ENDPOINTS) {
             try {
-              const fsRes = await fetch('https://formsubmit.co/ajax/deeprajpaul500@gmail.com', {
-                method: 'POST',
-                headers: { 
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                  name: nameVal,
-                  email: emailVal,
-                  phone: numberVal || 'Not provided',
-                  inquiryType: inquiryVal || 'General Inquiry',
-                  message: messageVal,
-                  _subject: `[Portfolio Contact] New Message from ${nameVal} (${emailVal})`
-                })
-              });
-              const fsData = await fsRes.json();
-              if (fsRes.ok || fsData.success === 'true' || fsData.success === true || fsRes.status === 200) {
-                sentSuccessfully = true;
+              const { res, data } = await postContact(endpoint);
+              if (res.ok && data.success) {
+                const d = data.dispatch || {};
+                if (d.sumitSent || d.senderSent) {
+                  sentSuccessfully = true;
+                  partialDelivery = Boolean(d.sumitSent !== d.senderSent);
+                  break;
+                }
               }
-            } catch (fsErr) {
-              console.error('[FormSubmit Fallback Error]', fsErr);
+              if (data.error) {
+                lastError = data.error;
+              }
+            } catch (err) {
+              console.warn('[Contact API]', endpoint, err);
             }
           }
 
           if (sentSuccessfully) {
-            showAlert('success', `✅ <strong>Message sent successfully!</strong> Thank you, ${nameVal}! I've received your message and will reply to <em>${emailVal}</em> within 24 hours.`);
+            const partialNote = partialDelivery
+              ? ' (One confirmation email may arrive shortly.)'
+              : '';
+            showAlert(
+              'success',
+              `✅ <strong>Message sent successfully!</strong> Thank you, ${nameVal}! You'll get a confirmation at <em>${emailVal}</em> and I'll reply within 24 hours.${partialNote}`
+            );
             contactForm.reset();
             clearAlert(10000);
           } else {
-            showAlert('error', '⚠️ Could not send automatically. Please email directly at <a href="mailto:deeprajpaul500@gmail.com" style="color: #ff5500; text-decoration: underline;">deeprajpaul500@gmail.com</a>.');
+            const hint = lastError
+              ? `<br /><span style="font-size:13px;opacity:0.85;">${lastError}</span>`
+              : '';
+            showAlert(
+              'error',
+              `⚠️ Could not send automatically.${hint} Please email directly at <a href="mailto:deeprajpaul500@gmail.com" style="color: #ff5500; text-decoration: underline;">deeprajpaul500@gmail.com</a>.`
+            );
           }
 
           if (submitBtn) {

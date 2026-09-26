@@ -1,0 +1,7 @@
+{
+  "name": "sumit-paul-portfolio",
+  "private": true,
+  "dependencies": {
+    "nodemailer": "^9.1.1"
+  }
+}
