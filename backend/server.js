@@ -105,19 +105,28 @@ async function dispatchEmailNotification(name, email, number, inquiryType, messa
     `,
   };
 
+  let sumitSent = false;
+  let senderSent = false;
+
   try {
     const info1 = await transporter.sendMail(mailToSumit);
-    console.log(`[Email Engine ⚡] Primary notification sent via Nodemailer SMTP. MessageId: ${info1.messageId}`);
+    console.log(`[Email Engine ⚡] Primary notification sent to ${GMAIL_USER} via Nodemailer SMTP. MessageId: ${info1.messageId}`);
+    sumitSent = true;
   } catch (err1) {
     console.error('[Email Engine ⚠️] Nodemailer Primary SMTP Error:', err1.message || err1);
   }
 
-  // Always send auto-reply to the sender independently via Nodemailer
+  // Send auto-reply to the sender independently via Nodemailer
   try {
     const info2 = await transporter.sendMail(mailToSender);
-    console.log(`[Email Engine ⚡] Auto-reply confirmation sent via Nodemailer SMTP. MessageId: ${info2.messageId}`);
+    console.log(`[Email Engine ⚡] Auto-reply confirmation sent to ${email} via Nodemailer SMTP. MessageId: ${info2.messageId}`);
+    senderSent = true;
   } catch (err2) {
     console.error('[Email Engine ⚠️] Nodemailer Auto-reply Error:', err2.message || err2);
+  }
+
+  if (!sumitSent || !senderSent) {
+    console.warn('[Email Engine ⚠️] SMTP Warning: One or both emails failed to deliver via Gmail SMTP. Please verify GMAIL_APP_PASS in Render dashboard.');
   }
 }
 
