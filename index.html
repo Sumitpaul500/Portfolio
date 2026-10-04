@@ -37,12 +37,20 @@
       z-index: 1;
       pointer-events: none;
       overflow: hidden;
+      transform: translateZ(0);
+      contain: strict;
+    }
+
+    #animation-canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      transform: translateZ(0);
+      image-rendering: auto;
     }
 
     canvas {
       display: block;
-      width: 100vw;
-      height: 100vh;
     }
 
     /* Header Navigation - Sleek Translucent Dark Glass Bar */
@@ -2886,13 +2894,17 @@
       const FRAME_PATH_SUFFIX = '.png';
 
       const canvas = document.getElementById('animation-canvas');
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
       const loader = document.getElementById('loader');
       const loaderText = document.getElementById('loader-text');
       const loaderFill = document.getElementById('loader-fill');
 
-      const images = [];
+      const images = new Array(TOTAL_FRAMES);
       let loadedCount = 0;
+      let lastDrawnIndex = -1;
+      let cssWidth = window.innerWidth;
+      let cssHeight = window.innerHeight;
+      let drawScale = 1;
 
       let targetFrame = 0;
       let currentFrame = 0;
@@ -2902,59 +2914,68 @@
         return `${FRAME_PATH_PREFIX}${paddedIndex}${FRAME_PATH_SUFFIX}`;
       }
 
+      function getDrawableFrame(index) {
+        const clamped = Math.max(0, Math.min(TOTAL_FRAMES - 1, index));
+        if (images[clamped]) return { img: images[clamped], index: clamped };
+        for (let d = 1; d < TOTAL_FRAMES; d++) {
+          const hi = clamped + d;
+          const lo = clamped - d;
+          if (hi < TOTAL_FRAMES && images[hi]) return { img: images[hi], index: hi };
+          if (lo >= 0 && images[lo]) return { img: images[lo], index: lo };
+        }
+        return null;
+      }
+
       function resizeCanvas() {
-        const dpr = window.devicePixelRatio || 1;
-        const width = window.innerWidth;
-        const height = window.innerHeight;
+        cssWidth = window.innerWidth;
+        cssHeight = window.innerHeight;
+        const dpr = Math.min(window.devicePixelRatio || 1, cssWidth > 1280 ? 1.25 : 1.5);
+        const maxEdge = 1600;
+        const longEdge = Math.max(cssWidth, cssHeight);
+        drawScale = longEdge > maxEdge ? maxEdge / longEdge : 1;
+        const bufferScale = dpr * drawScale;
 
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
-        canvas.style.width = width + 'px';
-        canvas.style.height = height + 'px';
-
-        ctx.scale(dpr, dpr);
-        renderCurrentFrame();
+        canvas.width = Math.max(1, Math.round(cssWidth * bufferScale));
+        canvas.height = Math.max(1, Math.round(cssHeight * bufferScale));
+        canvas.style.width = cssWidth + 'px';
+        canvas.style.height = cssHeight + 'px';
+        ctx.setTransform(bufferScale, 0, 0, bufferScale, 0, 0);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'medium';
+        lastDrawnIndex = -1;
+        renderCurrentFrame(true);
       }
 
       function drawFrame(img) {
-        if (!img || !img.complete || img.naturalWidth === 0) return;
+        if (!img) return;
+        const imgWidth = img.naturalWidth || img.width;
+        const imgHeight = img.naturalHeight || img.height;
+        if (!imgWidth || !imgHeight) return;
 
-        const canvasWidth = window.innerWidth;
-        const canvasHeight = window.innerHeight;
-
-        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-        const imgWidth = img.naturalWidth;
-        const imgHeight = img.naturalHeight;
-
-        // Cover fit: fill 100% of the screen background on all devices including large & ultrawide displays
-        const scale = Math.max(canvasWidth / imgWidth, canvasHeight / imgHeight);
+        const scale = Math.max(cssWidth / imgWidth, cssHeight / imgHeight);
         const drawWidth = imgWidth * scale;
         const drawHeight = imgHeight * scale;
+        const x = (cssWidth - drawWidth) / 2;
+        const y = (drawHeight > cssHeight) ? 0 : (cssHeight - drawHeight) / 2;
 
-        const x = (canvasWidth - drawWidth) / 2;
-        // Top-aligned with subtle offset so top subject is fully complete and unclipped
-        const y = (drawHeight > canvasHeight) ? 0 : (canvasHeight - drawHeight) / 2;
-
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, cssWidth, cssHeight);
         ctx.drawImage(img, x, y, drawWidth, drawHeight);
       }
 
-      function renderCurrentFrame() {
+      function renderCurrentFrame(force) {
         const roundedIndex = Math.round(currentFrame);
-        const clampedIndex = Math.max(0, Math.min(TOTAL_FRAMES - 1, roundedIndex));
-        if (images[clampedIndex]) {
-          drawFrame(images[clampedIndex]);
-        }
+        const drawable = getDrawableFrame(roundedIndex);
+        if (!drawable) return;
+        if (!force && drawable.index === lastDrawnIndex) return;
+        lastDrawnIndex = drawable.index;
+        drawFrame(drawable.img);
       }
 
       function updateScrollProgress() {
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        
         if (maxScroll <= 0) return;
-
         const progress = Math.max(0, Math.min(1, scrollTop / maxScroll));
         targetFrame = progress * (TOTAL_FRAMES - 1);
       }
@@ -2964,21 +2985,17 @@
         requestTick();
       }
 
-      window.addEventListener('resize', resizeCanvas);
-      window.addEventListener('orientationchange', resizeCanvas);
-      window.addEventListener('scroll', handleScroll, { passive: true });
-
       let tickRunning = false;
       function tick() {
         const diff = targetFrame - currentFrame;
-        
-        if (Math.abs(diff) > 0.001) {
-          currentFrame += diff * 0.12;
-          renderCurrentFrame();
+        if (Math.abs(diff) > 0.02) {
+          const follow = Math.abs(diff) > 12 ? 0.55 : 0.34;
+          currentFrame += diff * follow;
+          renderCurrentFrame(false);
           requestAnimationFrame(tick);
         } else {
           currentFrame = targetFrame;
-          renderCurrentFrame();
+          renderCurrentFrame(false);
           tickRunning = false;
         }
       }
@@ -2988,6 +3005,12 @@
           tickRunning = true;
           requestAnimationFrame(tick);
         }
+      }
+
+      let resizeTimer = 0;
+      function scheduleResize() {
+        cancelAnimationFrame(resizeTimer);
+        resizeTimer = requestAnimationFrame(resizeCanvas);
       }
 
       let hasLoadedFinished = false;
@@ -3007,11 +3030,12 @@
       }
 
       function preloadImages() {
-        // Instant render for Frame 1 so page displays under 150ms
         const firstImg = new Image();
+        firstImg.decoding = 'async';
         firstImg.onload = () => {
           images[0] = firstImg;
           drawFrame(firstImg);
+          lastDrawnIndex = 0;
           onAllLoaded();
           preloadRemainingFrames();
         };
@@ -3027,39 +3051,45 @@
       }
 
       function preloadRemainingFrames() {
-        let index = 2;
-        function loadNextBatch() {
-          const batchEnd = Math.min(index + 6, TOTAL_FRAMES + 1);
-          for (; index < batchEnd; index++) {
+        let nextIndex = 2;
+        const CONCURRENCY = 12;
+        let active = 0;
+
+        function startNext() {
+          while (active < CONCURRENCY && nextIndex <= TOTAL_FRAMES) {
+            const fileIndex = nextIndex++;
+            active++;
             const img = new Image();
-            const frameIdx = index - 1;
+            img.decoding = 'async';
+            const frameIdx = fileIndex - 1;
+            const done = () => {
+              active--;
+              startNext();
+            };
             img.onload = () => {
               images[frameIdx] = img;
               loadedCount++;
+              done();
             };
-            img.onerror = () => { loadedCount++; };
-            img.src = getFrameFilename(index);
-          }
-          if (index <= TOTAL_FRAMES) {
-            if ('requestIdleCallback' in window) {
-              requestIdleCallback(loadNextBatch, { timeout: 100 });
-            } else {
-              setTimeout(loadNextBatch, 20);
-            }
+            img.onerror = () => {
+              loadedCount++;
+              done();
+            };
+            img.src = getFrameFilename(fileIndex);
           }
         }
-        loadNextBatch();
+        startNext();
       }
 
-      window.addEventListener('resize', resizeCanvas);
-      window.addEventListener('orientationchange', resizeCanvas);
+      window.addEventListener('resize', scheduleResize, { passive: true });
+      window.addEventListener('orientationchange', scheduleResize, { passive: true });
       window.addEventListener('scroll', handleScroll, { passive: true });
 
       resizeCanvas();
       preloadImages();
 
       // ─── Contact Form — Real Backend Submission ──────────────────────────────
-      const DEPLOY_BUILD = '2026-09-26-v5.0.0-mobile-email-fix';
+      const DEPLOY_BUILD = '2026-10-04-v6.0.0-smooth-bg';
       const contactForm = document.getElementById('portfolio-contact-form');
       const contactAlert = document.getElementById('contact-alert');
       const submitBtn = document.getElementById('submit-btn');
