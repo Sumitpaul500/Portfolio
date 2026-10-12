@@ -9,9 +9,7 @@
   <meta property="og:description" content="Full Stack Developer & Computer Science Student (CGPA 9.59) specializing in web applications, backend APIs, and AI integrations." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="image" href="./frames-webp/frame-001.webp" fetchpriority="high">
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -26,16 +24,7 @@
       color: #ffffff;
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow-x: hidden;
-      scroll-behavior: auto;
-    }
-
-    #about,
-    #skills,
-    #projects,
-    #contact,
-    footer {
-      content-visibility: auto;
-      contain-intrinsic-size: auto 900px;
+      scroll-behavior: smooth;
     }
 
     /* Fixed Canvas background animation - Fills 100% of screen on all displays */
@@ -43,24 +32,25 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       z-index: 1;
       pointer-events: none;
       overflow: hidden;
+      transform: translateZ(0);
       contain: strict;
-      background-color: #000;
-      background-image: url('./frames-webp/frame-001.webp');
-      background-position: center top;
-      background-size: cover;
-      background-repeat: no-repeat;
     }
 
     #animation-canvas {
       display: block;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
+      width: 100vw;
+      height: 100vh;
+      transform: translateZ(0);
+      image-rendering: auto;
+    }
+
+    canvas {
+      display: block;
     }
 
     /* Header Navigation - Sleek Translucent Dark Glass Bar */
@@ -1252,15 +1242,13 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: transparent;
+      background: #000000;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: center;
       align-items: center;
-      padding-bottom: 28px;
       z-index: 9999;
-      pointer-events: none;
-      transition: opacity 0.35s ease, visibility 0.35s;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s;
     }
 
     .loader.hidden {
@@ -1675,31 +1663,37 @@
 
     /* Scroll Reveal Entrance Base Class */
     .reveal-item {
-      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-                  opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity, filter;
+      transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     /* Left-side cards fly in from Left */
     .reveal-left {
       opacity: 0;
-      transform: translate3d(-72px, 24px, 0) rotate(-2.5deg) scale(0.94);
+      filter: blur(8px);
+      transform: translate3d(-90px, 30px, 0) rotate(-2.5deg) scale(0.93);
     }
 
     /* Right-side cards fly in from Right */
     .reveal-right {
       opacity: 0;
-      transform: translate3d(72px, 24px, 0) rotate(2.5deg) scale(0.94);
+      filter: blur(8px);
+      transform: translate3d(90px, 30px, 0) rotate(2.5deg) scale(0.93);
     }
 
     /* Center / single cards fly in from Bottom Center */
     .reveal-center {
       opacity: 0;
-      transform: translate3d(0, 48px, 0) scale(0.94);
+      filter: blur(8px);
+      transform: translate3d(0, 60px, 0) scale(0.92);
     }
 
     /* Active Revealed State */
     .reveal-item.revealed {
       opacity: 1 !important;
+      filter: blur(0px) !important;
       transform: translate3d(0, 0, 0) rotate(0deg) scale(1) !important;
     }
 
@@ -2174,48 +2168,13 @@
 
     /* Proximity Button Interactive Transitions */
     .proximity-btn {
+      will-change: transform, box-shadow, filter;
       transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  filter 0.25s cubic-bezier(0.16, 1, 0.3, 1),
                   background-color 0.25s ease !important;
     }
 
-    @media (max-width: 860px) {
-      header {
-        background: rgba(10, 10, 16, 0.94);
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
-      }
-      .services-grid,
-      .stats-card,
-      .growaz-card,
-      .tailored-card,
-      .project-card,
-      .showcase-card,
-      .connect-card,
-      .contact-card-wrap {
-        background: rgba(14, 14, 20, 0.86) !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-      }
-      .mobile-nav-overlay {
-        background: rgba(8, 8, 14, 0.96);
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html, body { scroll-behavior: auto; }
-      .reveal-item,
-      .reveal-left,
-      .reveal-right,
-      .reveal-center,
-      .reveal-item.revealed {
-        opacity: 1 !important;
-        transform: none !important;
-        transition: none !important;
-        filter: none !important;
-      }
-    }
 
   </style>
 </head>
@@ -2931,136 +2890,86 @@
   <script>
     (function () {
       const TOTAL_FRAMES = 240;
-      const WEBP_PREFIX = './frames-webp/frame-';
-      const WEBP_SUFFIX = '.webp';
+      const FRAME_PATH_PREFIX = './ezgif-1733b1c7cf1a5d50-png-split/ezgif-frame-';
+      const FRAME_PATH_SUFFIX = '.png';
 
       const canvas = document.getElementById('animation-canvas');
-      if (!canvas) return;
-
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-      const saveData = !!(conn && (conn.saveData || /2g/i.test(conn.effectiveType || '')));
-      const isCoarse = window.matchMedia('(hover: none), (pointer: coarse)').matches || window.innerWidth <= 860;
-      const lowPower = saveData || isCoarse || (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
-      const frameStride = reducedMotion ? Math.max(1, TOTAL_FRAMES - 1) : (lowPower ? 4 : 2);
-      const maxDpr = lowPower || reducedMotion ? 1 : 1.25;
-      const maxConcurrent = 1;
-      const maxCached = lowPower ? 14 : 24;
-      const bitmapW = lowPower ? 640 : 854;
-      const bitmapH = Math.round(bitmapW * 9 / 16);
-
-      const ctx = canvas.getContext('2d', {
-        alpha: true,
-        desynchronized: true
-      });
+      const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
       const loader = document.getElementById('loader');
       const loaderText = document.getElementById('loader-text');
       const loaderFill = document.getElementById('loader-fill');
-      if (loader) loader.classList.add('hidden');
 
       const images = new Array(TOTAL_FRAMES);
-      const loaded = [];
-      const inFlight = new Set();
-      const pending = [];
-
-      let targetFrame = 0;
-      let currentFrame = 0;
+      let loadedCount = 0;
       let lastDrawnIndex = -1;
       let cssWidth = window.innerWidth;
       let cssHeight = window.innerHeight;
-      let dpr = 1;
-      let tickRunning = false;
-      let tickHandle = 0;
-      let hasLoadedFinished = false;
-      let prefetchArmed = false;
+      let drawScale = 1;
 
-      function getFrameUrl(fileIndex) {
-        return `${WEBP_PREFIX}${String(fileIndex).padStart(3, '0')}${WEBP_SUFFIX}`;
+      let targetFrame = 0;
+      let currentFrame = 0;
+
+      function getFrameFilename(index) {
+        const paddedIndex = String(index).padStart(3, '0');
+        return `${FRAME_PATH_PREFIX}${paddedIndex}${FRAME_PATH_SUFFIX}`;
       }
 
-      function snapIndex(index) {
+      function getDrawableFrame(index) {
         const clamped = Math.max(0, Math.min(TOTAL_FRAMES - 1, index));
-        if (frameStride <= 1) return clamped;
-        return Math.max(0, Math.min(TOTAL_FRAMES - 1, Math.round(clamped / frameStride) * frameStride));
-      }
-
-      function insertLoaded(index) {
-        let lo = 0;
-        let hi = loaded.length;
-        while (lo < hi) {
-          const mid = (lo + hi) >> 1;
-          if (loaded[mid] < index) lo = mid + 1;
-          else hi = mid;
+        if (images[clamped]) return { img: images[clamped], index: clamped };
+        for (let d = 1; d < TOTAL_FRAMES; d++) {
+          const hi = clamped + d;
+          const lo = clamped - d;
+          if (hi < TOTAL_FRAMES && images[hi]) return { img: images[hi], index: hi };
+          if (lo >= 0 && images[lo]) return { img: images[lo], index: lo };
         }
-        if (loaded[lo] !== index) loaded.splice(lo, 0, index);
-      }
-
-      function nearestLoadedIndex(targetIndex) {
-        if (!loaded.length) return null;
-        const clamped = Math.max(0, Math.min(TOTAL_FRAMES - 1, targetIndex));
-        let lo = 0;
-        let hi = loaded.length - 1;
-        while (lo <= hi) {
-          const mid = (lo + hi) >> 1;
-          if (loaded[mid] === clamped) return clamped;
-          if (loaded[mid] < clamped) lo = mid + 1;
-          else hi = mid - 1;
-        }
-        const after = loaded[Math.min(loaded.length - 1, lo)];
-        const before = loaded[Math.max(0, lo - 1)];
-        if (after == null) return before;
-        if (before == null) return after;
-        return (clamped - before) <= (after - clamped) ? before : after;
-      }
-
-      function frameSize(img) {
-        return {
-          w: img.naturalWidth || img.width || 0,
-          h: img.naturalHeight || img.height || 0
-        };
+        return null;
       }
 
       function resizeCanvas() {
         cssWidth = window.innerWidth;
         cssHeight = window.innerHeight;
-        dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
-
-        const maxEdge = lowPower ? 960 : 1280;
+        const dpr = Math.min(window.devicePixelRatio || 1, cssWidth > 1280 ? 1.25 : 1.5);
+        const maxEdge = 1600;
         const longEdge = Math.max(cssWidth, cssHeight);
-        const bufferScale = longEdge > maxEdge ? (maxEdge / longEdge) * dpr : dpr;
+        drawScale = longEdge > maxEdge ? maxEdge / longEdge : 1;
+        const bufferScale = dpr * drawScale;
 
         canvas.width = Math.max(1, Math.round(cssWidth * bufferScale));
         canvas.height = Math.max(1, Math.round(cssHeight * bufferScale));
-
+        canvas.style.width = cssWidth + 'px';
+        canvas.style.height = cssHeight + 'px';
         ctx.setTransform(bufferScale, 0, 0, bufferScale, 0, 0);
-        ctx.imageSmoothingEnabled = !lowPower;
-        ctx.imageSmoothingQuality = 'low';
-
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'medium';
         lastDrawnIndex = -1;
         renderCurrentFrame(true);
       }
 
       function drawFrame(img) {
-        const { w: imgWidth, h: imgHeight } = frameSize(img);
+        if (!img) return;
+        const imgWidth = img.naturalWidth || img.width;
+        const imgHeight = img.naturalHeight || img.height;
         if (!imgWidth || !imgHeight) return;
 
         const scale = Math.max(cssWidth / imgWidth, cssHeight / imgHeight);
         const drawWidth = imgWidth * scale;
         const drawHeight = imgHeight * scale;
         const x = (cssWidth - drawWidth) / 2;
-        const y = drawHeight > cssHeight ? 0 : (cssHeight - drawHeight) / 2;
+        const y = (drawHeight > cssHeight) ? 0 : (cssHeight - drawHeight) / 2;
+
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, cssWidth, cssHeight);
         ctx.drawImage(img, x, y, drawWidth, drawHeight);
-        if (canvas.style.opacity !== '1') canvas.style.opacity = '1';
       }
 
       function renderCurrentFrame(force) {
-        const nearest = nearestLoadedIndex(Math.round(currentFrame));
-        if (nearest == null) return;
-        if (!force && nearest === lastDrawnIndex) return;
-        const img = images[nearest];
-        if (!img) return;
-        lastDrawnIndex = nearest;
-        drawFrame(img);
+        const roundedIndex = Math.round(currentFrame);
+        const drawable = getDrawableFrame(roundedIndex);
+        if (!drawable) return;
+        if (!force && drawable.index === lastDrawnIndex) return;
+        lastDrawnIndex = drawable.index;
+        drawFrame(drawable.img);
       }
 
       function updateScrollProgress() {
@@ -3071,140 +2980,31 @@
         targetFrame = progress * (TOTAL_FRAMES - 1);
       }
 
-      function enqueue(index, urgent) {
-        const snapped = snapIndex(index);
-        if (images[snapped] || inFlight.has(snapped)) return;
-        const existing = pending.indexOf(snapped);
-        if (existing !== -1) pending.splice(existing, 1);
-        if (urgent) pending.unshift(snapped);
-        else pending.push(snapped);
-        pumpLoads();
-      }
-
-      function prioritizeAround(center) {
-        const snapped = snapIndex(center);
-        enqueue(snapped, true);
-        enqueue(snapped + frameStride, true);
-        enqueue(snapped - frameStride, true);
-        enqueue(snapped + frameStride * 2, false);
-        enqueue(snapped - frameStride * 2, false);
-        enqueue(snapped + frameStride * 3, false);
-        enqueue(snapped - frameStride * 3, false);
-      }
-
-      function evictFarFrames() {
-        if (loaded.length <= maxCached) return;
-        const center = Math.round(currentFrame);
-        let farthestIdx = 0;
-        let farthestDist = -1;
-        for (let i = 0; i < loaded.length; i++) {
-          const dist = Math.abs(loaded[i] - center);
-          if (dist > farthestDist) {
-            farthestDist = dist;
-            farthestIdx = i;
-          }
-        }
-        if (farthestDist < frameStride * 6) return;
-        const drop = loaded.splice(farthestIdx, 1)[0];
-        const img = images[drop];
-        images[drop] = undefined;
-        if (img && typeof img.close === 'function') img.close();
-      }
-
-      async function decodeFrame(url) {
-        const res = await fetch(url, { cache: 'force-cache' });
-        if (!res.ok) throw new Error('frame fetch failed');
-        const blob = await res.blob();
-        if (typeof createImageBitmap === 'function') {
-          try {
-            return await createImageBitmap(blob, {
-              resizeWidth: bitmapW,
-              resizeHeight: bitmapH,
-              resizeQuality: lowPower ? 'low' : 'medium'
-            });
-          } catch (_) {
-            return await createImageBitmap(blob);
-          }
-        }
-        return await new Promise((resolve, reject) => {
-          const img = new Image();
-          img.decoding = 'async';
-          img.onload = () => resolve(img);
-          img.onerror = reject;
-          img.src = URL.createObjectURL(blob);
-        });
-      }
-
-      async function loadFrame(index) {
-        if (images[index] || inFlight.has(index)) return;
-        inFlight.add(index);
-        try {
-          const bitmap = await decodeFrame(getFrameUrl(index + 1));
-          images[index] = bitmap;
-          insertLoaded(index);
-          evictFarFrames();
-          if (Math.abs(Math.round(currentFrame) - index) <= frameStride * 2) {
-            renderCurrentFrame(true);
-          }
-        } catch (_) {
-          /* keep nearest loaded frame on screen */
-        } finally {
-          inFlight.delete(index);
-          pumpLoads();
-        }
-      }
-
-      function pumpLoads() {
-        if (document.hidden) return;
-        while (inFlight.size < maxConcurrent && pending.length) {
-          const next = pending.shift();
-          if (!images[next] && !inFlight.has(next)) loadFrame(next);
-        }
-      }
-
-      function armPrefetch() {
-        if (prefetchArmed || reducedMotion) return;
-        prefetchArmed = true;
-        updateScrollProgress();
-        prioritizeAround(targetFrame);
-      }
-
       function handleScroll() {
-        if (document.hidden || reducedMotion) return;
-        if (!canvas.width) resizeCanvas();
         updateScrollProgress();
-        armPrefetch();
         requestTick();
       }
 
+      let tickRunning = false;
       function tick() {
-        if (document.hidden) {
-          tickRunning = false;
-          return;
-        }
-        const nearest = nearestLoadedIndex(targetFrame);
-        const goal = nearest == null
-          ? targetFrame
-          : (Math.abs(nearest - targetFrame) > frameStride * 2 ? nearest : targetFrame);
-        const diff = goal - currentFrame;
-        const absDiff = Math.abs(diff);
-
-        if (absDiff > 0.02) {
-          const lerpRate = absDiff > 15 ? 0.5 : (absDiff > 5 ? 0.32 : 0.2);
-          currentFrame += diff * lerpRate;
+        const diff = targetFrame - currentFrame;
+        if (Math.abs(diff) > 0.02) {
+          const follow = Math.abs(diff) > 12 ? 0.55 : 0.34;
+          currentFrame += diff * follow;
           renderCurrentFrame(false);
-          tickHandle = requestAnimationFrame(tick);
+          requestAnimationFrame(tick);
         } else {
-          currentFrame = goal;
+          currentFrame = targetFrame;
           renderCurrentFrame(false);
           tickRunning = false;
         }
       }
 
       function requestTick() {
-        if (tickRunning || document.hidden) return;
-        tickRunning = true;
-        tickHandle = requestAnimationFrame(tick);
+        if (!tickRunning) {
+          tickRunning = true;
+          requestAnimationFrame(tick);
+        }
       }
 
       let resizeTimer = 0;
@@ -3213,72 +3013,83 @@
         resizeTimer = requestAnimationFrame(resizeCanvas);
       }
 
-      function onInitialLoadDone() {
+      let hasLoadedFinished = false;
+      function onAllLoaded() {
         if (hasLoadedFinished) return;
         hasLoadedFinished = true;
-        if (loader) loader.classList.add('hidden');
-        if (loaderText) loaderText.textContent = 'Loading 100%';
-        if (loaderFill) loaderFill.style.width = '100%';
+
+        if (loaderText) loaderText.textContent = "Loading 100%";
+        if (loaderFill) loaderFill.style.width = "100%";
+
+        setTimeout(() => {
+          if (loader) loader.classList.add('hidden');
+        }, 200);
+
         updateScrollProgress();
-        const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 420));
-        idle(() => {
-          if (!prefetchArmed && !reducedMotion) armPrefetch();
-        }, { timeout: 1200 });
+        requestTick();
       }
 
-      function preloadFirstFrame() {
-        const first = new Image();
-        first.decoding = 'async';
-        first.fetchPriority = 'high';
-        const settle = () => {
-          if (!images[0]) {
-            images[0] = first;
-            insertLoaded(0);
-          }
-          onInitialLoadDone();
+      function preloadImages() {
+        const firstImg = new Image();
+        firstImg.decoding = 'async';
+        firstImg.onload = () => {
+          images[0] = firstImg;
+          drawFrame(firstImg);
+          lastDrawnIndex = 0;
+          onAllLoaded();
+          preloadRemainingFrames();
         };
-        first.onload = () => {
-          if (first.decode) {
-            first.decode().then(settle).catch(settle);
-          } else {
-            settle();
-          }
+        firstImg.onerror = () => {
+          onAllLoaded();
+          preloadRemainingFrames();
         };
-        first.onerror = settle;
-        first.src = getFrameUrl(1);
-        onInitialLoadDone();
+        firstImg.src = getFrameFilename(1);
+
+        setTimeout(() => {
+          if (!hasLoadedFinished) onAllLoaded();
+        }, 150);
+      }
+
+      function preloadRemainingFrames() {
+        let nextIndex = 2;
+        const CONCURRENCY = 12;
+        let active = 0;
+
+        function startNext() {
+          while (active < CONCURRENCY && nextIndex <= TOTAL_FRAMES) {
+            const fileIndex = nextIndex++;
+            active++;
+            const img = new Image();
+            img.decoding = 'async';
+            const frameIdx = fileIndex - 1;
+            const done = () => {
+              active--;
+              startNext();
+            };
+            img.onload = () => {
+              images[frameIdx] = img;
+              loadedCount++;
+              done();
+            };
+            img.onerror = () => {
+              loadedCount++;
+              done();
+            };
+            img.src = getFrameFilename(fileIndex);
+          }
+        }
+        startNext();
       }
 
       window.addEventListener('resize', scheduleResize, { passive: true });
       window.addEventListener('orientationchange', scheduleResize, { passive: true });
       window.addEventListener('scroll', handleScroll, { passive: true });
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          cancelAnimationFrame(tickHandle);
-          tickRunning = false;
-          return;
-        }
-        updateScrollProgress();
-        prioritizeAround(targetFrame);
-        requestTick();
-        pumpLoads();
-      });
 
-      preloadFirstFrame();
-      if (lowPower) {
-        const bootCanvas = () => {
-          resizeCanvas();
-        };
-        window.addEventListener('pointerdown', bootCanvas, { once: true, passive: true });
-        window.addEventListener('scroll', bootCanvas, { once: true, passive: true });
-        const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 700));
-        idle(bootCanvas, { timeout: 1600 });
-      } else {
-        resizeCanvas();
-      }
+      resizeCanvas();
+      preloadImages();
 
       // ─── Contact Form — Real Backend Submission ──────────────────────────────
-      const DEPLOY_BUILD = '2026-10-13-v10.0.0-first-paint';
+      const DEPLOY_BUILD = '2026-10-04-v6.0.0-smooth-bg';
       const contactForm = document.getElementById('portfolio-contact-form');
       const contactAlert = document.getElementById('contact-alert');
       const submitBtn = document.getElementById('submit-btn');
@@ -3515,7 +3326,9 @@
         }
       }
 
+      updateRects();
       window.addEventListener('resize', scheduleUpdateRects, { passive: true });
+      window.addEventListener('scroll', scheduleUpdateRects, { passive: true });
 
       let mouseX = -1000;
       let mouseY = -1000;
@@ -3534,7 +3347,6 @@
       window.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
-        if (!cardStates[0]?.rect) updateRects();
         wakeProximityAnimation();
       }, { passive: true });
 
@@ -3571,6 +3383,7 @@
             s.element.style.setProperty('--glow-y', `${relY.toFixed(1)}%`);
             s.element.style.setProperty('--spotlight-x', `${relX.toFixed(1)}%`);
             s.element.style.setProperty('--spotlight-y', `${relY.toFixed(1)}%`);
+            s.element.style.boxShadow = `0 12px 36px rgba(0, 0, 0, 0.45), 0 0 ${Math.round(s.currentOpacity * 28)}px rgba(255, 85, 0, ${(s.currentOpacity * 0.35).toFixed(2)})`;
           } else if (s.element.style.getPropertyValue('--glow-opacity') !== '0') {
             s.element.style.setProperty('--glow-opacity', '0');
             s.element.style.boxShadow = 'none';
@@ -3605,8 +3418,12 @@
           if (s.currentGlow > 0.005 || s.targetGlow > 0) {
             hasActiveUpdates = true;
             s.element.style.transform = `translateY(${s.currentY.toFixed(2)}px) scale(${s.currentScale.toFixed(3)})`;
+            s.element.style.filter = `brightness(${(1 + s.currentGlow * 0.16).toFixed(2)})`;
+            s.element.style.boxShadow = `0 ${Math.round(s.currentGlow * 8)}px ${Math.round(s.currentGlow * 20)}px rgba(255, 85, 0, ${(s.currentGlow * 0.4).toFixed(2)})`;
           } else if (s.element.style.transform !== '') {
             s.element.style.transform = '';
+            s.element.style.filter = '';
+            s.element.style.boxShadow = '';
           }
         });
 
@@ -3616,6 +3433,8 @@
           isProximityAnimating = false;
         }
       }
+
+      wakeProximityAnimation();
     })();
 
     // ─── Mobile Navigation Drawer Toggle Handler ─────────────────────────────
@@ -3653,9 +3472,6 @@
       const EYEBROW_TEXT = 'Computer Science Student &';
       const TITLE_LINE1  = 'Software';
       const TITLE_LINE2  = 'Developer';
-      const skipTyping = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        || window.matchMedia('(hover: none), (pointer: coarse)').matches
-        || window.innerWidth <= 860;
 
       // ── initial hidden state ──
       eyebrow.textContent = '';
@@ -3670,17 +3486,7 @@
       const wait = ms => new Promise(r => setTimeout(r, ms));
 
       async function startTypingSequence() {
-        if (skipTyping) {
-          eyebrow.textContent = EYEBROW_TEXT;
-          titleEl.innerHTML = TITLE_LINE1 + '<br>' + TITLE_LINE2;
-          subtitle.style.opacity = '1';
-          subtitle.style.transform = 'translateY(0)';
-          desc.style.opacity = '1';
-          desc.style.transform = 'translateY(0)';
-          return;
-        }
-
-        await wait(40);
+        await wait(300);
 
         // 1. Type eyebrow line with caret
         const ebCaret = document.createElement('span');
@@ -3688,9 +3494,9 @@
         eyebrow.appendChild(ebCaret);
         for (let i = 0; i < EYEBROW_TEXT.length; i++) {
           eyebrow.insertBefore(document.createTextNode(EYEBROW_TEXT[i]), ebCaret);
-          await wait(14 + Math.random() * 6);
+          await wait(32 + Math.random() * 14);
         }
-        await wait(60);
+        await wait(220);
         ebCaret.remove();
 
         // 2. Type Title (Software <br> Developer)
@@ -3700,16 +3506,16 @@
 
         for (let i = 0; i < TITLE_LINE1.length; i++) {
           titleEl.insertBefore(document.createTextNode(TITLE_LINE1[i]), tCaret);
-          await wait(18 + Math.random() * 8);
+          await wait(45 + Math.random() * 20);
         }
         titleEl.insertBefore(document.createElement('br'), tCaret);
-        await wait(50);
+        await wait(160);
 
         for (let i = 0; i < TITLE_LINE2.length; i++) {
           titleEl.insertBefore(document.createTextNode(TITLE_LINE2[i]), tCaret);
-          await wait(18 + Math.random() * 8);
+          await wait(45 + Math.random() * 20);
         }
-        await wait(80);
+        await wait(320);
         tCaret.remove();
 
         // 3. Reveal right-side subtitle & desc
@@ -3719,14 +3525,21 @@
         desc.style.transform = 'translateY(0)';
       }
 
-      startTypingSequence();
+      const loader = document.getElementById('loader');
+      if (loader && !loader.classList.contains('hidden')) {
+        const chk = setInterval(() => {
+          if (loader.classList.contains('hidden')) { clearInterval(chk); startTypingSequence(); }
+        }, 100);
+      } else {
+        startTypingSequence();
+      }
     })();
 
     // ─── 3D Physics Tech Balls Engine ────────────────────────────────────────
     (function () {
       const canvas = document.getElementById('tech-balls-canvas');
       if (!canvas) return;
-      const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+      const ctx = canvas.getContext('2d');
 
       // ── Tech list (from actual skills in portfolio) ──
       const TECHS = [
@@ -3759,13 +3572,11 @@
       let animFrame;
       let settled = false;
       let triggered = false;
-      let lastTime = 0;
-      let inViewport = false;
 
       // ── Resize canvas to CSS size with correct DPR handling ──
       function resize() {
         const rect = canvas.getBoundingClientRect();
-        const dpr  = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.5);
+        const dpr  = window.devicePixelRatio || 1;
         if (rect.width <= 0 || rect.height <= 0) return false;
         W = rect.width;
         H = rect.height;
@@ -3849,9 +3660,11 @@
         // ── Outer orange glow on hover (matches site's #ff5500 accent) ──
         if (isHov) {
           ctx.shadowColor = 'rgba(255, 85, 0, 0.65)';
-          ctx.shadowBlur  = isMobile ? 10 : 18;
+          ctx.shadowBlur  = 32;
         } else {
-          ctx.shadowBlur = 0;
+          // subtle colored glow always present
+          ctx.shadowColor = b.glow;
+          ctx.shadowBlur  = 10;
         }
 
         ctx.translate(b.x, b.y);
@@ -4008,10 +3821,6 @@
       }
 
       function render(ts) {
-        if (!inViewport) {
-          isTechBallsRendering = false;
-          return;
-        }
         if (!lastTime) lastTime = ts;
         const elapsed = ts - startTime;
         ctx.clearRect(0, 0, W, H);
@@ -4106,8 +3915,7 @@
       }
 
       const observer = new IntersectionObserver(entries => {
-        inViewport = !!(entries[0] && entries[0].isIntersecting);
-        if (inViewport) {
+        if (entries[0].isIntersecting) {
           if (!hasAnimatedInView) {
             checkAndAnimateInView();
           } else {
@@ -4115,18 +3923,32 @@
             positionSettled();
             wakeTechBalls();
           }
-        } else if (animFrame) {
-          cancelAnimationFrame(animFrame);
-          isTechBallsRendering = false;
         }
-      }, { threshold: 0.01, rootMargin: '80px 0px' });
+      }, { threshold: 0.01 });
 
       observer.observe(canvas);
 
-      const ro = new ResizeObserver(() => {
-        if (inViewport) resize();
-      });
+      // Window scroll & load fallback listeners to ensure 100% reliable trigger on 1st link click
+      window.addEventListener('scroll', checkAndAnimateInView, { passive: true });
+      window.addEventListener('load', checkAndAnimateInView);
+
+      // Multi-layer fallback for font readiness and viewport entry
+      if (document.fonts) {
+        document.fonts.ready.then(() => {
+          if (triggered) {
+            resize();
+            positionSettled();
+            wakeTechBalls();
+          } else {
+            checkAndAnimateInView();
+          }
+        });
+      }
+
+      // resize handling
+      const ro = new ResizeObserver(resize);
       ro.observe(canvas);
+      resize();
     })();
 
     // ─── Scroll-Triggered Cinematic Intersection Observer Engine ─────────────
@@ -4184,7 +4006,7 @@
         </div>
       </div>
       <div style="flex: 1; height: 100%; border-radius: 10px; overflow: hidden; background: #ffffff;">
-        <iframe id="resume-iframe" src="about:blank" title="Sumit Paul resume preview" style="width: 100%; height: 100%; border: none;"></iframe>
+        <iframe src="Sumit_Paul_Resume.pdf?v=201" style="width: 100%; height: 100%; border: none;"></iframe>
       </div>
     </div>
   </div>
@@ -4241,11 +4063,6 @@
 
         if (btnViewResume && resumeModal) {
           btnViewResume.addEventListener('click', function () {
-            const resumeFrame = document.getElementById('resume-iframe');
-            if (resumeFrame && resumeFrame.dataset.loaded !== '1') {
-              resumeFrame.src = 'Sumit_Paul_Resume.pdf?v=201';
-              resumeFrame.dataset.loaded = '1';
-            }
             resumeModal.classList.add('open');
           });
         }
