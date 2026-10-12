@@ -37,6 +37,24 @@
           "value": "public, max-age=86400, immutable"
         }
       ]
+    },
+    {
+      "source": "/frames-webp/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/ezgif-1733b1c7cf1a5d50-png-split/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ]
 }

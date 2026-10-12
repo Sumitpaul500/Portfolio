@@ -9,6 +9,7 @@
   <meta property="og:description" content="Full Stack Developer & Computer Science Student (CGPA 9.59) specializing in web applications, backend APIs, and AI integrations." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="./frames-webp/frame-001.webp" type="image/webp" fetchpriority="high">
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     * {
@@ -2890,28 +2891,44 @@
   <script>
     (function () {
       const TOTAL_FRAMES = 240;
-      const FRAME_PATH_PREFIX = './ezgif-1733b1c7cf1a5d50-png-split/ezgif-frame-';
-      const FRAME_PATH_SUFFIX = '.png';
+      const WEBP_PREFIX = './frames-webp/frame-';
+      const WEBP_SUFFIX = '.webp';
+      const PNG_PREFIX = './ezgif-1733b1c7cf1a5d50-png-split/ezgif-frame-';
+      const PNG_SUFFIX = '.png';
 
       const canvas = document.getElementById('animation-canvas');
+      if (!canvas) return;
       const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
       const loader = document.getElementById('loader');
       const loaderText = document.getElementById('loader-text');
       const loaderFill = document.getElementById('loader-fill');
 
+      const isMobile = window.matchMedia('(hover: none), (pointer: coarse)').matches || window.innerWidth <= 860;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      const saveData = !!(conn && (conn.saveData || /2g/i.test(conn.effectiveType || '')));
+      const lowPower = isMobile || saveData || (navigator.hardwareConcurrency || 4) <= 4;
+
+      const KEYFRAME_STEP = lowPower ? 6 : 4;
+      const MAX_CONCURRENT = lowPower ? 3 : 4;
+
       const images = new Array(TOTAL_FRAMES);
-      let loadedCount = 0;
+      const inFlight = new Set();
+      const urgentQueue = [];
+      const keyframeQueue = [];
+      const fillQueue = [];
+
       let lastDrawnIndex = -1;
       let cssWidth = window.innerWidth;
       let cssHeight = window.innerHeight;
-      let drawScale = 1;
-
       let targetFrame = 0;
       let currentFrame = 0;
+      let tickRunning = false;
+      let hasLoadedFinished = false;
 
-      function getFrameFilename(index) {
-        const paddedIndex = String(index).padStart(3, '0');
-        return `${FRAME_PATH_PREFIX}${paddedIndex}${FRAME_PATH_SUFFIX}`;
+      function getFrameUrl(index, isWebP) {
+        const padded = String(index).padStart(3, '0');
+        return isWebP ? `${WEBP_PREFIX}${padded}${WEBP_SUFFIX}` : `${PNG_PREFIX}${padded}${PNG_SUFFIX}`;
       }
 
       function getDrawableFrame(index) {
@@ -2929,10 +2946,10 @@
       function resizeCanvas() {
         cssWidth = window.innerWidth;
         cssHeight = window.innerHeight;
-        const dpr = Math.min(window.devicePixelRatio || 1, cssWidth > 1280 ? 1.25 : 1.5);
-        const maxEdge = 1600;
+        const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.0 : (cssWidth > 1280 ? 1.25 : 1.5));
+        const maxEdge = isMobile ? 1280 : 1600;
         const longEdge = Math.max(cssWidth, cssHeight);
-        drawScale = longEdge > maxEdge ? maxEdge / longEdge : 1;
+        const drawScale = longEdge > maxEdge ? maxEdge / longEdge : 1;
         const bufferScale = dpr * drawScale;
 
         canvas.width = Math.max(1, Math.round(cssWidth * bufferScale));
@@ -2940,8 +2957,8 @@
         canvas.style.width = cssWidth + 'px';
         canvas.style.height = cssHeight + 'px';
         ctx.setTransform(bufferScale, 0, 0, bufferScale, 0, 0);
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'medium';
+        ctx.imageSmoothingEnabled = !lowPower;
+        ctx.imageSmoothingQuality = lowPower ? 'low' : 'medium';
         lastDrawnIndex = -1;
         renderCurrentFrame(true);
       }
@@ -2958,8 +2975,6 @@
         const x = (cssWidth - drawWidth) / 2;
         const y = (drawHeight > cssHeight) ? 0 : (cssHeight - drawHeight) / 2;
 
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, cssWidth, cssHeight);
         ctx.drawImage(img, x, y, drawWidth, drawHeight);
       }
 
@@ -2980,16 +2995,36 @@
         targetFrame = progress * (TOTAL_FRAMES - 1);
       }
 
+      function prioritizeScrollNeighborhood(frame) {
+        const center = Math.round(frame);
+        const range = [center, center + 1, center - 1, center + 2, center - 2, center + 3, center - 3];
+        for (let i = 0; i < range.length; i++) {
+          const idx = range[i];
+          if (idx >= 0 && idx < TOTAL_FRAMES && !images[idx] && !inFlight.has(idx)) {
+            const pos = urgentQueue.indexOf(idx);
+            if (pos !== -1) urgentQueue.splice(pos, 1);
+            urgentQueue.unshift(idx);
+          }
+        }
+        pumpQueue();
+      }
+
       function handleScroll() {
+        if (document.hidden) return;
         updateScrollProgress();
+        prioritizeScrollNeighborhood(targetFrame);
         requestTick();
       }
 
-      let tickRunning = false;
       function tick() {
+        if (document.hidden) {
+          tickRunning = false;
+          return;
+        }
         const diff = targetFrame - currentFrame;
-        if (Math.abs(diff) > 0.02) {
-          const follow = Math.abs(diff) > 12 ? 0.55 : 0.34;
+        const absDiff = Math.abs(diff);
+        if (absDiff > 0.02) {
+          const follow = absDiff > 12 ? 0.55 : 0.34;
           currentFrame += diff * follow;
           renderCurrentFrame(false);
           requestAnimationFrame(tick);
@@ -3001,7 +3036,7 @@
       }
 
       function requestTick() {
-        if (!tickRunning) {
+        if (!tickRunning && !document.hidden) {
           tickRunning = true;
           requestAnimationFrame(tick);
         }
@@ -3013,7 +3048,6 @@
         resizeTimer = requestAnimationFrame(resizeCanvas);
       }
 
-      let hasLoadedFinished = false;
       function onAllLoaded() {
         if (hasLoadedFinished) return;
         hasLoadedFinished = true;
@@ -3023,73 +3057,129 @@
 
         setTimeout(() => {
           if (loader) loader.classList.add('hidden');
-        }, 200);
+        }, 150);
 
         updateScrollProgress();
         requestTick();
       }
 
+      function loadSingleFrame(index, onDone) {
+        if (images[index] || inFlight.has(index)) {
+          if (onDone) onDone();
+          return;
+        }
+        inFlight.add(index);
+
+        const img = new Image();
+        img.decoding = 'async';
+
+        img.onload = () => {
+          images[index] = img;
+          inFlight.delete(index);
+          if (Math.abs(Math.round(currentFrame) - index) <= 2) {
+            renderCurrentFrame(false);
+          }
+          if (onDone) onDone();
+          pumpQueue();
+        };
+
+        img.onerror = () => {
+          // Automatic seamless fallback to PNG
+          const pngImg = new Image();
+          pngImg.decoding = 'async';
+          pngImg.onload = () => {
+            images[index] = pngImg;
+            inFlight.delete(index);
+            if (Math.abs(Math.round(currentFrame) - index) <= 2) {
+              renderCurrentFrame(false);
+            }
+            if (onDone) onDone();
+            pumpQueue();
+          };
+          pngImg.onerror = () => {
+            inFlight.delete(index);
+            if (onDone) onDone();
+            pumpQueue();
+          };
+          pngImg.src = getFrameUrl(index + 1, false);
+        };
+
+        img.src = getFrameUrl(index + 1, true);
+      }
+
+      function pumpQueue() {
+        while (inFlight.size < MAX_CONCURRENT) {
+          let next = -1;
+          if (urgentQueue.length) next = urgentQueue.shift();
+          else if (keyframeQueue.length) next = keyframeQueue.shift();
+          else if (fillQueue.length) next = fillQueue.shift();
+          else break;
+
+          if (next >= 0 && !images[next] && !inFlight.has(next)) {
+            loadSingleFrame(next);
+          }
+        }
+      }
+
+      function startKeyframesAndBackgroundFill() {
+        // 1. Queue sparse keyframes across entire scroll sequence for instant response
+        for (let i = 0; i < TOTAL_FRAMES; i += KEYFRAME_STEP) {
+          if (!images[i] && !inFlight.has(i)) keyframeQueue.push(i);
+        }
+        if (!images[TOTAL_FRAMES - 1] && !inFlight.has(TOTAL_FRAMES - 1)) {
+          keyframeQueue.push(TOTAL_FRAMES - 1);
+        }
+        pumpQueue();
+
+        // 2. Queue remaining frames in background during idle moments
+        const scheduleFill = () => {
+          for (let i = 0; i < TOTAL_FRAMES; i++) {
+            if (!images[i] && !inFlight.has(i) && !keyframeQueue.includes(i) && !urgentQueue.includes(i)) {
+              fillQueue.push(i);
+            }
+          }
+          pumpQueue();
+        };
+
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(scheduleFill, { timeout: 1500 });
+        } else {
+          setTimeout(scheduleFill, 600);
+        }
+      }
+
       function preloadImages() {
-        const firstImg = new Image();
-        firstImg.decoding = 'async';
-        firstImg.onload = () => {
-          images[0] = firstImg;
-          drawFrame(firstImg);
-          lastDrawnIndex = 0;
+        // Load poster frame (frame 0) first
+        loadSingleFrame(0, () => {
+          renderCurrentFrame(true);
           onAllLoaded();
-          preloadRemainingFrames();
-        };
-        firstImg.onerror = () => {
-          onAllLoaded();
-          preloadRemainingFrames();
-        };
-        firstImg.src = getFrameFilename(1);
+          if (!reducedMotion) {
+            startKeyframesAndBackgroundFill();
+          }
+        });
 
         setTimeout(() => {
           if (!hasLoadedFinished) onAllLoaded();
-        }, 150);
-      }
-
-      function preloadRemainingFrames() {
-        let nextIndex = 2;
-        const CONCURRENCY = 12;
-        let active = 0;
-
-        function startNext() {
-          while (active < CONCURRENCY && nextIndex <= TOTAL_FRAMES) {
-            const fileIndex = nextIndex++;
-            active++;
-            const img = new Image();
-            img.decoding = 'async';
-            const frameIdx = fileIndex - 1;
-            const done = () => {
-              active--;
-              startNext();
-            };
-            img.onload = () => {
-              images[frameIdx] = img;
-              loadedCount++;
-              done();
-            };
-            img.onerror = () => {
-              loadedCount++;
-              done();
-            };
-            img.src = getFrameFilename(fileIndex);
-          }
-        }
-        startNext();
+        }, 180);
       }
 
       window.addEventListener('resize', scheduleResize, { passive: true });
       window.addEventListener('orientationchange', scheduleResize, { passive: true });
       window.addEventListener('scroll', handleScroll, { passive: true });
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          tickRunning = false;
+        } else {
+          updateScrollProgress();
+          requestTick();
+        }
+      });
 
       resizeCanvas();
       preloadImages();
 
       // ─── Contact Form — Real Backend Submission ──────────────────────────────
-      const DEPLOY_BUILD = '2026-10-04-v6.0.0-smooth-bg';
+      const DEPLOY_BUILD = '2026-10-13-v9.0.0-smooth-perf-verified';
       const contactForm = document.getElementById('portfolio-contact-form');
       const contactAlert = document.getElementById('contact-alert');
       const submitBtn = document.getElementById('submit-btn');
@@ -3928,8 +4018,17 @@
 
       observer.observe(canvas);
 
-      // Window scroll & load fallback listeners to ensure 100% reliable trigger on 1st link click
-      window.addEventListener('scroll', checkAndAnimateInView, { passive: true });
+      // Window scroll & load fallback listeners to ensure 100% reliable trigger on 1st link click without layout thrashing
+      let scrollCheckScheduled = false;
+      function scheduleCheckAndAnimate() {
+        if (hasAnimatedInView || scrollCheckScheduled) return;
+        scrollCheckScheduled = true;
+        requestAnimationFrame(() => {
+          scrollCheckScheduled = false;
+          checkAndAnimateInView();
+        });
+      }
+      window.addEventListener('scroll', scheduleCheckAndAnimate, { passive: true });
       window.addEventListener('load', checkAndAnimateInView);
 
       // Multi-layer fallback for font readiness and viewport entry
