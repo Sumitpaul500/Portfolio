@@ -187,19 +187,44 @@ def deterministic_grounding_engine(user_message: str, portfolio: Dict[str, Any] 
             f"- **Core Coursework:** {coursework}"
         )
 
-    # 3. Technical Skills
-    if any(k in q for k in ['skill', 'technolog', 'stack', 'languages', 'framework']):
-        return (
-            f"Here are **{name}'s verified technical skills** from his portfolio:\n\n"
-            f"- **Programming Languages:** {', '.join(p['skills']['languagesAndCore'][:5])}\n"
-            f"- **Frontend:** {', '.join(p['skills']['frontend'])}\n"
-            f"- **Backend & APIs:** {', '.join(p['skills']['backend'])}\n"
-            f"- **Databases & Storage:** {', '.join(p['skills']['databasesAndStorage'])}\n"
-            f"- **DevOps & Tools:** {', '.join(p['skills']['developerToolsAndCloud'])}\n"
-            f"- **AI & LLM Integration:** {', '.join(p['skills']['aiAndLLMs'])}\n"
-            f"- **Core CS:** Data Structures & Algorithms, OOP, System Design, Cryptography\n\n"
-            f"Would you like to know how he applied any of these technologies in his projects?"
-        )
+    # 3a. Direct check for unlisted technologies / skills (conversational direct answer)
+    unlisted_tech_map = {
+        'iot': 'IoT (Internet of Things)',
+        'internet of things': 'IoT (Internet of Things)',
+        'embedded': 'Embedded Systems / Hardware',
+        'arduino': 'Arduino',
+        'raspberry': 'Raspberry Pi',
+        'kubernetes': 'Kubernetes (K8s)',
+        'k8s': 'Kubernetes (K8s)',
+        'ruby': 'Ruby / Ruby on Rails',
+        'rails': 'Ruby on Rails',
+        'swift': 'Swift / iOS Development',
+        'ios': 'iOS Development',
+        'flutter': 'Flutter',
+        'dart': 'Dart',
+        'kotlin': 'Kotlin',
+        'blockchain': 'Blockchain / Web3',
+        'web3': 'Web3',
+        'solidity': 'Solidity',
+        'php': 'PHP / Laravel',
+        'laravel': 'Laravel',
+        'c#': 'C# / .NET',
+        'dotnet': '.NET / C#',
+        'angular': 'Angular',
+        'vue': 'Vue.js',
+        'aws': 'AWS (Amazon Web Services)',
+        'azure': 'Microsoft Azure',
+        'gcp': 'Google Cloud Platform (GCP)'
+    }
+
+    for key, label in unlisted_tech_map.items():
+        if re.search(rf"\b{re.escape(key)}\b", q, re.IGNORECASE):
+            return (
+                f"**No**, {name} does not currently have **{label}** listed in his verified portfolio skills.\n\n"
+                f"His primary engineering focus is on **Full-Stack Software Engineering (React, SvelteKit, FastAPI, Node.js)**, "
+                f"**Microservices & Databases (Docker, MongoDB, Redis, Firebase)**, and **AI/LLM Integrations (Groq, Gemini)**.\n\n"
+                f"Would you like to explore his related backend or AI integration experience instead?"
+            )
 
     # 3b. Follow-up to "Would you like to know how he applied any of these technologies in his projects?"
     is_affirmative = q in ['yes', 'yes please', 'sure', 'yeah', 'yep', 'tell me', 'tell me more'] or \
@@ -222,6 +247,33 @@ def deterministic_grounding_engine(user_message: str, portfolio: Dict[str, Any] 
             f"- 🏥 **Flask & REST APIs:** In **AyurSutra** (SIH 2025 Grand Finale Top 15)\n"
             f"  • Built Python Flask backend for patient scheduling, EHR integration, and automated therapy workflows.\n\n"
             f"You can inspect all source code on his [GitHub Profile](https://github.com/Sumitpaul500)."
+        )
+
+    # 3c. General Technical Skills overview
+    is_general_skills = (
+        'what are his skills' in q or
+        'what are your skills' in q or
+        'technical skills' in q or
+        'list skills' in q or
+        'all skills' in q or
+        'tech stack' in q or
+        'what technologies' in q or
+        'skills overview' in q or
+        q in ['skills', 'skills?'] or
+        ('skills' in q and not any(k in q for k in ['do you have', 'does he have', 'do i have', 'skills of', 'skill in']))
+    )
+
+    if is_general_skills:
+        return (
+            f"Here are **{name}'s verified technical skills** from his portfolio:\n\n"
+            f"- **Programming Languages:** {', '.join(p['skills']['languagesAndCore'][:5])}\n"
+            f"- **Frontend:** {', '.join(p['skills']['frontend'])}\n"
+            f"- **Backend & APIs:** {', '.join(p['skills']['backend'])}\n"
+            f"- **Databases & Storage:** {', '.join(p['skills']['databasesAndStorage'])}\n"
+            f"- **DevOps & Tools:** {', '.join(p['skills']['developerToolsAndCloud'])}\n"
+            f"- **AI & LLM Integration:** {', '.join(p['skills']['aiAndLLMs'])}\n"
+            f"- **Core CS:** Data Structures & Algorithms, OOP, System Design, Cryptography\n\n"
+            f"Would you like to know how he applied any of these technologies in his projects?"
         )
 
     # 4. Specific Technologies
