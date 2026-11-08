@@ -5380,10 +5380,10 @@
       // Endpoint selection: Python backend on 5001 first, fallback to 3001, then /api/chat
       const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       const CHATBOT_ENDPOINTS = isLocalHost
-        ? ['http://localhost:5001/api/chat', 'http://localhost:3001/api/chat', `${window.location.origin}/api/chat`]
+        ? ['http://localhost:5001/api/chat', 'http://localhost:3001/api/chat', `${window.location.origin}/api/chat_backup`, `${window.location.origin}/api/chat`]
         : [
-            `${window.location.origin}/api/chat`,
-            `${window.location.origin}/api/chat_backup`
+            `${window.location.origin}/api/chat_backup`,
+            `${window.location.origin}/api/chat`
           ];
 
       // Quick Suggestion Questions
