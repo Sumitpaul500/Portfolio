@@ -33,10 +33,14 @@ cur_dir = Path(__file__).resolve().parent
 if str(cur_dir) not in sys.path:
     sys.path.insert(0, str(cur_dir))
 
-# Load environment variables securely
+# Load environment variables securely if python-dotenv is installed
 root_dir = cur_dir.parent
-load_dotenv(root_dir / 'backend' / '.env')
-load_dotenv(root_dir / '.env')
+try:
+    from dotenv import load_dotenv
+    load_dotenv(root_dir / 'backend' / '.env')
+    load_dotenv(root_dir / '.env')
+except ImportError:
+    pass
 
 from models import ChatRequest, ChatResponse, HealthResponse
 from ai_service import process_chat_request
