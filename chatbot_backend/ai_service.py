@@ -201,7 +201,84 @@ def deterministic_grounding_engine(user_message: str, portfolio: Dict[str, Any] 
             f"Would you like to know how he applied any of these technologies in his projects?"
         )
 
+    # 3b. Follow-up to "Would you like to know how he applied any of these technologies in his projects?"
+    is_affirmative = q in ['yes', 'yes please', 'sure', 'yeah', 'yep', 'tell me', 'tell me more'] or \
+        q.startswith('yes ') or any(k in q for k in ['how he applied', 'how did he apply', 'how are they applied', 'how does he use', 'how did he use', 'in his projects', 'applied in projects'])
+
+    if is_affirmative:
+        return (
+            f"Here is **how {name} applied these technologies across his production projects**:\n\n"
+            f"- 🚀 **Gemini AI, Leaflet & Firebase:** In **[Community Hero](https://community-hero-47e90.web.app/)**\n"
+            f"  • Integrated Gemini AI for automated civic-issue categorization.\n"
+            f"  • Built interactive Leaflet geospatial map with geohashing for hotspot prediction.\n"
+            f"  • Architected real-time Firestore database with role-based access control (RBAC 3+ roles).\n\n"
+            f"- ⚡ **Docker, FastAPI, Groq LLM & Redis:** In **[FinPilot AI](https://github.com/Sumitpaul500/Smart-Expense-Tracker)**\n"
+            f"  • Containerized 3-tier microservices stack with Docker Compose (FastAPI + Node.js + SvelteKit).\n"
+            f"  • Deployed OCR + Groq LLM (Llama 3.3-70B) pipeline parsing 50+ receipt formats (>95% accuracy).\n"
+            f"  • Implemented Redis caching for high-speed multi-currency calculations and financial health scoring.\n\n"
+            f"- 🔒 **Java, LSB Steganography & AES-256:** In **[Image Steganography](https://github.com/Sumitpaul500)**\n"
+            f"  • Engineered 1,277 lines of pure Java (Swing UI) without external libraries.\n"
+            f"  • Concealed text and audio payloads across JPG/PNG/BMP with 99.2% payload capacity and AES-256/CBC encryption.\n\n"
+            f"- 🏥 **Flask & REST APIs:** In **AyurSutra** (SIH 2025 Grand Finale Top 15)\n"
+            f"  • Built Python Flask backend for patient scheduling, EHR integration, and automated therapy workflows.\n\n"
+            f"You can inspect all source code on his [GitHub Profile](https://github.com/Sumitpaul500)."
+        )
+
     # 4. Specific Technologies
+    if any(k in q for k in ['docker', 'container']):
+        return (
+            f"Yes! **{name} has hands-on Docker and containerization experience:**\n"
+            f"- In **[FinPilot AI](https://github.com/Sumitpaul500/Smart-Expense-Tracker)**, he used **Docker and Docker Compose** to containerize a 3-tier microservices architecture (SvelteKit frontend, Node.js Express REST API, FastAPI AI service, MongoDB, and Redis).\n"
+            f"- Engineered multi-container orchestration for reproducible development and local deployment."
+        )
+
+    if any(k in q for k in ['mongo', 'nosql']):
+        return (
+            f"Yes! **{name} uses MongoDB extensively:**\n"
+            f"- Serves as the primary NoSQL datastore in **[FinPilot AI](https://github.com/Sumitpaul500/Smart-Expense-Tracker)** for receipt metadata, transaction history, and multi-currency account data.\n"
+            f"- Experienced with MongoDB Atlas, aggregation pipelines, schema modeling, and indexing."
+        )
+
+    if 'redis' in q:
+        return (
+            f"Yes! **{name} integrates Redis for high-speed caching:**\n"
+            f"- Implemented in **[FinPilot AI](https://github.com/Sumitpaul500/Smart-Expense-Tracker)** for caching financial exchange rates, user session state, and accelerating the real-time financial health scoring engine."
+        )
+
+    if 'fastapi' in q:
+        return (
+            f"Yes! **FastAPI is one of {name}'s go-to Python frameworks:**\n"
+            f"- Built the high-performance AI inference and OCR extraction microservice in **[FinPilot AI](https://github.com/Sumitpaul500/Smart-Expense-Tracker)** using FastAPI.\n"
+            f"- Also powers the backend of this portfolio's AI Recruiter Chatbot with Pydantic schemas and ReAct agent architecture."
+        )
+
+    if any(k in q for k in ['firebase', 'firestore']):
+        return (
+            f"Yes! **{name} built and deployed with Firebase:**\n"
+            f"- Architected **[Community Hero](https://community-hero-47e90.web.app/)** with Cloud Firestore, fine-grained Role-Based Access Control (RBAC 3+ roles), Cloud Functions, and Firebase Hosting supporting 1,000+ concurrent users."
+        )
+
+    if any(k in q for k in ['gemini', 'groq', 'llm', 'ocr']):
+        return (
+            f"Yes! **{name} has practical, production LLM integration skills:**\n"
+            f"- **Gemini AI:** Integrated into **[Community Hero](https://community-hero-47e90.web.app/)** for automated civic-issue categorization.\n"
+            f"- **Groq LLM (Llama 3.3-70B) & OCR.Space:** Implemented in **[FinPilot AI](https://github.com/Sumitpaul500/Smart-Expense-Tracker)** for extracting structured receipt data from 50+ formats (>95% accuracy).\n"
+            f"- **Oracle Cloud OCI Certified Generative AI Professional (2025)**."
+        )
+
+    if any(k in q for k in ['steganograph', 'crypto', 'aes', 'security']):
+        return (
+            f"Yes! **{name} implemented cybersecurity algorithms in Java:**\n"
+            f"- Built an **[Image Steganography Application](https://github.com/Sumitpaul500)** in 1,277 lines of pure Java (no third-party dependencies).\n"
+            f"- Combines LSB steganography (99.2% capacity concealment in JPG/PNG/BMP) with military-grade AES-256/CBC encryption and SHA-256 password hashing."
+        )
+
+    if any(k in q for k in ['leaflet', 'map', 'geohash']):
+        return (
+            f"Yes! **{name} has geospatial engineering experience:**\n"
+            f"- Built interactive Leaflet mapping in **[Community Hero](https://community-hero-47e90.web.app/)** with geo-tagged civic issue reporting and a predictive hotspot engine using geohashing."
+        )
+
     if 'python' in q:
         return (
             f"Yes! **{name} is highly proficient in Python.** He has used Python for:\n"
