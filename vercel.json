@@ -4,7 +4,8 @@
       "maxDuration": 30
     },
     "api/chat.py": {
-      "maxDuration": 30
+      "maxDuration": 30,
+      "includeFiles": "chatbot_backend/**"
     },
     "api/chat_backup.js": {
       "maxDuration": 30
