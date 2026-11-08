@@ -6,7 +6,7 @@
   <title>Sumit Paul | Computer Science Engineering Student & Full Stack Developer</title>
   <meta name="description" content="Portfolio of Sumit Paul, a Computer Science & Engineering student at New Horizon College of Engineering, Bengaluru. Full Stack Developer specializing in Java, Python, React, Node.js, FastAPI, and AI applications." />
   <meta property="og:title" content="Sumit Paul | Computer Science Engineering Student & Full Stack Developer" />
-  <meta property="og:description" content="Full Stack Developer & Computer Science Student (CGPA 9.59) specializing in web applications, backend APIs, and AI integrations." />
+  <meta property="og:description" content="Full Stack Developer & Computer Science Student (CGPA 9.51) specializing in web applications, backend APIs, and AI integrations." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="image" href="./frames-webp/frame-001.webp" type="image/webp" fetchpriority="high">
@@ -1641,6 +1641,102 @@
     }
 
     /* ==========================================================================
+       MOBILE CARD ANTICLOCKWISE GLOW — CSS-ONLY (no JS mouse proximity needed)
+       Uses a dedicated pseudo-element on .mobile-glow-card applied in JS
+       or directly on all card types inside the hover:none media query.
+       ========================================================================== */
+
+    /* Keyframes: spin from 360deg down to 0deg = anticlockwise rotation */
+    @keyframes cardBorderGlowCCW {
+      0%   { --mobile-glow-angle: 360deg; }
+      100% { --mobile-glow-angle: 0deg; }
+    }
+
+    /* @property registration for smooth CSS custom property animation.
+       Falls back gracefully on browsers that don't support @property. */
+    @property --mobile-glow-angle {
+      syntax: '<angle>';
+      inherits: false;
+      initial-value: 360deg;
+    }
+
+    /* Applied to every card type on touch / mobile screens.
+       Attaches a persistent, CSS-driven anticlockwise border glow. */
+    @media (hover: none), (max-width: 860px) {
+      /* The ::before pseudo-element carries the rotating border light */
+      .services-grid.mobile-glow,
+      .stats-card.mobile-glow,
+      .growaz-card.mobile-glow,
+      .tailored-card.mobile-glow,
+      .project-card.mobile-glow,
+      .showcase-card.mobile-glow,
+      .connect-card.mobile-glow,
+      .contact-card-wrap.mobile-glow {
+        /* Ensure position context is set */
+        position: relative;
+        overflow: hidden;
+      }
+
+      .services-grid.mobile-glow::before,
+      .stats-card.mobile-glow::before,
+      .growaz-card.mobile-glow::before,
+      .tailored-card.mobile-glow::before,
+      .project-card.mobile-glow::before,
+      .showcase-card.mobile-glow::before,
+      .connect-card.mobile-glow::before,
+      .contact-card-wrap.mobile-glow::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        padding: 2px;
+        /* Rotating conic gradient — angle driven by CSS animation */
+        background: conic-gradient(
+          from var(--mobile-glow-angle, 360deg) at 50% 50%,
+          transparent 0deg,
+          rgba(255, 85, 0, 0.85) 30deg,
+          rgba(255, 140, 0, 0.80) 75deg,
+          rgba(255, 200, 100, 0.55) 105deg,
+          transparent 140deg
+        );
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+        opacity: 1;
+        z-index: 2;
+        /* Anticlockwise: 360deg → 0deg over 4 seconds, looping */
+        animation: cardBorderGlowCCW 4s linear infinite;
+        /* Stagger offset applied via inline style --mobile-anim-delay if needed */
+        animation-delay: var(--mobile-anim-delay, 0s);
+        will-change: background;
+      }
+
+      /* Fallback for browsers without @property support:
+         Use a simpler border-image shimmer approach as backup */
+      @supports not (animation-timeline: scroll()) {
+        /* Keep the above — it works even without @property;
+           the gradient simply won't tween smoothly, but still rotates via
+           a JS-driven --mobile-glow-angle fallback added below */
+      }
+    }
+
+    /* Respect prefers-reduced-motion: slow the animation to near-still */
+    @media (prefers-reduced-motion: reduce) {
+      .services-grid.mobile-glow::before,
+      .stats-card.mobile-glow::before,
+      .growaz-card.mobile-glow::before,
+      .tailored-card.mobile-glow::before,
+      .project-card.mobile-glow::before,
+      .showcase-card.mobile-glow::before,
+      .connect-card.mobile-glow::before,
+      .contact-card-wrap.mobile-glow::before {
+        animation-duration: 30s;
+        opacity: 0.35;
+      }
+    }
+
+    /* ==========================================================================
        HERO TYPING & SCROLL-TRIGGERED ENTRANCE ANIMATIONS
        ========================================================================== */
 
@@ -2176,6 +2272,646 @@
                   background-color 0.25s ease !important;
     }
 
+    /* ==========================================================================
+       AI RECRUITER ASSISTANT CHATBOT — PREMIUM DARK GLASSMORPHIC UI
+       ========================================================================== */
+    .ai-chat-launcher {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff5500 0%, #ff8c00 100%);
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 9990;
+      box-shadow: 0 10px 28px rgba(255, 85, 0, 0.42), 0 0 20px rgba(255, 140, 0, 0.35);
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease;
+      user-select: none;
+      outline: none;
+    }
+
+    .ai-chat-launcher:hover {
+      transform: scale(1.08) translateY(-2px);
+      box-shadow: 0 14px 36px rgba(255, 85, 0, 0.55), 0 0 30px rgba(255, 140, 0, 0.5);
+    }
+
+    .ai-chat-launcher:active {
+      transform: scale(0.96);
+    }
+
+    .ai-chat-launcher-badge {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 14px;
+      height: 14px;
+      background: #10b981;
+      border: 2.5px solid #0b0d13;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+      animation: aiPulseBadge 2.2s infinite ease-in-out;
+    }
+
+    @keyframes aiPulseBadge {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.25); opacity: 0.85; }
+    }
+
+    .ai-chat-launcher-tooltip {
+      position: absolute;
+      right: 74px;
+      background: rgba(14, 18, 28, 0.95);
+      border: 1px solid rgba(255, 85, 0, 0.35);
+      backdrop-filter: blur(12px);
+      color: #ffffff;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 600;
+      white-space: nowrap;
+      pointer-events: none;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transform: translateX(10px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      letter-spacing: 0.2px;
+    }
+
+    .ai-chat-launcher:hover .ai-chat-launcher-tooltip {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Chat Window Container */
+    .ai-chat-window {
+      position: fixed;
+      bottom: 104px;
+      right: 28px;
+      width: 410px;
+      max-width: calc(100vw - 32px);
+      height: 620px;
+      max-height: calc(100vh - 128px);
+      background: rgba(11, 14, 23, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 85, 0, 0.3);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      z-index: 9995;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75), 0 0 35px rgba(255, 85, 0, 0.18);
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(24px) scale(0.96);
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.3s;
+    }
+
+    .ai-chat-window.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Chat Header */
+    .ai-chat-header {
+      padding: 14px 18px;
+      background: linear-gradient(180deg, rgba(25, 30, 46, 0.95) 0%, rgba(14, 18, 28, 0.85) 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .ai-chat-profile {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .ai-chat-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff5500, #ff8c00);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      box-shadow: 0 2px 10px rgba(255, 85, 0, 0.4);
+      flex-shrink: 0;
+    }
+
+    .ai-chat-title-wrap h4 {
+      margin: 0;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.2px;
+    }
+
+    .ai-chat-status {
+      font-size: 11px;
+      color: #10b981;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .ai-chat-status::before {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #10b981;
+    }
+
+    .ai-chat-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ai-chat-header-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .ai-chat-header-btn:hover {
+      background: rgba(255, 85, 0, 0.15);
+      border-color: rgba(255, 85, 0, 0.4);
+      color: #ffffff;
+    }
+
+    /* Messages Thread */
+    .ai-chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scroll-behavior: smooth;
+    }
+
+    .ai-chat-messages::-webkit-scrollbar {
+      width: 5px;
+    }
+    .ai-chat-messages::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .ai-chat-messages::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+
+    /* Message Bubbles */
+    .ai-msg {
+      display: flex;
+      gap: 9px;
+      max-width: 90%;
+      word-break: break-word;
+      font-size: 13.5px;
+      line-height: 1.55;
+      animation: aiMsgFadeIn 0.25s ease-out;
+    }
+
+    @keyframes aiMsgFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ai-msg-user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .ai-msg-user .ai-msg-bubble {
+      background: linear-gradient(135deg, rgba(255, 85, 0, 0.28) 0%, rgba(255, 140, 0, 0.22) 100%);
+      border: 1px solid rgba(255, 85, 0, 0.45);
+      color: #ffffff;
+      border-radius: 16px 16px 4px 16px;
+      padding: 10px 14px;
+    }
+
+    .ai-msg-assistant {
+      align-self: flex-start;
+    }
+
+    .ai-msg-assistant .ai-msg-bubble {
+      background: rgba(20, 26, 40, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      border-radius: 16px 16px 16px 4px;
+      padding: 12px 15px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    }
+
+    .ai-msg-bubble a {
+      color: #ff914d;
+      font-weight: 600;
+      text-decoration: underline;
+      transition: color 0.2s;
+    }
+    .ai-msg-bubble a:hover {
+      color: #ffa76e;
+    }
+
+    .ai-msg-bubble code {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #fbbf24;
+      font-family: monospace;
+    }
+
+    .ai-msg-bubble ul, .ai-msg-bubble ol {
+      margin: 8px 0 8px 18px;
+      padding: 0;
+    }
+
+    .ai-msg-bubble li {
+      margin-bottom: 4px;
+    }
+
+    .ai-msg-bubble blockquote {
+      border-left: 3px solid #ff5500;
+      margin: 8px 0;
+      padding: 4px 10px;
+      background: rgba(255, 85, 0, 0.08);
+      border-radius: 0 8px 8px 0;
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .ai-msg-bubble hr {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255, 85, 0, 0.5), rgba(255, 255, 255, 0.1), transparent);
+      margin: 12px 0;
+    }
+
+    .ai-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin: 12px 0;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(8, 12, 20, 0.7);
+      -webkit-overflow-scrolling: touch;
+    }
+    .ai-table-wrap::-webkit-scrollbar {
+      height: 6px;
+    }
+    .ai-table-wrap::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 4px;
+    }
+    .ai-table-wrap::-webkit-scrollbar-thumb {
+      background: rgba(255, 85, 0, 0.45);
+      border-radius: 4px;
+    }
+    .ai-table-wrap::-webkit-scrollbar-thumb:hover {
+      background: #ff5500;
+    }
+
+    .ai-chat-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+      line-height: 1.45;
+      text-align: left;
+      min-width: 480px;
+    }
+
+    .ai-chat-table th {
+      background: rgba(255, 85, 0, 0.2);
+      color: #ffaa77;
+      padding: 8px 10px;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255, 85, 0, 0.35);
+      white-space: nowrap;
+    }
+
+    .ai-chat-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      color: #cbd5e1;
+      vertical-align: top;
+    }
+
+    .ai-chat-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .ai-chat-table tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Quick Question Suggestion Chips */
+    .ai-quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .ai-chip {
+      background: rgba(255, 85, 0, 0.08);
+      border: 1px solid rgba(255, 85, 0, 0.25);
+      color: #ffaa77;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .ai-chip:hover {
+      background: rgba(255, 85, 0, 0.22);
+      border-color: rgba(255, 85, 0, 0.55);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* Typing Indicator */
+    .ai-typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 12px;
+      background: rgba(20, 26, 40, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      width: fit-content;
+    }
+
+    .ai-typing-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ff7a00;
+      animation: aiDotPulse 1.4s infinite ease-in-out;
+    }
+
+    .ai-typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .ai-typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes aiDotPulse {
+      0%, 80%, 100% { transform: scale(0.65); opacity: 0.4; }
+      40% { transform: scale(1.15); opacity: 1; }
+    }
+
+    /* Job Description Upload / Matching Panel */
+    .ai-jd-panel {
+      background: rgba(16, 21, 33, 0.95);
+      border: 1px dashed rgba(255, 85, 0, 0.4);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ai-jd-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      color: #ff914d;
+    }
+
+    .ai-jd-dropzone {
+      border: 1.5px dashed rgba(255, 255, 255, 0.18);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .ai-jd-dropzone:hover, .ai-jd-dropzone.dragover {
+      border-color: #ff5500;
+      background: rgba(255, 85, 0, 0.08);
+    }
+
+    .ai-jd-dropzone-text {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .ai-jd-dropzone-formats {
+      font-size: 10.5px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .ai-jd-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      height: 80px;
+      background: rgba(8, 11, 18, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #ffffff;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-family: inherit;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .ai-jd-textarea:focus {
+      border-color: #ff5500;
+    }
+
+    .ai-jd-file-selected {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 85, 0, 0.12);
+      border: 1px solid rgba(255, 85, 0, 0.3);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #ffffff;
+    }
+
+    .ai-jd-file-remove {
+      color: #ef4444;
+      cursor: pointer;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
+    .ai-jd-submit-btn {
+      background: linear-gradient(135deg, #ff5500, #ff8c00);
+      border: none;
+      color: #ffffff;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .ai-jd-submit-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(255, 85, 0, 0.4);
+    }
+
+    /* Input Footer */
+    .ai-chat-footer {
+      padding: 12px 14px;
+      background: rgba(14, 18, 28, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ai-chat-input-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .ai-chat-input {
+      flex: 1;
+      background: rgba(20, 26, 40, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      color: #ffffff;
+      padding: 10px 14px;
+      font-size: 13.5px;
+      font-family: inherit;
+      resize: none;
+      max-height: 120px;
+      min-height: 42px;
+      height: 42px;
+      box-sizing: border-box;
+      outline: none;
+      line-height: 1.4;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .ai-chat-input:focus {
+      border-color: rgba(255, 85, 0, 0.6);
+      box-shadow: 0 0 0 3px rgba(255, 85, 0, 0.15);
+    }
+
+    .ai-chat-icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.06);
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .ai-chat-icon-btn:hover {
+      background: rgba(255, 85, 0, 0.15);
+      border-color: rgba(255, 85, 0, 0.4);
+      color: #ffffff;
+    }
+
+    .ai-chat-send-btn {
+      background: linear-gradient(135deg, #ff5500 0%, #ff8c00 100%);
+      border: none;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(255, 85, 0, 0.35);
+    }
+
+    .ai-chat-send-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(255, 85, 0, 0.5);
+    }
+
+    .ai-chat-send-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .ai-chat-footer-note {
+      font-size: 10.5px;
+      color: #64748b;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* Mobile Responsive Overrides */
+    @media (max-width: 480px) {
+      .ai-chat-launcher {
+        bottom: 20px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+      }
+      .ai-chat-window {
+        bottom: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        border-radius: 0;
+        border: none;
+      }
+    }
+
 
   </style>
 </head>
@@ -2258,7 +2994,7 @@
         <!-- Right Side Subtitle -->
         <div class="hero-right">
           <h3 class="hero-subtitle-box" id="type-subtitle">Building scalable<br>systems that <span class="serif-italic">empower.</span></h3>
-          <p class="hero-desc-box" id="type-desc">B.Tech CSE Student at NHCE, Bengaluru (Affiliated to VTU · CGPA 9.59) specializing in Full-Stack Web Development, REST APIs, and AI Applications.</p>
+          <p class="hero-desc-box" id="type-desc">B.Tech CSE Student at NHCE, Bengaluru (Affiliated to VTU · CGPA 9.51) specializing in Full-Stack Web Development, REST APIs, and AI Applications.</p>
           <div class="hero-cta-group" style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
             <button type="button" id="btn-view-resume" class="btn-orange" style="padding: 12px 24px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; border-radius: 999px;">
               📄 View Resume
@@ -2336,7 +3072,7 @@
 
         <div class="stats-grid">
           <div class="stat-item">
-            <div class="stat-number">9.59</div>
+            <div class="stat-number">9.51</div>
             <div class="stat-label">
               <span class="dot-orange"></span> NHCE · VTU B.E CSE CGPA
             </div>
@@ -2806,7 +3542,7 @@
         <!-- Brand Column -->
         <div class="footer-brand-col">
           <a href="#" class="footer-logo">Sumit Paul</a>
-          <p class="footer-tagline">B.Tech CSE Student at NHCE, Bengaluru (Affiliated to VTU · CGPA 9.59) & Full Stack Developer. Building scalable web platforms and AI applications.</p>
+          <p class="footer-tagline">B.Tech CSE Student at NHCE, Bengaluru (Affiliated to VTU · CGPA 9.51) & Full Stack Developer. Building scalable web platforms and AI applications.</p>
           <a href="#contact" class="footer-cta-btn">
             Get in touch
             <span class="btn-icon">➔</span>
@@ -3342,6 +4078,78 @@
         }
       }
     });
+
+    // ─── Mobile CSS Glow Initialiser — adds .mobile-glow to every card ──────
+    // Runs on ALL devices; only meaningful on mobile (CSS @media guards effect)
+    (function initMobileCardGlow() {
+      const mobileCardSelectors = [
+        '.services-grid',
+        '.stats-card',
+        '.growaz-card',
+        '.tailored-card',
+        '.project-card',
+        '.showcase-card',
+        '.connect-card',
+        '.contact-card-wrap'
+      ];
+      const isMobileOrTouch = window.matchMedia('(hover: none)').matches || window.innerWidth <= 860;
+      if (!isMobileOrTouch) return;
+
+      // Collect all cards and add the .mobile-glow class
+      const glowCards = [];
+      let delayIdx = 0;
+      mobileCardSelectors.forEach(sel => {
+        document.querySelectorAll(sel).forEach(el => {
+          el.classList.add('mobile-glow');
+          // Stagger: spread start phase across 4-second period
+          const phaseOffset = ((delayIdx % 7) * 0.55).toFixed(2);
+          el.style.setProperty('--mobile-anim-delay', `-${phaseOffset}s`);
+          glowCards.push({ el, phaseOffset: parseFloat(phaseOffset) });
+          delayIdx++;
+        });
+      });
+
+      // ── Safari / @property fallback ──────────────────────────────────────
+      // @property animated inside @keyframes is NOT supported in Safari < 17.4.
+      // Detect support: CSS.registerProperty exists but animating custom props
+      // in keyframes still fails. We check via a simple heuristic.
+      const supportsAtPropertyAnimation = (() => {
+        try {
+          // If CSS.registerProperty is absent, definitely no support
+          if (typeof CSS === 'undefined' || typeof CSS.registerProperty !== 'function') return false;
+          // Safari 17+ supports @property but still has bugs animating in keyframes.
+          // Use user-agent sniff as a safety net for Safari.
+          const ua = navigator.userAgent;
+          const isSafari = /Safari/i.test(ua) && !/Chrome|Chromium|CriOS|EdgA/i.test(ua);
+          if (isSafari) return false;
+          return true;
+        } catch (e) { return false; }
+      })();
+
+      if (!supportsAtPropertyAnimation && glowCards.length > 0) {
+        // JS rAF fallback: animate --mobile-glow-angle from 360 → 0 over 4000ms,
+        // repeating infinitely. Each card has its own phase offset.
+        const PERIOD_MS = 4000; // 4-second full rotation
+        let startTime = null;
+
+        function tickGlow(timestamp) {
+          if (!startTime) startTime = timestamp;
+          const elapsed = timestamp - startTime;
+
+          glowCards.forEach(({ el, phaseOffset }) => {
+            // phaseOffset shifts the start angle (same as CSS animation-delay negative)
+            const t = ((elapsed + phaseOffset * 1000) % PERIOD_MS) / PERIOD_MS;
+            // Anticlockwise: from 360 down to 0
+            const angle = (360 - t * 360).toFixed(1);
+            el.style.setProperty('--mobile-glow-angle', `${angle}deg`);
+          });
+
+          requestAnimationFrame(tickGlow);
+        }
+
+        requestAnimationFrame(tickGlow);
+      }
+    })();
 
     // ─── Proximity-Based Lighting & Button Pop-Out Interaction Engine ─────────
     (function () {
@@ -4100,12 +4908,12 @@
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 12px;">
         <h3 style="margin: 0; display: flex; align-items: center; gap: 8px; font-size: 18px; color: #ffffff;">📄 Sumit Paul — Resume Preview</h3>
         <div style="display: flex; gap: 10px; align-items: center;">
-          <a href="Sumit_Paul_Resume.pdf" download="Sumit_Paul_Resume.pdf" target="_blank" rel="noopener noreferrer" class="btn-orange" style="padding: 7px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 999px;">📥 Download Resume (PDF)</a>
+          <a href="Sumit_Paul_Resume.pdf" target="_blank" rel="noopener noreferrer" class="btn-orange" style="padding: 7px 18px; font-size: 13px; font-weight: 600; text-decoration: none; border-radius: 999px;">📥 Download Resume (PDF)</a>
           <button type="button" id="close-resume-modal" class="admin-btn-cancel" style="padding: 6px 14px; font-size: 14px; cursor: pointer;">✕ Close</button>
         </div>
       </div>
       <div style="flex: 1; height: 100%; border-radius: 10px; overflow: hidden; background: #ffffff;">
-        <iframe src="Sumit_Paul_Resume.pdf?v=201" style="width: 100%; height: 100%; border: none;"></iframe>
+        <iframe src="Sumit_Paul_Resume.pdf?v=202611" style="width: 100%; height: 100%; border: none;"></iframe>
       </div>
     </div>
   </div>
@@ -4474,5 +5282,549 @@
         }
       })();
     </script>
+
+  <!-- ─── AI Recruiter Chatbot Floating Launcher ────────────────────────── -->
+  <button id="ai-chat-launcher" class="ai-chat-launcher" aria-label="Open AI Recruiter Assistant" title="Chat with Sumit's AI Assistant">
+    <span class="ai-chat-launcher-badge"></span>
+    <span class="ai-chat-launcher-tooltip">Ask Sumit's AI 💬</span>
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      <circle cx="12" cy="10" r="1"></circle>
+      <circle cx="8" cy="10" r="1"></circle>
+      <circle cx="16" cy="10" r="1"></circle>
+    </svg>
+  </button>
+
+  <!-- ─── AI Recruiter Chat Window ─────────────────────────────────────── -->
+  <div id="ai-chat-window" class="ai-chat-window" role="dialog" aria-modal="false" aria-label="AI Portfolio Assistant">
+    <div class="ai-chat-header">
+      <div class="ai-chat-profile">
+        <div class="ai-chat-avatar">SP</div>
+        <div class="ai-chat-title-wrap">
+          <h4>Sumit's AI Recruiter ⚡</h4>
+          <div class="ai-chat-status">Portfolio Grounded • Active</div>
+        </div>
+      </div>
+      <div class="ai-chat-header-actions">
+        <button type="button" id="ai-chat-jd-toggle" class="ai-chat-header-btn" title="Upload Job Description (PDF/DOCX/TXT)">📑</button>
+        <button type="button" id="ai-chat-clear" class="ai-chat-header-btn" title="Clear Conversation">🔄</button>
+        <button type="button" id="ai-chat-close" class="ai-chat-header-btn" title="Close Chat">✕</button>
+      </div>
+    </div>
+
+    <!-- Hidden JD Upload Drawer inside Chat -->
+    <div id="ai-jd-panel" class="ai-jd-panel" style="display: none;">
+      <div class="ai-jd-panel-header">
+        <span>📑 Job Description Matcher</span>
+        <span id="ai-jd-close" style="cursor: pointer; color: #94a3b8; font-size: 14px;">✕</span>
+      </div>
+      <div id="ai-jd-dropzone" class="ai-jd-dropzone">
+        <div class="ai-jd-dropzone-text">📁 Click or drag & drop Job Description</div>
+        <div class="ai-jd-dropzone-formats">Supports PDF, DOCX, or TXT (Max 4.5MB)</div>
+        <input type="file" id="ai-jd-file-input" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" style="display: none;" />
+      </div>
+      <div id="ai-jd-file-selected" class="ai-jd-file-selected">
+        <span id="ai-jd-file-name">filename.pdf</span>
+        <span id="ai-jd-file-remove" class="ai-jd-file-remove">✕</span>
+      </div>
+      <textarea id="ai-jd-textarea" class="ai-jd-textarea" placeholder="Or paste job description text directly here..."></textarea>
+      <button type="button" id="ai-jd-submit-btn" class="ai-jd-submit-btn">🚀 Analyze Portfolio Alignment</button>
+    </div>
+
+    <!-- Chat Messages -->
+    <div id="ai-chat-messages" class="ai-chat-messages"></div>
+
+    <!-- Chat Footer -->
+    <div class="ai-chat-footer">
+      <div class="ai-chat-input-row">
+        <button type="button" id="ai-chat-attach-btn" class="ai-chat-icon-btn" title="Upload JD (PDF / DOCX / TXT)">📎</button>
+        <textarea id="ai-chat-input" class="ai-chat-input" placeholder="Ask anything about Sumit or paste JD..." rows="1"></textarea>
+        <button type="button" id="ai-chat-send" class="ai-chat-icon-btn ai-chat-send-btn" title="Send message" disabled>➔</button>
+      </div>
+      <div class="ai-chat-footer-note">
+        <span>⚡ Python AI Engine</span> • <span>Strictly grounded in verified portfolio data</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── AI Chatbot Client Engine ──────────────────────────────────────── -->
+  <script>
+    (function initAIChatbot() {
+      // Elements
+      const launcher = document.getElementById('ai-chat-launcher');
+      const chatWindow = document.getElementById('ai-chat-window');
+      const closeBtn = document.getElementById('ai-chat-close');
+      const clearBtn = document.getElementById('ai-chat-clear');
+      const messagesContainer = document.getElementById('ai-chat-messages');
+      const inputField = document.getElementById('ai-chat-input');
+      const sendBtn = document.getElementById('ai-chat-send');
+      const jdToggleBtn = document.getElementById('ai-chat-jd-toggle');
+      const jdAttachBtn = document.getElementById('ai-chat-attach-btn');
+      const jdPanel = document.getElementById('ai-jd-panel');
+      const jdCloseBtn = document.getElementById('ai-jd-close');
+      const jdDropzone = document.getElementById('ai-jd-dropzone');
+      const jdFileInput = document.getElementById('ai-jd-file-input');
+      const jdFileSelected = document.getElementById('ai-jd-file-selected');
+      const jdFileName = document.getElementById('ai-jd-file-name');
+      const jdFileRemove = document.getElementById('ai-jd-file-remove');
+      const jdTextarea = document.getElementById('ai-jd-textarea');
+      const jdSubmitBtn = document.getElementById('ai-jd-submit-btn');
+
+      if (!launcher || !chatWindow) return;
+
+      // State
+      let conversationHistory = [];
+      let isWaitingForResponse = false;
+      let selectedFile = null; // { name, type, base64 }
+
+      // Endpoint selection: Python backend on 5001 first, fallback to 3001, then /api/chat
+      const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const CHATBOT_ENDPOINTS = isLocalHost
+        ? ['http://localhost:5001/api/chat', 'http://localhost:3001/api/chat', `${window.location.origin}/api/chat`]
+        : [
+            `${window.location.origin}/api/chat`,
+            `${window.location.origin}/api/chat_backup`,
+            'https://sumit-portfolio-backend-d8ys.onrender.com/api/chat'
+          ];
+
+      // Quick Suggestion Questions
+      const QUICK_QUESTIONS = [
+        { label: "💡 Technical Skills", query: "What are his technical skills?" },
+        { label: "🚀 Featured Projects", query: "Tell me about his best projects." },
+        { label: "🎓 CGPA & College", query: "What is his CGPA and college background?" },
+        { label: "🏆 Hackathons", query: "What hackathons has he participated in?" },
+        { label: "⭐ Why Hire Sumit?", query: "Why should we hire Sumit Paul?" },
+        { label: "📑 Analyze Job Description", action: "open_jd" }
+      ];
+
+      // Markdown parsing helper
+      function formatMarkdown(text) {
+        if (!text) return '';
+        let escaped = text
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+
+        // Unescape explicit line breaks
+        escaped = escaped.replace(/&lt;br\s*\/?&gt;/gi, '<br/>');
+
+        // Horizontal dividers
+        escaped = escaped.replace(/^(?:---|___|\*\*\*)$/gm, '<hr style="margin: 12px 0; border: none; border-top: 1px solid rgba(255, 255, 255, 0.12);" />');
+
+        // Restore safe blockquotes
+        escaped = escaped.replace(/^&gt;\s?(.*)$/gm, '<blockquote>$1</blockquote>');
+
+        // Headers
+        escaped = escaped.replace(/^#### (.*$)/gim, '<h5 style="margin: 8px 0 4px; color: #ffaa77; font-size: 13.5px; font-weight: 600;">$1</h5>');
+        escaped = escaped.replace(/^### (.*$)/gim, '<h4 style="margin: 10px 0 6px; color: #ffffff; font-size: 14.5px; font-weight: 700;">$1</h4>');
+        escaped = escaped.replace(/^## (.*$)/gim, '<h3 style="margin: 12px 0 6px; color: #ffffff; font-size: 15.5px; font-weight: 700;">$1</h3>');
+
+        // Bold & Italic
+        escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        escaped = escaped.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+        // Code
+        escaped = escaped.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+        // Links [text](url)
+        escaped = escaped.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+|tel:[^\s)]+|[a-zA-Z0-9_\-.]+\.pdf)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1 ↗</a>');
+
+        // Separate fused table rows (e.g. "||" between rows)
+        escaped = escaped.replace(/\|\s*\|\s*/g, '|\n|');
+
+        // Markdown Tables Parser
+        const lines = escaped.split('\n');
+        const processedLines = [];
+        let inTable = false;
+        let tableHeaderDone = false;
+        let tableHtml = '';
+
+        for (let i = 0; i < lines.length; i++) {
+          const trimmed = lines[i].trim();
+          const isTableRow = trimmed.startsWith('|') && trimmed.endsWith('|') && trimmed.length > 2;
+          const isSeparator = isTableRow && /^\|(\s*:?-+:?\s*\|)+$/.test(trimmed);
+
+          if (isTableRow) {
+            if (!inTable) {
+              inTable = true;
+              tableHeaderDone = false;
+              tableHtml = '<div class="ai-table-wrap"><table class="ai-chat-table">';
+            }
+
+            if (isSeparator) {
+              tableHeaderDone = true;
+              continue;
+            }
+
+            const rawCells = trimmed.slice(1, -1).split('|');
+            const cells = rawCells.map(c => c.trim());
+
+            if (!tableHeaderDone) {
+              tableHtml += '<thead><tr>' + cells.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
+            } else {
+              tableHtml += '<tr>' + cells.map(c => `<td>${c}</td>`).join('') + '</tr>';
+            }
+          } else {
+            if (inTable) {
+              tableHtml += '</tbody></table></div>';
+              processedLines.push(tableHtml);
+              inTable = false;
+              tableHtml = '';
+            }
+            processedLines.push(lines[i]);
+          }
+        }
+        if (inTable) {
+          tableHtml += '</tbody></table></div>';
+          processedLines.push(tableHtml);
+        }
+        escaped = processedLines.join('\n');
+
+        // Unordered lists
+        escaped = escaped.replace(/^\s*[-•]\s+(.*)$/gm, '<li>$1</li>');
+        escaped = escaped.replace(/(<li>.*<\/li>)/gms, '<ul>$1</ul>');
+        // Clean double wrapped uls
+        escaped = escaped.replace(/<\/ul>\s*<ul>/g, '');
+
+        // Paragraph breaks
+        escaped = escaped.replace(/\n\n+/g, '<br/><br/>');
+        escaped = escaped.replace(/\n/g, '<br/>');
+
+        return escaped;
+      }
+
+      // Add a message bubble
+      function appendMessage(role, content) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `ai-msg ai-msg-${role}`;
+
+        const bubble = document.createElement('div');
+        bubble.className = 'ai-msg-bubble';
+        bubble.innerHTML = formatMarkdown(content);
+
+        msgDiv.appendChild(bubble);
+        messagesContainer.appendChild(msgDiv);
+        scrollChatToBottom();
+        return msgDiv;
+      }
+
+      // Show typing indicator
+      function showTypingIndicator() {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'ai-msg ai-msg-assistant';
+        typingDiv.id = 'ai-typing-placeholder';
+        typingDiv.innerHTML = `
+          <div class="ai-typing-indicator">
+            <span class="ai-typing-dot"></span>
+            <span class="ai-typing-dot"></span>
+            <span class="ai-typing-dot"></span>
+          </div>
+        `;
+        messagesContainer.appendChild(typingDiv);
+        scrollChatToBottom();
+      }
+
+      function hideTypingIndicator() {
+        const placeholder = document.getElementById('ai-typing-placeholder');
+        if (placeholder) placeholder.remove();
+      }
+
+      function scrollChatToBottom() {
+        setTimeout(() => {
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }, 30);
+      }
+
+      // Render welcome message and quick chips
+      function renderWelcome() {
+        messagesContainer.innerHTML = '';
+        const welcomeText = "Hi! 👋 I'm **Sumit Paul's AI portfolio assistant**.\n\n" +
+          "I can help you explore his **technical skills, projects, education (CGPA: 9.51), hackathon achievements, and experience**.\n\n" +
+          "You can also **upload or paste a job description** to see how his verified qualifications align with your role.\n\n" +
+          "What would you like to know?";
+
+        appendMessage('assistant', welcomeText);
+
+        // Render Quick Chips
+        const chipsContainer = document.createElement('div');
+        chipsContainer.className = 'ai-quick-chips';
+        QUICK_QUESTIONS.forEach(item => {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'ai-chip';
+          chip.textContent = item.label;
+          chip.addEventListener('click', () => {
+            if (item.action === 'open_jd') {
+              toggleJDPanel(true);
+            } else if (item.query) {
+              handleUserSubmit(item.query);
+            }
+          });
+          chipsContainer.appendChild(chip);
+        });
+        messagesContainer.appendChild(chipsContainer);
+        scrollChatToBottom();
+      }
+
+      // Toggle Chat Window
+      function toggleChat(open) {
+        const isOpen = open !== undefined ? open : !chatWindow.classList.contains('open');
+        if (isOpen) {
+          chatWindow.classList.add('open');
+          if (messagesContainer.children.length === 0) {
+            renderWelcome();
+          }
+          setTimeout(() => inputField.focus(), 250);
+        } else {
+          chatWindow.classList.remove('open');
+          toggleJDPanel(false);
+        }
+      }
+
+      // Toggle JD Drawer
+      function toggleJDPanel(show) {
+        const isShown = show !== undefined ? show : jdPanel.style.display === 'none';
+        jdPanel.style.display = isShown ? 'flex' : 'none';
+        if (isShown) {
+          scrollChatToBottom();
+          if (jdTextarea) jdTextarea.focus();
+        }
+      }
+
+      // Retrieve dynamic custom & deleted skills from Admin UI
+      function getLocalAdminSkills() {
+        try {
+          const custom = JSON.parse(localStorage.getItem('sumit_portfolio_custom_skills')) || {};
+          const deleted = JSON.parse(localStorage.getItem('sumit_portfolio_deleted_skills')) || [];
+          return { customSkills: custom, deletedSkills: deleted };
+        } catch (e) {
+          return { customSkills: {}, deletedSkills: [] };
+        }
+      }
+
+      // Send chat request to endpoints with automatic fallback
+      async function sendChatRequest(payload) {
+        let lastError = null;
+        for (const endpoint of CHATBOT_ENDPOINTS) {
+          try {
+            const res = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              return data;
+            } else if (res.status === 429) {
+              const data = await res.json();
+              throw new Error(data.error || 'Too many requests. Please wait a moment.');
+            } else {
+              const data = await res.json().catch(() => ({}));
+              throw new Error(data.error || `Server returned ${res.status}`);
+            }
+          } catch (err) {
+            lastError = err;
+            console.warn(`[Chatbot Client] Endpoint ${endpoint} failed:`, err.message);
+          }
+        }
+        throw lastError || new Error('Could not reach the chatbot service.');
+      }
+
+      // Handle message submission
+      async function handleUserSubmit(userText, options = {}) {
+        const text = (userText || inputField.value || '').trim();
+        const filePayload = options.file || selectedFile;
+        const jdText = options.jobDescriptionText || '';
+
+        if (!text && !filePayload && !jdText) return;
+        if (isWaitingForResponse) return;
+
+        // Display user message in chat
+        let displayMsg = text;
+        if (filePayload) {
+          displayMsg = text ? `📄 [Uploaded ${filePayload.name}]\n\n${text}` : `📄 [Uploaded ${filePayload.name}] Please analyze this job description against Sumit's portfolio.`;
+        } else if (jdText && !text) {
+          displayMsg = `📋 [Pasted Job Description]\nPlease analyze how Sumit Paul's portfolio aligns with these requirements.`;
+        }
+
+        appendMessage('user', displayMsg);
+
+        // Reset input fields
+        inputField.value = '';
+        inputField.style.height = '42px';
+        sendBtn.disabled = true;
+        clearSelectedFile();
+        toggleJDPanel(false);
+
+        // Append to local history
+        conversationHistory.push({ role: 'user', content: text || displayMsg });
+
+        isWaitingForResponse = true;
+        showTypingIndicator();
+
+        const { customSkills, deletedSkills } = getLocalAdminSkills();
+
+        const requestPayload = {
+          message: text,
+          history: conversationHistory.slice(-8),
+          customSkills,
+          deletedSkills,
+          jobDescriptionText: jdText
+        };
+
+        if (filePayload) {
+          requestPayload.file = filePayload;
+        }
+
+        try {
+          const result = await sendChatRequest(requestPayload);
+          hideTypingIndicator();
+
+          if (result && result.success && result.response) {
+            appendMessage('assistant', result.response);
+            conversationHistory.push({ role: 'assistant', content: result.response });
+          } else {
+            appendMessage('assistant', result.error || 'Sorry, I encountered an issue. Please try again.');
+          }
+        } catch (err) {
+          hideTypingIndicator();
+          appendMessage('assistant', `⚠️ ${err.message || 'Unable to connect to the chatbot server. Please ensure the server is running.'}`);
+        } finally {
+          isWaitingForResponse = false;
+        }
+      }
+
+      // File reading helper (PDF, DOCX, TXT)
+      function handleFileSelected(file) {
+        if (!file) return;
+
+        const maxBytes = 4.5 * 1024 * 1024;
+        if (file.size > maxBytes) {
+          alert(`File is too large (${(file.size / (1024 * 1024)).toFixed(1)} MB). Maximum allowed size is 4.5 MB.`);
+          return;
+        }
+
+        const validExts = ['.pdf', '.docx', '.txt'];
+        const nameLower = file.name.toLowerCase();
+        const isValid = validExts.some(ext => nameLower.endsWith(ext));
+        if (!isValid) {
+          alert('Unsupported file format. Please upload a PDF, DOCX, or TXT file.');
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const base64 = e.target.result.split(',')[1];
+          selectedFile = {
+            name: file.name,
+            type: file.type || 'application/octet-stream',
+            base64: base64
+          };
+          jdFileName.textContent = `📄 ${file.name} (${(file.size / 1024).toFixed(0)} KB)`;
+          jdFileSelected.style.display = 'flex';
+          jdDropzone.style.display = 'none';
+          toggleJDPanel(true);
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function clearSelectedFile() {
+        selectedFile = null;
+        if (jdFileInput) jdFileInput.value = '';
+        if (jdFileSelected) jdFileSelected.style.display = 'none';
+        if (jdDropzone) jdDropzone.style.display = 'block';
+      }
+
+      // Event Listeners
+      launcher.addEventListener('click', () => toggleChat());
+      closeBtn.addEventListener('click', () => toggleChat(false));
+      clearBtn.addEventListener('click', () => {
+        conversationHistory = [];
+        renderWelcome();
+      });
+
+      // Textarea auto-resize & Enter-to-send
+      inputField.addEventListener('input', function () {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        sendBtn.disabled = !this.value.trim();
+      });
+
+      inputField.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          if (this.value.trim() && !isWaitingForResponse) {
+            handleUserSubmit();
+          }
+        }
+      });
+
+      sendBtn.addEventListener('click', () => {
+        if (!isWaitingForResponse && inputField.value.trim()) {
+          handleUserSubmit();
+        }
+      });
+
+      // JD Panel events
+      if (jdToggleBtn) {
+        jdToggleBtn.addEventListener('click', () => toggleJDPanel());
+      }
+      if (jdAttachBtn) {
+        jdAttachBtn.addEventListener('click', () => {
+          if (jdFileInput) jdFileInput.click();
+        });
+      }
+      if (jdCloseBtn) {
+        jdCloseBtn.addEventListener('click', () => toggleJDPanel(false));
+      }
+
+      // Dropzone
+      if (jdDropzone && jdFileInput) {
+        jdDropzone.addEventListener('click', () => jdFileInput.click());
+        jdFileInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files[0]) {
+            handleFileSelected(e.target.files[0]);
+          }
+        });
+
+        jdDropzone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          jdDropzone.classList.add('dragover');
+        });
+        jdDropzone.addEventListener('dragleave', () => {
+          jdDropzone.classList.remove('dragover');
+        });
+        jdDropzone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          jdDropzone.classList.remove('dragover');
+          if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleFileSelected(e.dataTransfer.files[0]);
+          }
+        });
+      }
+
+      if (jdFileRemove) {
+        jdFileRemove.addEventListener('click', clearSelectedFile);
+      }
+
+      if (jdSubmitBtn) {
+        jdSubmitBtn.addEventListener('click', () => {
+          const pastedText = (jdTextarea ? jdTextarea.value : '').trim();
+          if (!selectedFile && !pastedText) {
+            alert('Please upload a job description file or paste the job description text.');
+            return;
+          }
+
+          handleUserSubmit('', {
+            file: selectedFile,
+            jobDescriptionText: pastedText
+          });
+
+          if (jdTextarea) jdTextarea.value = '';
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

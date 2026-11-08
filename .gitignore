@@ -10,3 +10,7 @@ scratch/
 .vercel
 .env*
 .cursor/
+
+__pycache__/
+*.pyc
+

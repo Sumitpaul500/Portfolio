@@ -6,6 +6,11 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot
 
 Start-Sleep -Seconds 1
 
+Write-Host "Starting Python AI Recruiter Chatbot (port 5001)..." -ForegroundColor Cyan
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\chatbot_backend'; python app.py" -WindowStyle Normal
+
+Start-Sleep -Seconds 1
+
 Write-Host "Starting Portfolio Frontend (port 3000)..." -ForegroundColor Cyan
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot'; python -m http.server 3000" -WindowStyle Normal
 
@@ -13,6 +18,7 @@ Write-Host ""
 Write-Host "Portfolio is live!" -ForegroundColor Green
 Write-Host "  Frontend: http://localhost:3000" -ForegroundColor Yellow
 Write-Host "  Backend:  http://localhost:3001" -ForegroundColor Yellow
+Write-Host "  Chatbot:  http://localhost:5001" -ForegroundColor Yellow
 Write-Host ""
 Write-Host "REMINDER: Set your Gmail App Password in backend/.env" -ForegroundColor Magenta
 Write-Host "  Get it at: https://myaccount.google.com/apppasswords" -ForegroundColor Magenta

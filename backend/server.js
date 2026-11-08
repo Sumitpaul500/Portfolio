@@ -6,6 +6,8 @@ const https = require('https');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const { dispatchEmailNotification } = require('../lib/emailDispatch');
+const { processChatRequest } = require('../lib/aiService');
+const { parseDocument } = require('../lib/documentParser');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -21,14 +23,17 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
+  res.header('X-Content-Type-Options', 'nosniff');
+  res.header('X-Frame-Options', 'SAMEORIGIN');
+  res.header('Referrer-Policy', 'strict-origin-when-cross-origin');
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
   next();
 });
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ─── Health Check Endpoint ───────────────────────────────────────────────────
 app.get('/health', (req, res) => {
@@ -101,6 +106,80 @@ app.post('/api/contact', async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Unexpected error while sending your message.'
+    });
+  }
+});
+
+// ─── AI Recruiter Chatbot & JD Analysis Handler ───────────────────────────────
+app.post('/api/chat', async (req, res) => {
+  // 1. Try forwarding to Python Chatbot Server (port 5001) first
+  try {
+    const pythonResp = await fetch('http://localhost:5001/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body || {}),
+      signal: AbortSignal.timeout(10000)
+    });
+    const pythonData = await pythonResp.json();
+    return res.status(pythonResp.status).json(pythonData);
+  } catch (pythonErr) {
+    // If Python service is starting or offline, proceed with local handler
+  }
+
+  try {
+    const body = req.body || {};
+    const message = String(body.message || '').trim();
+    const history = Array.isArray(body.history) ? body.history : [];
+    const customSkills = body.customSkills || {};
+    const deletedSkills = Array.isArray(body.deletedSkills) ? body.deletedSkills : [];
+    let jobDescriptionText = String(body.jobDescriptionText || '').trim();
+
+    // Handle uploaded file (PDF / DOCX / TXT)
+    if (body.file && body.file.base64) {
+      try {
+        const fileBuffer = Buffer.from(body.file.base64, 'base64');
+        const extractedText = parseDocument(
+          fileBuffer,
+          body.file.type || '',
+          body.file.name || ''
+        );
+        jobDescriptionText = extractedText;
+      } catch (fileErr) {
+        return res.status(400).json({
+          success: false,
+          error: fileErr.message || 'Failed to parse uploaded document. Please ensure valid format or paste text directly.'
+        });
+      }
+    }
+
+    if (!message && !jobDescriptionText) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please enter a message or upload a job description.'
+      });
+    }
+
+    const clientIp = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1';
+
+    const result = await processChatRequest({
+      message,
+      history,
+      customSkills,
+      deletedSkills,
+      jobDescriptionText,
+      clientIp
+    });
+
+    if (!result.success) {
+      return res.status(429).json(result);
+    }
+
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error('[Chat Server] Error:', err.message || err);
+    return res.status(500).json({
+      success: false,
+      error: 'An unexpected error occurred while processing your request.'
     });
   }
 });
